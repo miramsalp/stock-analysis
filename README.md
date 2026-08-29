@@ -1,8 +1,8 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for **AppLovin (APP)**, **Meta (META)** and **Alphabet (GOOGL)**.
-Enter your shares and average cost, edit the drivers, and every projection, scenario, multiple
-and IRR on the page re-runs.
+A CY2026–CY2030 equity model for ten names: **APP**, **META**, **GOOGL**, **OSCR**, **MRVL**,
+**IREN**, **HIMS**, **SOFI**, **AXON** and **MSTR**. Enter your shares and average cost, edit the
+drivers, and every projection, scenario, multiple and IRR on the page re-runs.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
@@ -50,10 +50,22 @@ multiple, so the three cases can disagree about more than one variable at a time
 
 **APP** ships with the owner's own figures and the five Q2 CY2026 watch items behind them.
 
-**META** and **GOOGL** ship with modelled defaults — reasonable, but not company guidance. Their
-watch items are deliberately structural: they name the disclosure to read rather than a number
-management has committed to. Both are flagged in the page with a source note. Replace them with
+**Every other ticker** ships with modelled defaults — reasonable, but not company guidance, and
+the `shares` / `cost` values are placeholders to overwrite with your real position. Their watch
+items are deliberately structural: they name the disclosure to read rather than a number
+management has committed to. Each is flagged in the page with a source note. Replace them with
 real guided figures as releases land.
+
+### MSTR is a special case
+
+A multiple on software earnings does not value Strategy, so the P/E ladder for MSTR is noise —
+the model shows it, and the page says so in a caveat above the summary stats. What was done
+instead: `netCash` is set to the bitcoin treasury less convertible debt, which makes the
+**EV/EBITDA "Implied price per share" row read as approximate net asset value per share**.
+Compare the market price against that to see the premium you are paying. The diluted share count
+row is the other half of the story, because issuing stock above NAV is the strategy. The five
+watch items are about bitcoin per share, mNAV, issuance, debt maturities and the fair-value
+accounting swing — not about software revenue.
 
 Nothing here is investment advice.
 
@@ -78,6 +90,9 @@ wording in someone's browser.
 
 ## Adding a company
 
-Add an entry to `DEFAULTS` in `src/data/tickers.js` with the same shape as the existing three,
-then add a `--tick-<key>` colour to `src/index.css`. The tab strip, tables, charts and watch grid
-all read from that object — nothing else needs touching.
+Add an entry to `DEFAULTS` in `src/data/tickers.js` with the same shape as the existing ten, then
+add a `--tick-<key>` colour to `src/index.css` (both the light block and the two dark blocks). The
+tab strip, tables, charts and watch grid all read from that object — nothing else needs touching.
+
+An optional `caveat` string on a ticker renders as a warning note above the summary stats. Use it
+when the earnings-multiple frame does not actually fit the company, as with MSTR.

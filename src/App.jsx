@@ -73,10 +73,16 @@ export default function App() {
   return (
     <>
       <header className="topbar">
-        <div className="brand">
-          <span className="mark">▚▚</span>
-          <h1>Ad Stack 2030</h1>
-          <span className="sub">CY26–CY30 model</span>
+        <div className="topbar-row">
+          <div className="brand">
+            <span className="mark">▚▚</span>
+            <h1>Ad Stack 2030</h1>
+            <span className="sub">CY26–CY30 model</span>
+          </div>
+
+          <button type="button" className="ghost" onClick={reset}>
+            Reset {active}
+          </button>
         </div>
 
         <nav className="tickers" role="tablist" aria-label="Company">
@@ -87,6 +93,7 @@ export default function App() {
               className="tk"
               role="tab"
               aria-selected={k === active}
+              title={DEFAULTS[k].name}
               style={{ '--tk': `var(${DEFAULTS[k].cssvar})` }}
               onClick={() => setStore((prev) => ({ ...prev, active: k }))}
             >
@@ -95,10 +102,6 @@ export default function App() {
             </button>
           ))}
         </nav>
-
-        <button type="button" className="ghost" onClick={reset}>
-          Reset ticker
-        </button>
       </header>
 
       <main>
@@ -107,6 +110,14 @@ export default function App() {
             Everything below is priced off these two numbers. Edit either and the whole model
             re-runs.
           </SectionHead>
+
+          {/* Sits above the summary stats on purpose: on a ticker the earnings frame
+              does not fit, the caveat has to be read before the numbers are. */}
+          {d.caveat ? (
+            <p className="note warn">
+              <strong>Read this first.</strong> {d.caveat}
+            </p>
+          ) : null}
 
           <div className="deck">
             <div className="card entry">

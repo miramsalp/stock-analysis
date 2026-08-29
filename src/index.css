@@ -24,8 +24,15 @@
   --chart-bull: #1b7f52;
   --shadow: 0 1px 2px rgb(18 22 28 / 6%), 0 8px 24px -12px rgb(18 22 28 / 18%);
   --tick-app: #a6650a;
-  --tick-meta: #2a5fd0;
+  --tick-meta: #3a4fc4;
   --tick-googl: #7a3fbf;
+  --tick-oscr: #0e7c86;
+  --tick-mrvl: #1b7a4f;
+  --tick-iren: #5e7a12;
+  --tick-hims: #b8356f;
+  --tick-sofi: #0f6bb5;
+  --tick-axon: #c25a18;
+  --tick-mstr: #a62b33;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -46,8 +53,15 @@
     --chart-bull: #2fa36e;
     --shadow: 0 1px 0 rgb(255 255 255 / 2%), 0 12px 32px -16px rgb(0 0 0 / 70%);
     --tick-app: #f0a83a;
-    --tick-meta: #6c9af5;
+    --tick-meta: #8390f0;
     --tick-googl: #b183ee;
+    --tick-oscr: #3fbcc8;
+    --tick-mrvl: #45be86;
+    --tick-iren: #a3c740;
+    --tick-hims: #f27ba9;
+    --tick-sofi: #52a9e8;
+    --tick-axon: #f0904a;
+    --tick-mstr: #eb6b72;
   }
 }
 
@@ -68,8 +82,15 @@
   --chart-bull: #2fa36e;
   --shadow: 0 1px 0 rgb(255 255 255 / 2%), 0 12px 32px -16px rgb(0 0 0 / 70%);
   --tick-app: #f0a83a;
-  --tick-meta: #6c9af5;
+  --tick-meta: #8390f0;
   --tick-googl: #b183ee;
+  --tick-oscr: #3fbcc8;
+  --tick-mrvl: #45be86;
+  --tick-iren: #a3c740;
+  --tick-hims: #f27ba9;
+  --tick-sofi: #52a9e8;
+  --tick-axon: #f0904a;
+  --tick-mstr: #eb6b72;
 }
 
 *,
@@ -107,14 +128,20 @@ h3 {
   top: 0;
   z-index: 40;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.topbar-row {
+  display: flex;
   flex-wrap: wrap;
   gap: 18px;
   align-items: center;
-  padding: 12px clamp(16px, 4vw, 40px);
-  background: var(--surface);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--hairline);
 }
 
 .brand {
@@ -146,20 +173,35 @@ h3 {
   color: var(--ink-3);
 }
 
+/* Ten tabs do not fit every viewport, so the strip scrolls rather than wrapping. */
 .tickers {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  overflow-x: auto;
   padding: 4px;
   background: var(--sunken);
   border: 1px solid var(--hairline);
   border-radius: 9px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline-2) transparent;
+  overscroll-behavior-x: contain;
+}
+
+.tickers::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tickers::-webkit-scrollbar-thumb {
+  background: var(--hairline-2);
+  border-radius: 3px;
 }
 
 .tk {
   display: flex;
+  flex: none;
   gap: 7px;
   align-items: center;
-  padding: 7px 13px;
+  padding: 7px 11px;
   appearance: none;
   border: 0;
   border-radius: 6px;
@@ -918,6 +960,16 @@ svg.chart {
 .note strong {
   font-weight: 600;
   color: var(--ink-2);
+}
+
+/* Used where the model's frame does not fit the company — MSTR, today. */
+.note.warn {
+  border-left-color: var(--accent);
+  color: var(--ink-2);
+}
+
+.note.warn strong {
+  color: var(--accent);
 }
 
 footer {
