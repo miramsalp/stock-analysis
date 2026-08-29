@@ -1,0 +1,1076 @@
+<title>Ad Stack 2030</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* ============================================================
+   Ad Stack 2030 — amber-phosphor terminal on cool graphite
+   Tokens: light on bare :root, redefined for both dark states.
+   ============================================================ */
+:root{
+  --ground:#E9EBEF;
+  --surface:#FFFFFF;
+  --sunken:#F3F4F7;
+  --ink:#12161C;
+  --hairline:#D9DDE4;
+  --hairline-2:#C6CBD5;
+  --accent:#9A5D06;
+  --accent-soft:#F3E4C7;
+  --pos:#146F4B;
+  --neg:#B03A22;
+  --chart-bear:#C0492E;
+  --chart-base:#3A6EA5;
+  --chart-bull:#1B7F52;
+  --shadow:0 1px 2px rgba(18,22,28,.06), 0 8px 24px -12px rgba(18,22,28,.18);
+  --tick-app:#A6650A;
+  --tick-meta:#2A5FD0;
+  --tick-googl:#7A3FBF;
+}
+:root{ --ink-2:#4B5462; --ink-3:#6C7686; }
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1015;
+    --surface:#161A21;
+    --sunken:#11151B;
+    --ink:#E7EAF0;
+    --ink-2:#A9B2C0;
+    --ink-3:#7E8797;
+    --hairline:#242A34;
+    --hairline-2:#333B48;
+    --accent:#F0A83A;
+    --accent-soft:#3A2C12;
+    --pos:#48BE8A;
+    --neg:#E8785A;
+    --chart-bear:#DD7052;
+    --chart-base:#6494D6;
+    --chart-bull:#2FA36E;
+    --shadow:0 1px 0 rgba(255,255,255,.02), 0 12px 32px -16px rgba(0,0,0,.7);
+    --tick-app:#F0A83A;
+    --tick-meta:#6C9AF5;
+    --tick-googl:#B183EE;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1015;
+  --surface:#161A21;
+  --sunken:#11151B;
+  --ink:#E7EAF0;
+  --ink-2:#A9B2C0;
+  --ink-3:#7E8797;
+  --hairline:#242A34;
+  --hairline-2:#333B48;
+  --accent:#F0A83A;
+  --accent-soft:#3A2C12;
+  --pos:#48BE8A;
+  --neg:#E8785A;
+  --chart-bear:#DD7052;
+  --chart-base:#6494D6;
+  --chart-bull:#2FA36E;
+  --shadow:0 1px 0 rgba(255,255,255,.02), 0 12px 32px -16px rgba(0,0,0,.7);
+  --tick-app:#F0A83A;
+  --tick-meta:#6C9AF5;
+  --tick-googl:#B183EE;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Archivo,"IBM Plex Sans",system-ui,sans-serif;text-wrap:balance;margin:0}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:var(--surface);
+  background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--hairline);
+  display:flex;flex-wrap:wrap;align-items:center;gap:18px;
+  padding:12px clamp(16px,4vw,40px);
+}
+.brand{display:flex;align-items:baseline;gap:12px;margin-right:auto}
+.brand .mark{
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;
+  color:var(--accent);letter-spacing:.14em;
+}
+.brand h1{font-size:17px;font-weight:700;letter-spacing:-.015em}
+.brand .sub{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace}
+
+.tickers{display:flex;gap:6px;background:var(--sunken);padding:4px;border-radius:9px;border:1px solid var(--hairline)}
+.tk{
+  appearance:none;border:0;background:transparent;cursor:pointer;
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12.5px;letter-spacing:.06em;
+  color:var(--ink-3);padding:7px 13px;border-radius:6px;display:flex;align-items:center;gap:7px;
+  transition:color .14s ease, background .14s ease;
+}
+.tk .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.5}
+.tk[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tk[aria-selected="true"] .dot{opacity:1;background:var(--tk)}
+.tk:hover{color:var(--ink)}
+.tk:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.ghost{
+  appearance:none;background:transparent;border:1px solid var(--hairline-2);color:var(--ink-2);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.05em;
+  padding:7px 11px;border-radius:7px;cursor:pointer;transition:.14s ease;
+}
+.ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- layout ---------- */
+main{max-width:1240px;margin:0 auto;padding:24px clamp(16px,4vw,40px) 72px;display:flex;flex-direction:column;gap:30px}
+section{display:flex;flex-direction:column;gap:14px}
+.shead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--hairline);padding-bottom:9px}
+.shead h2{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+}
+.shead p{margin:0;font-size:12.5px;color:var(--ink-3);max-width:62ch}
+
+.card{background:var(--surface);border:1px solid var(--hairline);border-radius:12px;box-shadow:var(--shadow)}
+.pad{padding:18px}
+
+/* ---------- position strip ---------- */
+.deck{display:grid;grid-template-columns:minmax(240px,320px) 1fr;gap:14px}
+@media (max-width:860px){.deck{grid-template-columns:1fr}}
+
+.entry{padding:18px;display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.inwrap{display:flex;align-items:center;background:var(--sunken);border:1px solid var(--hairline);border-radius:8px;padding:0 11px;transition:border-color .14s}
+.inwrap:focus-within{border-color:var(--accent)}
+.inwrap .pre{color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-size:13px;padding-right:5px}
+.inwrap input{
+  appearance:none;border:0;background:transparent;color:var(--ink);width:100%;
+  font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:500;padding:9px 0;
+  font-variant-numeric:tabular-nums;
+}
+.inwrap input:focus{outline:none}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border-radius:12px;overflow:hidden;border:1px solid var(--hairline)}
+@media (max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--surface);padding:18px 18px 16px;display:flex;flex-direction:column;gap:4px;justify-content:center}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.stat .v{font-family:Archivo,sans-serif;font-weight:600;font-size:clamp(20px,2.4vw,27px);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .m{font-size:11.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+.pos{color:var(--pos)} .neg{color:var(--neg)}
+
+/* ---------- tables ---------- */
+.scroller{overflow-x:auto;border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--hairline);white-space:nowrap}
+thead th{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--sunken);border-bottom:1px solid var(--hairline-2);
+}
+th.rowh,td.rowh{text-align:left;font-weight:500;color:var(--ink-2);font-size:13px;position:sticky;left:0;background:var(--surface);border-right:1px solid var(--hairline)}
+thead th.rowh{background:var(--sunken)}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody tr:hover td,tbody tr:hover th.rowh{background:var(--sunken)}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13px}
+tr.rule td,tr.rule th{border-bottom:1px solid var(--hairline-2)}
+tr.head-in td,tr.head-in th{
+  background:var(--sunken);font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);padding-top:11px;padding-bottom:7px;
+}
+tr.emph td{font-weight:600;color:var(--ink)}
+.cell-in{
+  width:100%;max-width:110px;text-align:right;appearance:none;background:var(--sunken);
+  border:1px solid var(--hairline);border-radius:6px;color:var(--ink);padding:5px 8px;
+  font-family:"IBM Plex Mono",monospace;font-size:13px;font-variant-numeric:tabular-nums;
+}
+.cell-in:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.tag{
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid var(--hairline-2);
+  color:var(--ink-3);margin-left:8px;vertical-align:middle;
+}
+.tag.edit{color:var(--accent);border-color:var(--accent);opacity:.9}
+
+/* ---------- scenarios ---------- */
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.scen{grid-template-columns:1fr}}
+.sc{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.sc .bar{height:3px}
+.sc-bear .bar{background:var(--chart-bear)} .sc-base .bar{background:var(--chart-base)} .sc-bull .bar{background:var(--chart-bull)}
+.sc h3{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.sc h3 .sq{width:9px;height:9px;border-radius:2px;flex:none}
+.sc-bear h3 .sq{background:var(--chart-bear)} .sc-base h3 .sq{background:var(--chart-base)} .sc-bull h3 .sq{background:var(--chart-bull)}
+.sc .thesis{font-size:12px;color:var(--ink-3);margin:0;line-height:1.5}
+.sc .body{padding:16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.sc .ins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.sc .ins .field label{font-size:9.5px;letter-spacing:.08em}
+.sc .ins .cell-in{max-width:none}
+.sc .out{border-top:1px dashed var(--hairline-2);padding-top:12px;display:flex;flex-direction:column;gap:7px}
+.orow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.5px}
+.orow .k{color:var(--ink-3)}
+.orow .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-weight:500}
+.orow.big .v{font-size:19px;font-weight:600;font-family:Archivo,sans-serif;letter-spacing:-.02em}
+
+/* ---------- charts ---------- */
+.chart-wrap{position:relative}
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+.gridline{stroke:var(--hairline);stroke-width:1}
+.axis-t{font-family:"IBM Plex Mono",monospace;font-size:10px;fill:var(--ink-3);letter-spacing:.05em}
+.val-t{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink);font-weight:500}
+.cat-t{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:var(--ink-2);letter-spacing:.04em}
+.tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-118%);
+  background:var(--surface);border:1px solid var(--hairline-2);border-radius:8px;
+  padding:8px 10px;box-shadow:var(--shadow);transition:opacity .1s ease;z-index:5;white-space:nowrap;
+}
+.tip .t{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.tip .b{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.tip .s{font-size:11.5px;color:var(--ink-3)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:14px;padding:0 18px 16px;font-size:11.5px;color:var(--ink-2)}
+.chart-legend span{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace}
+.chart-legend i{width:10px;height:10px;border-radius:2px;display:block}
+.chart-legend i.dash{height:0;width:14px;border-top:2px dashed var(--ink-3);border-radius:0}
+
+/* ---------- watchlist ---------- */
+.watch{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.wc{padding:16px;display:flex;flex-direction:column;gap:10px;position:relative}
+.wc.done{opacity:.55}
+.wc .top{display:flex;gap:11px;align-items:flex-start}
+.wc h3{font-size:13.5px;font-weight:600;line-height:1.4;flex:1}
+.wc input[type=checkbox]{
+  appearance:none;width:17px;height:17px;flex:none;margin-top:2px;border:1.5px solid var(--hairline-2);
+  border-radius:5px;cursor:pointer;background:var(--sunken);position:relative;transition:.14s;
+}
+.wc input[type=checkbox]:hover{border-color:var(--accent)}
+.wc input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
+.wc input[type=checkbox]:checked::after{
+  content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;
+  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.wc .blk{display:flex;flex-direction:column;gap:3px}
+.wc .lbl{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.wc .lbl.hit{color:var(--accent)}
+.wc p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.wc .metric{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink);
+  background:var(--sunken);border:1px solid var(--hairline);border-radius:6px;padding:2px 7px;display:inline-block;
+}
+
+.note{
+  font-size:12px;color:var(--ink-3);line-height:1.6;border-left:2px solid var(--hairline-2);
+  padding-left:12px;max-width:78ch;
+}
+.note strong{color:var(--ink-2);font-weight:600}
+footer{
+  border-top:1px solid var(--hairline);padding:22px clamp(16px,4vw,40px);
+  max-width:1240px;margin:0 auto;font-size:11.5px;color:var(--ink-3);
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  font-family:"IBM Plex Mono",monospace;
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark">▚▚</span>
+    <h1>Ad Stack 2030</h1>
+    <span class="sub">CY26–CY30 model</span>
+  </div>
+  <nav class="tickers" role="tablist" aria-label="Company"></nav>
+  <button class="ghost" id="reset">Reset ticker</button>
+</header>
+
+<main>
+  <!-- POSITION -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">01 / Position</span>
+      <h2 id="posTitle">Your holding</h2>
+      <p>Everything below is priced off these two numbers. Edit either and the whole model re-runs.</p>
+    </div>
+    <div class="deck">
+      <div class="card entry">
+        <div class="field">
+          <label for="inShares">Shares held</label>
+          <div class="inwrap"><input id="inShares" type="number" step="1" min="0" inputmode="decimal"></div>
+        </div>
+        <div class="field">
+          <label for="inCost">Average cost / share</label>
+          <div class="inwrap"><span class="pre">$</span><input id="inCost" type="number" step="0.01" min="0" inputmode="decimal"></div>
+        </div>
+        <div class="orow"><span class="k">Total invested</span><span class="v" id="oInvested">—</span></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="k">2030 base target</span><span class="v" id="hTarget">—</span><span class="m" id="hTargetSub">—</span></div>
+        <div class="stat"><span class="k">Position value 2030</span><span class="v" id="hValue">—</span><span class="m" id="hValueSub">—</span></div>
+        <div class="stat"><span class="k">Net profit</span><span class="v" id="hProfit">—</span><span class="m" id="hProfitSub">—</span></div>
+        <div class="stat"><span class="k">Annualised (5 yr)</span><span class="v" id="hCagr">—</span><span class="m" id="hCagrSub">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSUMPTIONS -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">02 / Drivers</span>
+      <h2>Model assumptions <span class="tag edit">editable</span></h2>
+      <p>The only numbers you have to believe. Revenue compounds off the prior year, so changing one growth rate moves every year after it.</p>
+    </div>
+    <div class="card scroller"><table id="tblAssume"></table></div>
+  </section>
+
+  <!-- PROJECTIONS -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">03 / Build</span>
+      <h2>Earnings projection</h2>
+      <p>Derived from the drivers above. Implied P/E is what you paid divided by that year's EPS — the multiple your entry looks like in hindsight.</p>
+    </div>
+    <div class="card scroller"><table id="tblProj"></table></div>
+  </section>
+
+  <!-- SCENARIOS -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">04 / Range</span>
+      <h2>2030 scenarios <span class="tag edit">editable</span></h2>
+      <p>Three independent 2030 endpoints. Each sets its own revenue, margin and exit multiple — they do not inherit the driver table.</p>
+    </div>
+    <div class="scen" id="scenCards"></div>
+    <div class="card">
+      <div class="pad" style="padding-bottom:6px"><h3 style="font-size:13px;font-weight:600">2030 price per share by scenario</h3></div>
+      <div class="chart-wrap" style="padding:0 18px"><div id="tipBand" class="tip"></div><svg id="bandChart" class="chart" viewBox="0 0 720 200" role="img" aria-label="2030 target price by scenario"></svg></div>
+      <div class="chart-legend">
+        <span><i style="background:var(--chart-bear)"></i>Bear</span>
+        <span><i style="background:var(--chart-base)"></i>Base</span>
+        <span><i style="background:var(--chart-bull)"></i>Bull</span>
+        <span><i class="dash"></i>Your cost basis</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUATION -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">05 / Multiples</span>
+      <h2>Valuation ladder <span class="tag edit">editable multiples</span></h2>
+      <p>Same earnings, two lenses. The P/E band brackets the equity price; EV/EBITDA cross-checks it on cash flow and adds back net cash.</p>
+    </div>
+    <div class="deck" style="grid-template-columns:1fr;gap:14px">
+      <div class="card scroller"><table id="tblVal"></table></div>
+      <div class="card">
+        <div class="pad" style="padding-bottom:6px"><h3 style="font-size:13px;font-weight:600" id="pathTitle">Midpoint P/E price path</h3></div>
+        <div class="chart-wrap" style="padding:0 18px"><div id="tipPath" class="tip"></div><svg id="pathChart" class="chart" viewBox="0 0 720 250" role="img" aria-label="Midpoint price target by year"></svg></div>
+        <div class="chart-legend" id="pathLegend"></div>
+      </div>
+    </div>
+    <p class="note" id="valNote"></p>
+  </section>
+
+  <!-- WATCH -->
+  <section>
+    <div class="shead">
+      <span class="eyebrow">06 / Verify</span>
+      <h2 id="watchTitle">What to check next quarter</h2>
+      <p>The model above is a claim. These are the five disclosures that confirm or break it. Tick them off as the release lands.</p>
+    </div>
+    <div class="watch" id="watchGrid"></div>
+    <p class="note" id="watchNote"></p>
+  </section>
+</main>
+
+<footer>
+  <span>Ad Stack 2030 · a personal model, not investment advice</span>
+  <span>Inputs save to this browser only</span>
+</footer>
+
+<script>
+"use strict";
+
+/* ===================== defaults ===================== */
+const YEARS = [2026, 2027, 2028, 2029, 2030];
+
+const DEFAULTS = {
+  APP: {
+    name: "AppLovin", cssvar: "--tick-app",
+    shares: 32, cost: 319.46,
+    prevRev: 5.4795,                       // CY2025 base so CY2026 lands on $8.00B
+    growth:  [46, 35, 30, 25, 20],
+    niMargin:[62, 63, 64, 65, 65],
+    ebMargin:[84, 84, 84, 85, 85],
+    sharesOut:[0.335, 0.335, 0.335, 0.335, 0.335],
+    peLow: 20, peHigh: 35, evMult: 20, netCash: 0,
+    scen: {
+      bear: {label:"Bear", thesis:"Ad competition and audience saturation cap the AXON flywheel.", rev:16.0, margin:55, pe:18},
+      base: {label:"Base", thesis:"AXON keeps compounding as e-commerce becomes the second engine.", rev:21.06, margin:65, pe:25},
+      bull: {label:"Bull", thesis:"Global ad-tech dominance — AppLovin takes share outside gaming.", rev:28.0, margin:68, pe:30}
+    },
+    sourced: true,
+    watch: [
+      {h:"Revenue guidance execution", m:"Q3 guide $2.055B – $2.085B (+46% to +48% YoY)",
+       b:"Q2 revenue of $1.924B narrowly missed the guidance midpoint on delayed AXON model deployments.",
+       c:"Verify Q3 revenue meets or beats the $2.07B midpoint — that proves the Q2 top-line miss was timing, not structural saturation."},
+      {h:"AXON deep-learning model step-up", m:"Engine upgrade live July 2026",
+       b:"Management said a major AXON engine upgrade went live immediately after Q2 closed.",
+       c:"Confirm higher advertiser return-on-ad-spend and better budget retention from mobile gaming clients after that July deployment."},
+      {h:"E-commerce and non-gaming momentum", m:"Non-gaming spend +28% over prior Q4 peak",
+       b:"Non-gaming consumer advertiser spend grew 28% past the previous Q4 peak, making e-commerce the growth engine outside core gaming.",
+       c:"Look for merchant adoption through analytics partnerships (Triple Whale, Shopify) and self-serve onboarding metrics. E-commerce has to carry revenue from ~$8B in 2026 toward $21B+ by 2030."},
+      {h:"GenAI creative automation", m:"~57% qualified-lead onboarding baseline",
+       b:"Producing good 30–60 second video creative is still the bottleneck keeping mid-market merchants from opening their budgets.",
+       c:"Watch product updates on the AI video generators and SparkLabs tooling. Onboarding conversion improving off the ~57% baseline signals the friction is coming down."},
+      {h:"EBITDA margin and cash conversion", m:"Q3 adj. EBITDA $1.71B – $1.74B (~83%)",
+       b:"Q3 adjusted EBITDA guidance implies roughly an 83% margin after higher AI compute and training costs.",
+       c:"Ensure adjusted EBITDA margin holds above 82% despite GPU spend, and that free cash flow normalises toward the ~75%-of-EBITDA full-year target as Q2 tax timing noise clears."}
+    ]
+  },
+
+  META: {
+    name: "Meta Platforms", cssvar: "--tick-meta",
+    shares: 5, cost: 655.00,
+    prevRev: 194.0,
+    growth:  [16, 14, 12, 11, 10],
+    niMargin:[34, 35, 36, 36.5, 37],
+    ebMargin:[52, 53, 53, 54, 54],
+    sharesOut:[2.53, 2.50, 2.47, 2.44, 2.41],
+    peLow: 20, peHigh: 30, evMult: 13, netCash: 20,
+    scen: {
+      bear: {label:"Bear", thesis:"AI capex outruns ad growth; Reality Labs losses keep eating the margin.", rev:300, margin:30, pe:16},
+      base: {label:"Base", thesis:"Ad ranking gains hold pricing while capex depreciation is absorbed.", rev:350.8, margin:37, pe:24},
+      bull: {label:"Bull", thesis:"Business messaging and agentic ads open a genuine second revenue line.", rev:400, margin:40, pe:30}
+    },
+    sourced: false,
+    watch: [
+      {h:"Impressions versus price per ad", m:"Growth split, not just the headline",
+       b:"Revenue growth is the product of ad impressions delivered and average price per ad — only one of those can compound forever.",
+       c:"Check whether price per ad is carrying growth as impression growth decelerates. Pricing-led growth is the healthier signal; volume-led growth on flat pricing is a warning."},
+      {h:"Reality Labs operating loss", m:"Direction of the annual loss",
+       b:"Reality Labs is the single largest deliberate drag between operating income and the net margin this model assumes.",
+       c:"Confirm the loss is flattening rather than widening, and look for any commentary on capping or re-scoping the spend. The margin ramp to 37% depends on it."},
+      {h:"Capex guidance and the depreciation tail", m:"Full-year capex, then next-year D&A",
+       b:"AI infrastructure spend hits the income statement later as depreciation, one to two years after the cash goes out.",
+       c:"Take the full-year capex guide and ask what it does to next year's D&A line. Rising capex with an unchanged margin guide is the assumption most likely to break first."},
+      {h:"AI ad ranking and automated campaigns", m:"Share of revenue through automated tools",
+       b:"Automated campaign products are the mechanism by which AI spend is supposed to convert into advertiser return.",
+       c:"Look for disclosed advertiser counts and the share of ad revenue running through automated campaign products. Rising share is the proof the capex is earning its keep."},
+      {h:"Business messaging and newer surfaces", m:"From \"ramping\" to a disclosed number",
+       b:"Threads and paid messaging are the credible sources of revenue that is not the core feed.",
+       c:"Watch for the moment management puts an actual revenue figure on these instead of describing them as early. That disclosure is what a bull case needs."}
+    ]
+  },
+
+  GOOGL: {
+    name: "Alphabet", cssvar: "--tick-googl",
+    shares: 20, cost: 252.00,
+    prevRev: 390.4,
+    growth:  [14, 13, 12, 11, 10],
+    niMargin:[30, 31, 32, 32.5, 33],
+    ebMargin:[40, 41, 42, 42, 43],
+    sharesOut:[11.90, 11.70, 11.50, 11.30, 11.10],
+    peLow: 20, peHigh: 28, evMult: 12, netCash: 80,
+    scen: {
+      bear: {label:"Bear", thesis:"AI answers cannibalise search clicks; an antitrust remedy bites.", rev:580, margin:26, pe:15},
+      base: {label:"Base", thesis:"Search monetises at parity while Cloud compounds into real margin.", rev:687.7, margin:33, pe:24},
+      bull: {label:"Bull", thesis:"Gemini distribution plus Cloud turns Alphabet into the default AI utility.", rev:780, margin:36, pe:28}
+    },
+    sourced: false,
+    watch: [
+      {h:"Search growth against AI answers", m:"Search revenue growth staying double-digit",
+       b:"The whole model rests on AI-generated answers monetising at least as well as the blue links they replace.",
+       c:"Check that search revenue growth stays in double digits and that management still claims monetisation parity for AI surfaces. A single quarter of high-single-digit search growth invalidates the base case."},
+      {h:"Cloud growth and operating margin", m:"Backlog plus segment margin, together",
+       b:"Cloud is the segment that has to lift the blended net margin toward 33% by 2030.",
+       c:"Read growth and segment operating margin as a pair, alongside committed backlog. Growth bought with margin is not the same result."},
+      {h:"Capex against depreciation", m:"Full-year capex, then next-year D&A",
+       b:"Data centre spend converts into a depreciation charge that lands on the income statement a year or two later.",
+       c:"Check whether the capex guide leaves room for the margin path this model assumes. This is the assumption most likely to be wrong first."},
+      {h:"Antitrust remedies", m:"What is actually ordered, not proposed",
+       b:"Remedies touching ad-tech structure or default search placement affect both revenue and the multiple the market will pay.",
+       c:"Track what is actually ordered and its compliance date, then decide whether the exit multiple in the bear case is still generous enough."},
+      {h:"YouTube and subscription ARPU", m:"Subscriptions as a share of the mix",
+       b:"Subscriptions are the least cyclical revenue line and the strongest argument for a higher multiple.",
+       c:"Watch subscription revenue as a share of the total and the direction of YouTube ad pricing. A rising non-advertising mix is what justifies the top of the P/E band."}
+    ]
+  }
+};
+
+/* ===================== state ===================== */
+const LSKEY = "adstack2030.v2";
+let store = {active:"APP", data:{}, checks:{}};
+try {
+  const raw = localStorage.getItem(LSKEY);
+  if (raw) store = Object.assign(store, JSON.parse(raw));
+} catch (e) { /* private mode — run on defaults */ }
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function model(k){
+  if (!store.data[k]) store.data[k] = clone(DEFAULTS[k]);
+  const d = store.data[k];
+  // keep non-numeric fields authoritative from DEFAULTS
+  d.name = DEFAULTS[k].name; d.cssvar = DEFAULTS[k].cssvar;
+  d.watch = DEFAULTS[k].watch; d.sourced = DEFAULTS[k].sourced;
+  ["bear","base","bull"].forEach(s => {
+    d.scen[s].label = DEFAULTS[k].scen[s].label;
+    d.scen[s].thesis = DEFAULTS[k].scen[s].thesis;
+  });
+  return d;
+}
+function save(){
+  try { localStorage.setItem(LSKEY, JSON.stringify(store)); } catch (e) {}
+}
+
+/* ===================== math ===================== */
+function compute(d){
+  const rev = [], ni = [], eps = [], eb = [];
+  let prev = d.prevRev;
+  for (let i = 0; i < 5; i++){
+    rev[i] = prev * (1 + d.growth[i] / 100);
+    prev = rev[i];
+    ni[i] = rev[i] * d.niMargin[i] / 100;
+    eps[i] = d.sharesOut[i] > 0 ? ni[i] / d.sharesOut[i] : 0;
+    eb[i] = rev[i] * d.ebMargin[i] / 100;
+  }
+  const peMid = (d.peLow + d.peHigh) / 2;
+  const priceLow = eps.map(e => e * d.peLow);
+  const priceHigh = eps.map(e => e * d.peHigh);
+  const priceMid = eps.map(e => e * peMid);
+  const evPrice = eb.map((e, i) =>
+    d.sharesOut[i] > 0 ? (e * d.evMult + d.netCash) / d.sharesOut[i] : 0);
+
+  const cost = d.cost || 0;
+  const upside = priceMid.map(p => cost > 0 ? p / cost - 1 : 0);
+  const evUpside = evPrice.map(p => cost > 0 ? p / cost - 1 : 0);
+  const irr = priceMid.map((p, i) => cost > 0 && p > 0 ? Math.pow(p / cost, 1 / (i + 1)) - 1 : 0);
+  const impliedPE = eps.map(e => e > 0 ? cost / e : 0);
+
+  const scen = {};
+  ["bear","base","bull"].forEach(k => {
+    const s = d.scen[k];
+    const so = d.sharesOut[4] || 1;
+    const netInc = s.rev * s.margin / 100;
+    const e = netInc / so;
+    const target = e * s.pe;
+    const value = target * d.shares;
+    const invested = cost * d.shares;
+    scen[k] = {
+      ni: netInc, eps: e, target, value,
+      profit: value - invested,
+      roi: invested > 0 ? (value - invested) / invested : 0,
+      cagr: cost > 0 && target > 0 ? Math.pow(target / cost, 1 / 5) - 1 : 0
+    };
+  });
+
+  return {rev, ni, eps, eb, peMid, priceLow, priceHigh, priceMid, evPrice,
+          upside, evUpside, irr, impliedPE, scen, invested: cost * d.shares};
+}
+
+/* ===================== formatting ===================== */
+const nf = (v, dp = 2) => (v == null || !isFinite(v)) ? "—"
+  : v.toLocaleString("en-US", {minimumFractionDigits: dp, maximumFractionDigits: dp});
+const money = (v, dp = 2) => (!isFinite(v)) ? "—" : (v < 0 ? "−$" : "$") + nf(Math.abs(v), dp);
+const bil = v => !isFinite(v) ? "—" : "$" + nf(v, 2) + " B";
+const pct = (v, dp = 1) => !isFinite(v) ? "—" : nf(v * 100, dp) + "%";
+const sgnPct = (v, dp = 1) => (v >= 0 ? "+" : "−") + nf(Math.abs(v) * 100, dp) + "%";
+const sgnMoney = (v, dp = 0) => (v >= 0 ? "+$" : "−$") + nf(Math.abs(v), dp);
+const mult = v => !isFinite(v) ? "—" : nf(v, 1) + "x";
+const cls = v => v >= 0 ? "pos" : "neg";
+
+/* ===================== DOM helpers ===================== */
+const $ = s => document.querySelector(s);
+function el(tag, attrs, kids){
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    if (k === "class") n.className = attrs[k];
+    else if (k === "html") n.innerHTML = attrs[k];
+    else if (k === "text") n.textContent = attrs[k];
+    else n.setAttribute(k, attrs[k]);
+  }
+  (kids || []).forEach(c => n.appendChild(c));
+  return n;
+}
+function cell(txt, extra){
+  const td = el("td", {class: "n " + (extra || "")});
+  td.textContent = txt;
+  return td;
+}
+function numInput(value, step, onchange, suffix){
+  const i = el("input", {class:"cell-in", type:"number", step:step, inputmode:"decimal"});
+  i.value = value;
+  i.addEventListener("input", () => {
+    const v = parseFloat(i.value);
+    onchange(isFinite(v) ? v : 0);
+    refresh();
+  });
+  if (suffix) i.setAttribute("aria-label", suffix);
+  return i;
+}
+
+/* ===================== tabs ===================== */
+const NAV = $(".tickers");
+Object.keys(DEFAULTS).forEach(k => {
+  const b = el("button", {class:"tk", role:"tab", "data-k":k});
+  b.style.setProperty("--tk", `var(${DEFAULTS[k].cssvar})`);
+  b.appendChild(el("span", {class:"dot"}));
+  b.appendChild(document.createTextNode(k));
+  b.addEventListener("click", () => { store.active = k; save(); build(); });
+  NAV.appendChild(b);
+});
+
+$("#reset").addEventListener("click", () => {
+  delete store.data[store.active];
+  save();
+  build();
+});
+
+/* ===================== build (per ticker) ===================== */
+function build(){
+  const k = store.active, d = model(k);
+  document.querySelectorAll(".tk").forEach(b =>
+    b.setAttribute("aria-selected", b.dataset.k === k ? "true" : "false"));
+
+  $("#posTitle").textContent = `Your ${d.name} holding`;
+  $("#watchTitle").textContent = `What to check next quarter — ${k}`;
+  $("#pathTitle").textContent = `Midpoint P/E price path · ${nf(( d.peLow + d.peHigh)/2,1)}x`;
+  $("#inShares").value = d.shares;
+  $("#inCost").value = d.cost;
+
+  buildAssume(d);
+  buildProj();
+  buildScen(d);
+  buildVal(d);
+  buildWatch(k, d);
+  refresh();
+}
+
+$("#inShares").addEventListener("input", e => {
+  const d = model(store.active);
+  d.shares = Math.max(0, parseFloat(e.target.value) || 0);
+  refresh();
+});
+$("#inCost").addEventListener("input", e => {
+  const d = model(store.active);
+  d.cost = Math.max(0, parseFloat(e.target.value) || 0);
+  refresh();
+});
+
+function yearHead(first){
+  const tr = el("tr");
+  tr.appendChild(el("th", {class:"rowh", scope:"col", text:first}));
+  YEARS.forEach(y => tr.appendChild(el("th", {scope:"col", text:"CY" + y})));
+  return el("thead", null, [tr]);
+}
+
+function buildAssume(d){
+  const t = $("#tblAssume");
+  t.innerHTML = "";
+  t.appendChild(yearHead("Driver"));
+  const tb = el("tbody");
+  const rows = [
+    ["Revenue growth (% YoY)", "growth", "0.5"],
+    ["Net income margin (%)", "niMargin", "0.5"],
+    ["Adj. EBITDA margin (%)", "ebMargin", "0.5"],
+    ["Diluted shares out (B)", "sharesOut", "0.005"]
+  ];
+  rows.forEach(([label, key, step]) => {
+    const tr = el("tr");
+    tr.appendChild(el("th", {class:"rowh", scope:"row", text:label}));
+    for (let i = 0; i < 5; i++){
+      const td = el("td");
+      td.appendChild(numInput(d[key][i], step, v => { d[key][i] = v; }, label));
+      tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  });
+
+  // base year + multiples row
+  const tr2 = el("tr", {class:"rule"});
+  tr2.appendChild(el("th", {class:"rowh", scope:"row", text:"CY2025 revenue base ($B)"}));
+  const td2 = el("td");
+  td2.appendChild(numInput(d.prevRev, "0.1", v => { d.prevRev = v; }, "prior year revenue"));
+  tr2.appendChild(td2);
+  tr2.appendChild(el("td", {class:"n", colspan:"4",
+    html:'<span style="color:var(--ink-3);font-size:12px;text-align:left;display:block">CY2026 revenue compounds off this base.</span>'}));
+  tb.appendChild(tr2);
+  t.appendChild(tb);
+}
+
+function buildProj(){
+  const t = $("#tblProj");
+  t.innerHTML = "";
+  t.appendChild(yearHead("Line item"));
+  const tb = el("tbody", {id:"projBody"});
+  ["Revenue", "Net income", "Adj. EBITDA", "GAAP diluted EPS", "Implied P/E at your cost"]
+    .forEach((label, r) => {
+      const tr = el("tr", r === 3 ? {class:"emph"} : null);
+      tr.appendChild(el("th", {class:"rowh", scope:"row", text:label}));
+      for (let i = 0; i < 5; i++) tr.appendChild(el("td", {class:"n", id:`p${r}${i}`, text:"—"}));
+      tb.appendChild(tr);
+    });
+  t.appendChild(tb);
+}
+
+function buildScen(d){
+  const wrap = $("#scenCards");
+  wrap.innerHTML = "";
+  ["bear","base","bull"].forEach(key => {
+    const s = d.scen[key];
+    const card = el("div", {class:`card sc sc-${key}`});
+    card.appendChild(el("div", {class:"bar"}));
+    const body = el("div", {class:"body"});
+    const h = el("h3");
+    h.appendChild(el("span", {class:"sq"}));
+    h.appendChild(document.createTextNode(s.label + " case"));
+    body.appendChild(h);
+    body.appendChild(el("p", {class:"thesis", text:s.thesis}));
+
+    const ins = el("div", {class:"ins"});
+    [["2030 rev $B","rev","1"],["Margin %","margin","0.5"],["Exit P/E","pe","0.5"]]
+      .forEach(([lab, f, step]) => {
+        const fd = el("div", {class:"field"});
+        fd.appendChild(el("label", {text:lab}));
+        fd.appendChild(numInput(s[f], step, v => { s[f] = v; }, lab));
+        ins.appendChild(fd);
+      });
+    body.appendChild(ins);
+
+    const out = el("div", {class:"out"});
+    const mk = (k2, id, big) => {
+      const r = el("div", {class:"orow" + (big ? " big" : "")});
+      r.appendChild(el("span", {class:"k", text:k2}));
+      r.appendChild(el("span", {class:"v", id:id, text:"—"}));
+      out.appendChild(r);
+    };
+    mk("2030 EPS", `s_${key}_eps`);
+    mk("Target price", `s_${key}_tgt`, true);
+    mk("Your position", `s_${key}_val`);
+    mk("Net profit", `s_${key}_pl`);
+    mk("Return on cost", `s_${key}_roi`);
+    mk("Annualised", `s_${key}_cagr`);
+    body.appendChild(out);
+    card.appendChild(body);
+    wrap.appendChild(card);
+  });
+}
+
+function buildVal(d){
+  const t = $("#tblVal");
+  t.innerHTML = "";
+  t.appendChild(yearHead("Valuation metric"));
+  const tb = el("tbody");
+
+  const secRow = txt => {
+    const tr = el("tr", {class:"head-in"});
+    tr.appendChild(el("th", {class:"rowh", scope:"row", text:txt}));
+    tr.appendChild(el("td", {colspan:"5", text:""}));
+    tb.appendChild(tr);
+  };
+  const outRow = (label, prefix, emph) => {
+    const tr = el("tr", emph ? {class:"emph"} : null);
+    tr.appendChild(el("th", {class:"rowh", scope:"row", text:label}));
+    for (let i = 0; i < 5; i++) tr.appendChild(el("td", {class:"n", id:prefix + i, text:"—"}));
+    tb.appendChild(tr);
+  };
+  const inputRow = (label, field, step) => {
+    const tr = el("tr");
+    tr.appendChild(el("th", {class:"rowh", scope:"row", text:label}));
+    const td = el("td");
+    td.appendChild(numInput(d[field], step, v => { d[field] = v; }, label));
+    tr.appendChild(td);
+    tr.appendChild(el("td", {class:"n", colspan:"4",
+      html:'<span style="color:var(--ink-3);font-size:12px;text-align:left;display:block">Held flat across all five years.</span>'}));
+    tb.appendChild(tr);
+  };
+
+  secRow("P/E band");
+  inputRow("Target P/E — low", "peLow", "0.5");
+  inputRow("Target P/E — high", "peHigh", "0.5");
+  outRow("Price at low P/E", "vlo");
+  outRow("Price at high P/E", "vhi");
+  outRow("Price at midpoint P/E", "vmid", true);
+  outRow("Market cap at midpoint ($B)", "vcap");
+  outRow("Upside vs your cost", "vups");
+  outRow("IRR from your entry", "virr");
+
+  secRow("EV / EBITDA cross-check");
+  inputRow("Target EV/EBITDA", "evMult", "0.5");
+  inputRow("Net cash ($B)", "netCash", "1");
+  outRow("Implied price per share", "vev", true);
+  outRow("Upside vs your cost", "vevu");
+
+  t.appendChild(tb);
+}
+
+function buildWatch(k, d){
+  const g = $("#watchGrid");
+  g.innerHTML = "";
+  d.watch.forEach((w, i) => {
+    const id = `${k}:${i}`;
+    const card = el("div", {class:"card wc"});
+    const top = el("div", {class:"top"});
+    const cb = el("input", {type:"checkbox", id:"cb" + i, "aria-label":"Mark checked: " + w.h});
+    cb.checked = !!store.checks[id];
+    if (cb.checked) card.classList.add("done");
+    cb.addEventListener("change", () => {
+      store.checks[id] = cb.checked;
+      card.classList.toggle("done", cb.checked);
+      save();
+    });
+    top.appendChild(cb);
+    top.appendChild(el("h3", {text:w.h}));
+    card.appendChild(top);
+    card.appendChild(el("span", {class:"metric", text:w.m}));
+
+    const b1 = el("div", {class:"blk"});
+    b1.appendChild(el("span", {class:"lbl", text:"The benchmark"}));
+    b1.appendChild(el("p", {text:w.b}));
+    card.appendChild(b1);
+
+    const b2 = el("div", {class:"blk"});
+    b2.appendChild(el("span", {class:"lbl hit", text:"What to check"}));
+    b2.appendChild(el("p", {text:w.c}));
+    card.appendChild(b2);
+    g.appendChild(card);
+  });
+
+  $("#watchNote").innerHTML = d.sourced
+    ? "<strong>Source note.</strong> These five benchmarks come from your own reading of the Q2 CY2026 release and management commentary. Re-anchor them each quarter — a benchmark from two quarters ago is no longer a test."
+    : `<strong>Source note.</strong> The ${d.name} benchmarks are structural — they name the disclosure to read, not a figure management has guided to. Replace each one with the actual guided number when the release lands, then judge the quarter against that.`;
+}
+
+/* ===================== refresh (outputs only) ===================== */
+function refresh(){
+  const d = model(store.active), c = compute(d);
+
+  $("#oInvested").textContent = money(c.invested, 2);
+
+  const base = c.scen.base;
+  $("#hTarget").textContent = money(base.target, 2);
+  $("#hTargetSub").textContent = `${nf(d.scen.base.pe,1)}x on ${money(base.eps,2)} EPS`;
+  $("#hValue").textContent = money(base.value, 0);
+  $("#hValueSub").textContent = `${nf(d.shares,0)} shares @ ${money(d.cost,2)}`;
+  const hp = $("#hProfit");
+  hp.textContent = sgnMoney(base.profit, 0);
+  hp.className = "v " + cls(base.profit);
+  $("#hProfitSub").textContent = sgnPct(base.roi) + " on cost";
+  const hc = $("#hCagr");
+  hc.textContent = sgnPct(base.cagr);
+  hc.className = "v " + cls(base.cagr);
+  $("#hCagrSub").textContent = "base case, 2026 → 2030";
+
+  for (let i = 0; i < 5; i++){
+    $("#p0" + i).textContent = bil(c.rev[i]);
+    $("#p1" + i).textContent = bil(c.ni[i]);
+    $("#p2" + i).textContent = bil(c.eb[i]);
+    $("#p3" + i).textContent = money(c.eps[i], 2);
+    $("#p4" + i).textContent = mult(c.impliedPE[i]);
+
+    $("#vlo" + i).textContent = money(c.priceLow[i], 2);
+    $("#vhi" + i).textContent = money(c.priceHigh[i], 2);
+    $("#vmid" + i).textContent = money(c.priceMid[i], 2);
+    $("#vcap" + i).textContent = bil(c.ni[i] * c.peMid);
+    const u = $("#vups" + i);
+    u.textContent = sgnPct(c.upside[i]); u.className = "n " + cls(c.upside[i]);
+    const r = $("#virr" + i);
+    r.textContent = sgnPct(c.irr[i]); r.className = "n " + cls(c.irr[i]);
+    $("#vev" + i).textContent = money(c.evPrice[i], 2);
+    const eu = $("#vevu" + i);
+    eu.textContent = sgnPct(c.evUpside[i]); eu.className = "n " + cls(c.evUpside[i]);
+  }
+
+  ["bear","base","bull"].forEach(kk => {
+    const s = c.scen[kk];
+    $(`#s_${kk}_eps`).textContent = money(s.eps, 2);
+    $(`#s_${kk}_tgt`).textContent = money(s.target, 2);
+    $(`#s_${kk}_val`).textContent = money(s.value, 0);
+    const p = $(`#s_${kk}_pl`); p.textContent = sgnMoney(s.profit, 0); p.className = "v " + cls(s.profit);
+    const ro = $(`#s_${kk}_roi`); ro.textContent = sgnPct(s.roi); ro.className = "v " + cls(s.roi);
+    const cg = $(`#s_${kk}_cagr`); cg.textContent = sgnPct(s.cagr); cg.className = "v " + cls(s.cagr);
+  });
+
+  $("#valNote").innerHTML =
+    `<strong>How to read it.</strong> IRR annualises the midpoint target over the years to that column — CY2026 is one year out, CY2030 five. ` +
+    `The EV/EBITDA row values the whole business at ${nf(d.evMult,1)}x EBITDA and adds back ${bil(d.netCash)} of net cash before dividing by shares, ` +
+    `so it should land near the P/E midpoint. A wide gap between the two means one of the two multiples is doing the work, not the earnings.`;
+
+  drawBand(d, c);
+  drawPath(d, c);
+  save();
+}
+
+/* ===================== charts ===================== */
+const SVGNS = "http://www.w3.org/2000/svg";
+function s(tag, attrs){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function niceMax(v){
+  if (!isFinite(v) || v <= 0) return 10;
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const steps = [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10];
+  for (const st of steps) if (v <= st * mag) return st * mag;
+  return 10 * mag;
+}
+function bindTip(node, tip, wrap, html){
+  node.addEventListener("pointerenter", ev => {
+    tip.innerHTML = html;
+    tip.style.opacity = "1";
+    const r = wrap.getBoundingClientRect();
+    tip.style.left = (ev.clientX - r.left) + "px";
+    tip.style.top = (ev.clientY - r.top) + "px";
+  });
+  node.addEventListener("pointermove", ev => {
+    const r = wrap.getBoundingClientRect();
+    tip.style.left = (ev.clientX - r.left) + "px";
+    tip.style.top = (ev.clientY - r.top) + "px";
+  });
+  node.addEventListener("pointerleave", () => { tip.style.opacity = "0"; });
+}
+
+function drawBand(d, c){
+  const svg = $("#bandChart"), tip = $("#tipBand"), wrap = svg.parentNode;
+  svg.innerHTML = "";
+  const W = 720, H = 200, L = 62, R = 96, T = 14, B = 30;
+  const rows = [
+    {k:"bear", col:"var(--chart-bear)"},
+    {k:"base", col:"var(--chart-base)"},
+    {k:"bull", col:"var(--chart-bull)"}
+  ];
+  const maxV = niceMax(Math.max(d.cost, ...rows.map(r => c.scen[r.k].target)) * 1.02);
+  const x = v => L + (v / maxV) * (W - L - R);
+  const bandH = (H - T - B) / rows.length;
+  const barH = 30;
+
+  // grid + axis
+  for (let i = 0; i <= 4; i++){
+    const v = maxV * i / 4;
+    svg.appendChild(s("line", {x1:x(v), x2:x(v), y1:T, y2:H - B, class:"gridline"}));
+    const t = s("text", {x:x(v), y:H - B + 16, class:"axis-t", "text-anchor":"middle"});
+    t.textContent = "$" + Math.round(v).toLocaleString("en-US");
+    svg.appendChild(t);
+  }
+
+  rows.forEach((r, i) => {
+    const sc = c.scen[r.k];
+    const y = T + i * bandH + (bandH - barH) / 2;
+    const w = Math.max(0, x(sc.target) - L);
+    const rect = s("rect", {x:L, y:y, width:w, height:barH, rx:4, fill:r.col});
+    svg.appendChild(rect);
+
+    const cat = s("text", {x:L - 10, y:y + barH / 2 + 4, class:"cat-t", "text-anchor":"end"});
+    cat.textContent = d.scen[r.k].label.toUpperCase();
+    svg.appendChild(cat);
+
+    const val = s("text", {x:L + w + 10, y:y + barH / 2 + 4, class:"val-t"});
+    val.textContent = money(sc.target, 2);
+    svg.appendChild(val);
+
+    const hit = s("rect", {x:L, y:T + i * bandH, width:W - L - R, height:bandH, fill:"transparent"});
+    svg.appendChild(hit);
+    bindTip(hit, tip, wrap,
+      `<div class="t">${d.scen[r.k].label} case · 2030</div>` +
+      `<div class="b">${money(sc.target, 2)}</div>` +
+      `<div class="s">${bil(d.scen[r.k].rev)} rev · ${nf(d.scen[r.k].margin,1)}% margin · ${nf(d.scen[r.k].pe,1)}x</div>` +
+      `<div class="s">Position ${money(sc.value, 0)} · ${sgnPct(sc.roi)}</div>`);
+  });
+
+  // cost basis reference
+  if (d.cost > 0 && d.cost <= maxV){
+    svg.appendChild(s("line", {x1:x(d.cost), x2:x(d.cost), y1:T - 6, y2:H - B + 2,
+      stroke:"var(--ink-3)", "stroke-width":"2", "stroke-dasharray":"5 4"}));
+    const t = s("text", {x:x(d.cost), y:T - 11, class:"axis-t", "text-anchor":"middle", fill:"var(--ink-2)"});
+    t.textContent = "cost " + money(d.cost, 2);
+    svg.appendChild(t);
+  }
+}
+
+function drawPath(d, c){
+  const svg = $("#pathChart"), tip = $("#tipPath"), wrap = svg.parentNode;
+  svg.innerHTML = "";
+  const W = 720, H = 250, L = 62, R = 66, T = 22, B = 34;
+  const accent = `var(${d.cssvar})`;
+  const maxV = niceMax(Math.max(d.cost, ...c.priceMid, ...c.evPrice) * 1.06);
+  const x = i => L + i * (W - L - R) / 4;
+  const y = v => H - B - (v / maxV) * (H - B - T);
+
+  for (let i = 0; i <= 4; i++){
+    const v = maxV * i / 4;
+    svg.appendChild(s("line", {x1:L, x2:W - R, y1:y(v), y2:y(v), class:"gridline"}));
+    const t = s("text", {x:L - 10, y:y(v) + 4, class:"axis-t", "text-anchor":"end"});
+    t.textContent = "$" + Math.round(v).toLocaleString("en-US");
+    svg.appendChild(t);
+  }
+  YEARS.forEach((yr, i) => {
+    const t = s("text", {x:x(i), y:H - B + 18, class:"axis-t", "text-anchor":"middle"});
+    t.textContent = "CY" + yr;
+    svg.appendChild(t);
+  });
+
+  // gradient fill
+  const defs = s("defs", {});
+  const lg = s("linearGradient", {id:"fadeFill", x1:"0", y1:"0", x2:"0", y2:"1"});
+  lg.appendChild(s("stop", {offset:"0%", "stop-color":accent, "stop-opacity":"0.20"}));
+  lg.appendChild(s("stop", {offset:"100%", "stop-color":accent, "stop-opacity":"0"}));
+  defs.appendChild(lg);
+  svg.appendChild(defs);
+
+  const pts = c.priceMid.map((v, i) => [x(i), y(v)]);
+  const area = `M ${pts[0][0]} ${H - B} ` + pts.map(p => `L ${p[0]} ${p[1]}`).join(" ") +
+               ` L ${pts[4][0]} ${H - B} Z`;
+  svg.appendChild(s("path", {d:area, fill:"url(#fadeFill)"}));
+
+  // EV/EBITDA cross-check, recessive dotted
+  const evLine = c.evPrice.map((v, i) => `${i ? "L" : "M"} ${x(i)} ${y(v)}`).join(" ");
+  svg.appendChild(s("path", {d:evLine, fill:"none", stroke:"var(--ink-3)",
+    "stroke-width":"1.5", "stroke-dasharray":"2 4", "stroke-linecap":"round"}));
+
+  const line = pts.map((p, i) => `${i ? "L" : "M"} ${p[0]} ${p[1]}`).join(" ");
+  svg.appendChild(s("path", {d:line, fill:"none", stroke:accent, "stroke-width":"2",
+    "stroke-linecap":"round", "stroke-linejoin":"round"}));
+
+  if (d.cost > 0 && d.cost <= maxV){
+    svg.appendChild(s("line", {x1:L, x2:W - R, y1:y(d.cost), y2:y(d.cost),
+      stroke:"var(--ink-3)", "stroke-width":"2", "stroke-dasharray":"5 4"}));
+    const t = s("text", {x:W - R + 8, y:y(d.cost) + 4, class:"axis-t", fill:"var(--ink-2)"});
+    t.textContent = "cost";
+    svg.appendChild(t);
+  }
+
+  pts.forEach((p, i) => {
+    const last = i === 4;
+    svg.appendChild(s("circle", {cx:p[0], cy:p[1], r:last ? 5.5 : 4, fill:accent,
+      stroke:"var(--surface)", "stroke-width":"2"}));
+  });
+  const endT = s("text", {x:pts[4][0] + 10, y:pts[4][1] - 10, class:"val-t"});
+  endT.textContent = money(c.priceMid[4], 0);
+  svg.appendChild(endT);
+
+  YEARS.forEach((yr, i) => {
+    const hw = (W - L - R) / 4;
+    const hit = s("rect", {x:x(i) - hw / 2, y:T, width:hw, height:H - B - T, fill:"transparent"});
+    svg.appendChild(hit);
+    bindTip(hit, tip, wrap,
+      `<div class="t">CY${yr} · ${nf(c.peMid,1)}x midpoint</div>` +
+      `<div class="b">${money(c.priceMid[i], 2)}</div>` +
+      `<div class="s">EPS ${money(c.eps[i], 2)} · band ${money(c.priceLow[i], 0)}–${money(c.priceHigh[i], 0)}</div>` +
+      `<div class="s">${sgnPct(c.upside[i])} vs cost · IRR ${sgnPct(c.irr[i])}</div>` +
+      `<div class="s">EV/EBITDA check ${money(c.evPrice[i], 2)}</div>`);
+  });
+
+  $("#pathLegend").innerHTML =
+    `<span><i style="background:${accent}"></i>${store.active} midpoint P/E target</span>` +
+    `<span><i class="dash" style="border-top-style:dotted"></i>EV/EBITDA cross-check</span>` +
+    `<span><i class="dash"></i>Your cost basis</span>`;
+}
+
+/* ===================== go ===================== */
+if (!DEFAULTS[store.active]) store.active = "APP";
+build();
+</script>
