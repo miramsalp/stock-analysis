@@ -23,16 +23,15 @@
   --chart-base: #3a6ea5;
   --chart-bull: #1b7f52;
   --shadow: 0 1px 2px rgb(18 22 28 / 6%), 0 8px 24px -12px rgb(18 22 28 / 18%);
-  --tick-app: #a6650a;
-  --tick-meta: #3a4fc4;
-  --tick-googl: #7a3fbf;
-  --tick-oscr: #0e7c86;
-  --tick-mrvl: #1b7a4f;
-  --tick-iren: #5e7a12;
-  --tick-hims: #b8356f;
-  --tick-sofi: #0f6bb5;
-  --tick-axon: #c25a18;
-  --tick-mstr: #a62b33;
+  /* Sector accents. Validated as a categorical palette in this declaration order
+     against the dataviz skill's validate_palette.js — see src/data/sectors.js. */
+  --sec-internet: #a6650a;
+  --sec-semis: #3355c9;
+  --sec-consumer: #1b7a4f;
+  --sec-software: #7a3fbf;
+  --sec-health: #b8356f;
+  --sec-finance: #0086a0;
+  --sec-infra: #b02a38;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -52,16 +51,13 @@
     --chart-base: #6494d6;
     --chart-bull: #2fa36e;
     --shadow: 0 1px 0 rgb(255 255 255 / 2%), 0 12px 32px -16px rgb(0 0 0 / 70%);
-    --tick-app: #f0a83a;
-    --tick-meta: #8390f0;
-    --tick-googl: #b183ee;
-    --tick-oscr: #3fbcc8;
-    --tick-mrvl: #45be86;
-    --tick-iren: #a3c740;
-    --tick-hims: #f27ba9;
-    --tick-sofi: #52a9e8;
-    --tick-axon: #f0904a;
-    --tick-mstr: #eb6b72;
+    --sec-internet: #c4841a;
+    --sec-semis: #5a7fe8;
+    --sec-consumer: #35a96f;
+    --sec-software: #a472e0;
+    --sec-health: #db5f8e;
+    --sec-finance: #1f9db0;
+    --sec-infra: #dc5057;
   }
 }
 
@@ -81,16 +77,13 @@
   --chart-base: #6494d6;
   --chart-bull: #2fa36e;
   --shadow: 0 1px 0 rgb(255 255 255 / 2%), 0 12px 32px -16px rgb(0 0 0 / 70%);
-  --tick-app: #f0a83a;
-  --tick-meta: #8390f0;
-  --tick-googl: #b183ee;
-  --tick-oscr: #3fbcc8;
-  --tick-mrvl: #45be86;
-  --tick-iren: #a3c740;
-  --tick-hims: #f27ba9;
-  --tick-sofi: #52a9e8;
-  --tick-axon: #f0904a;
-  --tick-mstr: #eb6b72;
+  --sec-internet: #c4841a;
+  --sec-semis: #5a7fe8;
+  --sec-consumer: #35a96f;
+  --sec-software: #a472e0;
+  --sec-health: #db5f8e;
+  --sec-finance: #1f9db0;
+  --sec-infra: #dc5057;
 }
 
 *,
@@ -128,20 +121,14 @@ h3 {
   top: 0;
   z-index: 40;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
   padding: 12px clamp(16px, 4vw, 40px);
   background: var(--surface);
   background: color-mix(in srgb, var(--surface) 92%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--hairline);
-}
-
-.topbar-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  align-items: center;
 }
 
 .brand {
@@ -173,76 +160,102 @@ h3 {
   color: var(--ink-3);
 }
 
-/* Ten tabs do not fit every viewport, so the strip scrolls rather than wrapping. */
-.tickers {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding: 4px;
-  background: var(--sunken);
-  border: 1px solid var(--hairline);
-  border-radius: 9px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--hairline-2) transparent;
-  overscroll-behavior-x: contain;
+/* ---------- ticker picker ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.tickers::-webkit-scrollbar {
-  height: 6px;
-}
-
-.tickers::-webkit-scrollbar-thumb {
-  background: var(--hairline-2);
-  border-radius: 3px;
-}
-
-.tk {
-  display: flex;
-  flex: none;
-  gap: 7px;
-  align-items: center;
-  padding: 7px 11px;
+.picker-select select {
+  max-width: 320px;
+  padding: 7px 10px;
   appearance: none;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--ink-3);
+  background: var(--sunken);
+  border: 1px solid var(--hairline-2);
+  border-radius: 7px;
+  color: var(--ink);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.picker-select select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px 18px;
+  padding: 16px 18px;
+}
+
+.picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.picker-label {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.picker-label i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--sec);
+}
+
+.picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.chip {
+  padding: 5px 9px;
+  appearance: none;
+  background: var(--sunken);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  color: var(--ink-2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   cursor: pointer;
   transition:
     color 0.14s ease,
+    border-color 0.14s ease,
     background 0.14s ease;
 }
 
-.tk .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-.tk[aria-selected='true'] {
-  background: var(--surface);
-  color: var(--ink);
-  box-shadow: var(--shadow);
-}
-
-.tk[aria-selected='true'] .dot {
-  background: var(--tk);
-  opacity: 1;
-}
-
-.tk:hover {
+.chip:hover {
+  border-color: var(--sec);
   color: var(--ink);
 }
 
-.tk:focus-visible,
-button:focus-visible,
-input:focus-visible {
+.chip[aria-pressed='true'] {
+  background: var(--sec);
+  border-color: var(--sec);
+  color: var(--surface);
+}
+
+.chip:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }

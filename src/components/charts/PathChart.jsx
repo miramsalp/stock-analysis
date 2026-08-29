@@ -1,4 +1,4 @@
-import { YEARS } from '../../data/tickers.js'
+import { sectorVar, YEARS } from '../../data/tickers.js'
 import useTip from '../../hooks/useTip.js'
 import { money, nf, sgnPct } from '../../lib/format.js'
 import { axisLabel, niceMax, QUARTER_TICKS } from './chartUtils.js'
@@ -19,7 +19,7 @@ const B = 34
 export default function PathChart({ d, c, ticker }) {
   const { ref, tip, track, clear } = useTip()
 
-  const accent = `var(${d.cssvar})`
+  const accent = sectorVar(d.sector)
   const maxV = niceMax(Math.max(d.cost, ...c.priceMid, ...c.evPrice) * 1.06)
   const x = (i) => L + (i * (W - L - R)) / 4
   const y = (v) => H - B - (v / maxV) * (H - B - T)

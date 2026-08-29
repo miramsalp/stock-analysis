@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { DATA_AS_OF, DEFAULTS, SCEN_KEYS, TICKERS } from './data/tickers.js'
+import {
+  DATA_AS_OF,
+  SCEN_KEYS,
+  SECTOR_LABEL,
+  sectorVar,
+  TICKERS,
+  TICKERS_BY_SECTOR,
+} from './data/tickers.js'
 import { bil, money, nf, sgnMoney, sgnPct, tone } from './lib/format.js'
 import { project } from './lib/model.js'
 import { loadStore, persist, resetTicker } from './lib/storage.js'
@@ -11,6 +18,7 @@ import ProjectionTable from './components/ProjectionTable.jsx'
 import ScenarioCard from './components/ScenarioCard.jsx'
 import ValuationTable from './components/ValuationTable.jsx'
 import WatchCard from './components/WatchCard.jsx'
+import { TickerGrid, TickerSelect } from './components/TickerPicker.jsx'
 import { ORow, SectionHead, Stat } from './components/Primitives.jsx'
 import BandChart from './components/charts/BandChart.jsx'
 import PathChart from './components/charts/PathChart.jsx'
@@ -56,6 +64,11 @@ export default function App() {
     [edit],
   )
 
+  const selectTicker = useCallback(
+    (k) => setStore((prev) => ({ ...prev, active: k })),
+    [],
+  )
+
   const reset = () =>
     setStore((prev) => ({
       ...prev,
@@ -73,40 +86,39 @@ export default function App() {
   return (
     <>
       <header className="topbar">
-        <div className="topbar-row">
-          <div className="brand">
-            <span className="mark">▚▚</span>
-            <h1>Ad Stack 2030</h1>
-            <span className="sub">CY26–CY30 model</span>
-          </div>
-
-          <button type="button" className="ghost" onClick={reset}>
-            Reset {active}
-          </button>
+        <div className="brand">
+          <span className="mark">▚▚</span>
+          <h1>Ad Stack 2030</h1>
+          <span className="sub">CY26–CY30 model</span>
         </div>
 
-        <nav className="tickers" role="tablist" aria-label="Company">
-          {TICKERS.map((k) => (
-            <button
-              key={k}
-              type="button"
-              className="tk"
-              role="tab"
-              aria-selected={k === active}
-              title={DEFAULTS[k].name}
-              style={{ '--tk': `var(${DEFAULTS[k].cssvar})` }}
-              onClick={() => setStore((prev) => ({ ...prev, active: k }))}
-            >
-              <span className="dot" />
-              {k}
-            </button>
-          ))}
-        </nav>
+        <TickerSelect active={active} onSelect={selectTicker} />
+
+        <button type="button" className="ghost" onClick={reset}>
+          Reset {active}
+        </button>
       </header>
 
       <main>
         <section>
-          <SectionHead eyebrow="01 / Position" title={`Your ${d.name} holding`}>
+          <SectionHead
+            eyebrow="00 / Coverage"
+            title={`${TICKERS.length} companies, ${TICKERS_BY_SECTOR.length} sectors`}
+          >
+            Pick one to model. Grouped by sector so neighbours are comparable — AVGO next
+            to MRVL, LLY next to HIMS, UNH next to OSCR.
+          </SectionHead>
+          <div className="card">
+            <TickerGrid active={active} onSelect={selectTicker} />
+          </div>
+        </section>
+
+        <section>
+          <SectionHead
+            eyebrow="01 / Position"
+            title={`Your ${d.name} holding`}
+            tag={SECTOR_LABEL[d.sector]}
+          >
             Everything below is priced off these two numbers. Edit either and the whole model
             re-runs. Cost defaults to the market price on {DATA_AS_OF} — replace it with what you
             actually paid.
@@ -262,7 +274,7 @@ export default function App() {
               <PathChart d={d} c={c} ticker={active} />
               <div className="chart-legend">
                 <span>
-                  <i style={{ background: `var(${d.cssvar})` }} />
+                  <i style={{ background: sectorVar(d.sector) }} />
                   {active} midpoint P/E target
                 </span>
                 <span>

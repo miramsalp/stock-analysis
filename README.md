@@ -1,8 +1,22 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for ten names: **APP**, **META**, **GOOGL**, **OSCR**, **MRVL**,
-**IREN**, **HIMS**, **SOFI**, **AXON** and **MSTR**. Enter your shares and average cost, edit the
-drivers, and every projection, scenario, multiple and IRR on the page re-runs.
+A CY2026–CY2030 equity model for 26 companies across 7 sectors. Enter your shares and average
+cost, edit the drivers, and every projection, scenario, multiple and IRR on the page re-runs.
+
+| Sector | Tickers |
+| --- | --- |
+| Internet & Ads | APP · META · GOOGL · NFLX |
+| Semiconductors | MRVL · NVDA · TSM · AVGO |
+| Consumer & Commerce | AMZN · AAPL · SHOP · COST |
+| Software & Security | AXON · MSFT · CRM · NOW · CRWD |
+| Healthcare | OSCR · HIMS · LLY · UNH |
+| Financials | SOFI · V |
+| Power & Digital Assets | IREN · MSTR · CEG |
+
+Nothing in this list is a recommendation. The coverage names exist so each holding has a
+comparison sitting next to it — AVGO against MRVL for custom silicon, LLY against HIMS on the
+same GLP-1 question, UNH against OSCR for what mature managed-care margin actually looks like,
+NOW against AXON for what a ~90x multiple demands, CEG against IREN on who owns the power.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
@@ -113,16 +127,22 @@ Nothing here is investment advice.
 
 ```
 src/
-  data/tickers.js          per-company defaults, scenarios and watch items
+  data/meta.js             years, scenario keys, DATA_AS_OF
+  data/sectors.js          the 7 sector groups and their render order
+  data/tracked.js          the 10 names this was built around
+  data/watchlist.js        the 16 coverage names
+  data/tickers.js          merges both, groups by sector
   lib/model.js             the five-year projection
   lib/format.js            number formatting
   lib/storage.js           localStorage load/persist (numbers only)
   hooks/useTip.js          shared chart tooltip plumbing
-  components/              tables, cards, inputs
+  components/              tables, cards, inputs, ticker picker
   components/charts/       hand-rolled SVG band and path charts
   App.jsx                  page shell and state
   index.css                design tokens and all component styles
 ```
+
+`tracked.js` and `watchlist.js` have identical shape — the split is editorial, not structural.
 
 Only numeric fields are persisted. Copy, scenario theses and watch items always come from
 `src/data/tickers.js`, so editing that file updates every saved model instead of leaving stale
@@ -130,9 +150,25 @@ wording in someone's browser.
 
 ## Adding a company
 
-Add an entry to `DEFAULTS` in `src/data/tickers.js` with the same shape as the existing ten, then
-add a `--tick-<key>` colour to `src/index.css` (both the light block and the two dark blocks). The
-tab strip, tables, charts and watch grid all read from that object — nothing else needs touching.
+Add an entry to `WATCHLIST` in `src/data/watchlist.js` with the same shape as the others, giving
+it a `sector` key that already exists. The picker, tables, charts and watch grid all read from
+that object — nothing else needs touching.
 
-An optional `caveat` string on a ticker renders as a warning note above the summary stats. Use it
-when the earnings-multiple frame does not actually fit the company, as with MSTR.
+Adding a *new sector* means adding it to `SECTORS` in `src/data/sectors.js` and a matching
+`--sec-<key>` colour to all three theme blocks in `src/index.css`. The seven accent colours were
+validated as a categorical palette **in that declaration order** — adjacent-pair colour-vision
+separation passes in both light and dark. If you reorder or add, re-run the validator from the
+dataviz skill:
+
+```bash
+node scripts/validate_palette.js "#a6650a,#3355c9,#1b7a4f,#7a3fbf,#b8356f,#0086a0,#b02a38" --mode light
+node scripts/validate_palette.js "#c4841a,#5a7fe8,#35a96f,#a472e0,#db5f8e,#1f9db0,#dc5057" --mode dark
+```
+
+Colour never carries identity alone here — every chip is labelled with its ticker and every group
+with its sector name.
+
+An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
+earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
+large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
+growth rate — decides the outcome. Sixteen of the 26 carry one.
