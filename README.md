@@ -48,24 +48,64 @@ multiple, so the three cases can disagree about more than one variable at a time
 
 ## Where the numbers come from
 
-**APP** ships with the owner's own figures and the five Q2 CY2026 watch items behind them.
+All reported figures, share counts and prices were pulled on **28–29 August 2026** from
+[stockanalysis.com](https://stockanalysis.com) (which sources S&P Global consensus), with MSTR's
+bitcoin holdings from company 8-K filings. `DATA_AS_OF` in `src/data/tickers.js` carries the date,
+and the page footer shows it. **This is a snapshot, not a feed** — re-pull it when it matters.
 
-**Every other ticker** ships with modelled defaults — reasonable, but not company guidance, and
-the `shares` / `cost` values are placeholders to overwrite with your real position. Their watch
-items are deliberately structural: they name the disclosure to read rather than a number
-management has committed to. Each is flagged in the page with a source note. Replace them with
-real guided figures as releases land.
+Each ticker was built the same way:
+
+| Field | How it was set |
+| --- | --- |
+| `prevRev` | Last reported full fiscal year revenue |
+| `growth[0]` | Set so CY2026 lands on the **analyst consensus revenue estimate** |
+| `growth[1..4]` | A deceleration path — judgement, not consensus |
+| `niMargin[0]` | Set so year one lands near the **consensus EPS** |
+| `sharesOut` | Actual current diluted share count, then a dilution/buyback path |
+| `peLow` / `peHigh` | A band around where the stock actually trades |
+| `netCash` | Total cash less total debt (or market cap less enterprise value) |
+| `cost` | The market price on the reference date — a **placeholder** for your real cost basis |
+
+Only **APP** is `sourced: true`: its drivers and the five Q2 CY2026 watch items come from the
+owner's own reading of the release, and `cost` is a real entry at $319.46. Everything else has
+real reported history and real consensus behind year one, but the 2027–2030 path and the exit
+multiples are modelled assumptions.
+
+Three margins are deliberately set **below** the headline consensus, because consensus EPS for
+those names is non-GAAP while this model runs on GAAP: **MRVL** ($4.05 non-GAAP vs 16% GAAP
+margin here), **AXON** ($7.71 non-GAAP against a reported 4.5% GAAP margin), and **GOOGL**, whose
+FY2026 consensus EPS of $20.59 drops to $14.81 in FY2027 because 2026 carries a one-off gain.
+
+### Caveats
+
+An optional `caveat` string renders as an amber note above the summary stats, for tickers where
+the earnings-multiple frame does not cleanly fit. Five carry one:
+
+- **MRVL** — fiscal year ends in January, so columns are offset; trailing margin is flattered by a
+  divestiture gain.
+- **IREN** — fiscal year ends in June; lost $702.6M last year on $4.33B of capex, with trailing
+  EBITDA of just $34.7M. Everything past year one is a forecast about a business that does not
+  exist yet.
+- **SOFI** — a balance-sheet lender, so EV/EBITDA is close to meaningless; read the P/E ladder.
+- **AXON** — ~250x trailing earnings, so the entry multiple decides the outcome, not growth.
+- **MSTR** — see below.
 
 ### MSTR is a special case
 
-A multiple on software earnings does not value Strategy, so the P/E ladder for MSTR is noise —
-the model shows it, and the page says so in a caveat above the summary stats. What was done
-instead: `netCash` is set to the bitcoin treasury less convertible debt, which makes the
-**EV/EBITDA "Implied price per share" row read as approximate net asset value per share**.
-Compare the market price against that to see the premium you are paying. The diluted share count
-row is the other half of the story, because issuing stock above NAV is the strategy. The five
-watch items are about bitcoin per share, mNAV, issuance, debt maturities and the fair-value
-accounting swing — not about software revenue.
+A multiple on software earnings does not value Strategy, and reported net income is meaningless:
+the trailing twelve months show a **$31.4B loss** purely from bitcoin marks running through the
+income statement under fair-value rules. So the P/E ladder for MSTR is noise, and the page says so.
+
+What was done instead: `netCash` is set to the **bitcoin treasury less senior claims** — 840,447
+BTC (about 4% of all bitcoin) at a $75,385 average cost, worth roughly $66B, against roughly $22B
+of debt and preferreds. That makes the EV/EBITDA **"Implied price per share" row read as
+approximate net asset value per share**: about **$115** against a **$127.31** market price, an 11%
+premium.
+
+The share count row is the real story. It rises from 384M to 540M, so on a flat bitcoin price NAV
+per share falls to about $86 by 2030 even though the bitcoin pile does not shrink. The five watch
+items are about bitcoin per share, the NAV premium, average cost against spot, senior claims and
+the accounting swing — not software revenue.
 
 Nothing here is investment advice.
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { DEFAULTS, SCEN_KEYS, TICKERS } from './data/tickers.js'
+import { DATA_AS_OF, DEFAULTS, SCEN_KEYS, TICKERS } from './data/tickers.js'
 import { bil, money, nf, sgnMoney, sgnPct, tone } from './lib/format.js'
 import { project } from './lib/model.js'
 import { loadStore, persist, resetTicker } from './lib/storage.js'
@@ -108,7 +108,8 @@ export default function App() {
         <section>
           <SectionHead eyebrow="01 / Position" title={`Your ${d.name} holding`}>
             Everything below is priced off these two numbers. Edit either and the whole model
-            re-runs.
+            re-runs. Cost defaults to the market price on {DATA_AS_OF} — replace it with what you
+            actually paid.
           </SectionHead>
 
           {/* Sits above the summary stats on purpose: on a ticker the earnings frame
@@ -151,6 +152,11 @@ export default function App() {
               </div>
 
               <ORow label="Total invested" value={money(c.invested)} />
+              <ORow
+                label={`Market ${DATA_AS_OF.slice(0, 6)}`}
+                value={money(d.priceRef)}
+                toneClass={d.cost > 0 ? tone(d.priceRef - d.cost) : ''}
+              />
             </div>
 
             <div className="stats">
@@ -308,7 +314,7 @@ export default function App() {
 
       <footer>
         <span>Ad Stack 2030 · a personal model, not investment advice</span>
-        <span>Inputs save to this browser only</span>
+        <span>Reported figures and prices as of {DATA_AS_OF} · inputs save to this browser only</span>
       </footer>
     </>
   )

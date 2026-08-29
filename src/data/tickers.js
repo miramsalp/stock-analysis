@@ -2,6 +2,12 @@ export const YEARS = [2026, 2027, 2028, 2029, 2030]
 export const SCEN_KEYS = ['bear', 'base', 'bull']
 
 /**
+ * Reference date for every price, share count and reported figure below.
+ * Market data is a snapshot, not a feed — re-pull it when it matters.
+ */
+export const DATA_AS_OF = '29 August 2026'
+
+/**
  * One entry per company.
  *
  * The numeric fields are the editable model. The copy — `name`, each scenario's
@@ -9,15 +15,34 @@ export const SCEN_KEYS = ['bear', 'base', 'bull']
  * so editing this file updates every saved model instead of leaving stale wording
  * behind in someone's localStorage.
  *
- * APP's figures and watch items come from the owner's own reading of the Q2 CY2026
- * release. META and GOOGL ship with modelled defaults, flagged by `sourced: false`.
+ * HOW THESE WERE BUILT (all figures pulled 28–29 Aug 2026 from stockanalysis.com,
+ * which sources S&P Global; MSTR bitcoin holdings from company 8-K filings):
+ *
+ *   prevRev     last reported full fiscal year revenue
+ *   growth[0]   set so CY2026 lands on the analyst consensus revenue estimate
+ *   growth[1..] a deceleration path — this part is judgement, not consensus
+ *   niMargin[0] set so year one lands near the consensus EPS
+ *   sharesOut   actual current diluted share count, then a dilution/buyback path
+ *   peLow/High  a band around where the stock actually trades
+ *   netCash     total cash less total debt (or market cap less enterprise value)
+ *   cost        the market price on the reference date — a PLACEHOLDER for your
+ *               real cost basis, except APP which carries the owner's actual entry
+ *
+ * Only APP is `sourced: true`: its drivers and watch items come from the owner's own
+ * reading of the Q2 CY2026 release. Everything else has real reported history and real
+ * consensus behind year one, but the 2027–2030 path and the exit multiples are
+ * modelled assumptions, not guidance.
  */
 export const DEFAULTS = {
+  // FY2025 rev $5.481B · TTM $6.829B · TTM net margin 64.6% · 334.65M shares
+  // · price $317.76 · FY2026E rev $8.12B, EPS $16.56 · PT $525.58
+  // Left exactly as the owner supplied it — it lines up with consensus.
   APP: {
     name: 'AppLovin',
     cssvar: '--tick-app',
     shares: 32,
     cost: 319.46,
+    priceRef: 317.76,
     prevRev: 5.4795, // CY2025 base, set so CY2026 lands on $8.00B
     growth: [46, 35, 30, 25, 20],
     niMargin: [62, 63, 64, 65, 65],
@@ -26,7 +51,7 @@ export const DEFAULTS = {
     peLow: 20,
     peHigh: 35,
     evMult: 20,
-    netCash: 0,
+    netCash: -0.47,
     scen: {
       bear: {
         label: 'Bear',
@@ -85,62 +110,66 @@ export const DEFAULTS = {
     ],
   },
 
+  // FY2025 rev $200.97B, NI $60.46B (30.1%) · TTM rev $228.25B, NI $68.10B (29.8%)
+  // · TTM EBITDA $109.66B (48.0%) · 2.55B shares · net debt $22.1B · price $578.02
+  // · FY2026E rev $254.2B, EPS $31.16 · trailing P/E 21.8 · PT $754.77
   META: {
     name: 'Meta Platforms',
     cssvar: '--tick-meta',
     shares: 5,
-    cost: 655.0,
-    prevRev: 194.0,
-    growth: [16, 14, 12, 11, 10],
-    niMargin: [34, 35, 36, 36.5, 37],
-    ebMargin: [52, 53, 53, 54, 54],
-    sharesOut: [2.53, 2.5, 2.47, 2.44, 2.41],
-    peLow: 20,
-    peHigh: 30,
-    evMult: 13,
-    netCash: 20,
+    cost: 578.02,
+    priceRef: 578.02,
+    prevRev: 200.966,
+    growth: [26.5, 18, 15, 13, 11],
+    niMargin: [31.3, 31.5, 32, 32.5, 33],
+    ebMargin: [48, 48.5, 49, 49.5, 50],
+    sharesOut: [2.55, 2.51, 2.47, 2.43, 2.39],
+    peLow: 18,
+    peHigh: 28,
+    evMult: 14,
+    netCash: -22.06,
     scen: {
       bear: {
         label: 'Bear',
         thesis: 'AI capex outruns ad growth; Reality Labs losses keep eating the margin.',
-        rev: 300,
-        margin: 30,
-        pe: 16,
+        rev: 380,
+        margin: 26,
+        pe: 15,
       },
       base: {
         label: 'Base',
         thesis: 'Ad ranking gains hold pricing while capex depreciation is absorbed.',
-        rev: 350.8,
-        margin: 37,
-        pe: 24,
+        rev: 432.7,
+        margin: 33,
+        pe: 23,
       },
       bull: {
         label: 'Bull',
         thesis: 'Business messaging and agentic ads open a genuine second revenue line.',
-        rev: 400,
-        margin: 40,
-        pe: 30,
+        rev: 490,
+        margin: 36,
+        pe: 28,
       },
     },
     sourced: false,
     watch: [
       {
         h: 'Impressions versus price per ad',
-        m: 'The growth split, not just the headline',
-        b: 'Revenue growth is the product of ad impressions delivered and average price per ad — only one of those can compound forever.',
+        m: 'TTM revenue growth +27.7%',
+        b: 'Revenue growth is the product of ad impressions delivered and average price per ad — only one of those can compound forever, and growth is currently running well above the long-run path this model assumes.',
         c: 'Check whether price per ad is carrying growth as impression growth decelerates. Pricing-led growth is the healthier signal; volume-led growth on flat pricing is a warning.',
       },
       {
         h: 'Reality Labs operating loss',
-        m: 'Direction of the annual loss',
-        b: 'Reality Labs is the largest deliberate drag between operating income and the net margin this model assumes.',
-        c: 'Confirm the loss is flattening rather than widening, and look for commentary on capping or re-scoping the spend. The margin ramp to 37% depends on it.',
+        m: 'FY2025 net margin 30.1%, down from 37.9% in 2024',
+        b: 'The margin already fell nearly eight points in a year. Reality Labs plus AI infrastructure is where it went.',
+        c: 'Confirm the segment loss is flattening rather than widening. This model needs the margin to climb back toward 33% by 2030, and it has been moving the other way.',
       },
       {
         h: 'Capex guidance and the depreciation tail',
-        m: 'Full-year capex, then next-year D&A',
-        b: 'AI infrastructure spend hits the income statement later as depreciation, one to two years after the cash goes out.',
-        c: "Take the full-year capex guide and ask what it does to next year's D&A line. Rising capex against an unchanged margin guide is the assumption most likely to break first.",
+        m: 'Net debt $22.1B, up from a net cash position',
+        b: 'AI infrastructure spend hits the income statement later as depreciation, and Meta has moved to a net debt position funding it.',
+        c: "Take the full-year capex guide and ask what it does to next year's D&A line. Rising capex with an unchanged margin guide is the assumption most likely to break first.",
       },
       {
         h: 'AI ad ranking and automated campaigns',
@@ -157,39 +186,45 @@ export const DEFAULTS = {
     ],
   },
 
+  // FY2025 rev $402.8B, NI $132.2B (32.8%) · TTM rev $445.9B · TTM EBITDA $173.2B
+  // · 12.23B shares · net cash $121.7B · price $346.59 · FY2026E rev $497.9B
+  // · FY2026E EPS $20.59 but FY2027E EPS $14.81 — 2026 carries a one-off gain
   GOOGL: {
     name: 'Alphabet',
     cssvar: '--tick-googl',
     shares: 20,
-    cost: 252.0,
-    prevRev: 390.4,
-    growth: [14, 13, 12, 11, 10],
-    niMargin: [30, 31, 32, 32.5, 33],
-    ebMargin: [40, 41, 42, 42, 43],
-    sharesOut: [11.9, 11.7, 11.5, 11.3, 11.1],
-    peLow: 20,
+    cost: 346.59,
+    priceRef: 346.59,
+    prevRev: 402.8,
+    growth: [23.6, 16, 14, 12, 11],
+    // Deliberately normalised. Consensus FY2026 EPS of $20.59 falls to $14.81 in
+    // FY2027, so the 2026 GAAP number is not a margin this business actually runs at.
+    niMargin: [31, 31, 32, 32.5, 33],
+    ebMargin: [39, 40, 41, 41.5, 42],
+    sharesOut: [12.23, 12.05, 11.87, 11.7, 11.53],
+    peLow: 18,
     peHigh: 28,
-    evMult: 12,
-    netCash: 80,
+    evMult: 20,
+    netCash: 121.68,
     scen: {
       bear: {
         label: 'Bear',
         thesis: 'AI answers cannibalise search clicks; an antitrust remedy bites.',
-        rev: 580,
-        margin: 26,
+        rev: 700,
+        margin: 27,
         pe: 15,
       },
       base: {
         label: 'Base',
         thesis: 'Search monetises at parity while Cloud compounds into real margin.',
-        rev: 687.7,
+        rev: 818.5,
         margin: 33,
-        pe: 24,
+        pe: 23,
       },
       bull: {
         label: 'Bull',
         thesis: 'Gemini distribution plus Cloud turns Alphabet into the default AI utility.',
-        rev: 780,
+        rev: 900,
         margin: 36,
         pe: 28,
       },
@@ -198,9 +233,15 @@ export const DEFAULTS = {
     watch: [
       {
         h: 'Search growth against AI answers',
-        m: 'Search revenue growth staying double-digit',
+        m: 'FY2026E revenue $497.9B, +23.6%',
         b: 'The whole model rests on AI-generated answers monetising at least as well as the blue links they replace.',
-        c: 'Check that search revenue growth stays in double digits and that management still claims monetisation parity for AI surfaces. A single quarter of high-single-digit search growth invalidates the base case.',
+        c: 'Check search revenue growth stays in double digits and that management still claims monetisation parity for AI surfaces. A single quarter of high-single-digit search growth invalidates the base case.',
+      },
+      {
+        h: 'The 2026 earnings distortion',
+        m: 'FY2026E EPS $20.59 → FY2027E EPS $14.81',
+        b: 'Consensus EPS falls 28% next year. That is a one-off gain washing out of the 2026 GAAP number, not the business shrinking.',
+        c: 'Read 2026 GAAP net income with the one-off stripped out before comparing it with the 31% margin used here. Do not anchor an exit multiple on the inflated figure.',
       },
       {
         h: 'Cloud growth and operating margin',
@@ -210,9 +251,9 @@ export const DEFAULTS = {
       },
       {
         h: 'Capex against depreciation',
-        m: 'Full-year capex, then next-year D&A',
+        m: 'Net cash $121.7B — the buffer funding it',
         b: 'Data centre spend converts into a depreciation charge that lands on the income statement a year or two later.',
-        c: 'Check whether the capex guide leaves room for the margin path this model assumes. This is the assumption most likely to be wrong first.',
+        c: 'Check whether the capex guide leaves room for the margin path this model assumes, and how fast the net cash pile is being drawn down to pay for it.',
       },
       {
         h: 'Antitrust remedies',
@@ -220,65 +261,64 @@ export const DEFAULTS = {
         b: 'Remedies touching ad-tech structure or default search placement affect both revenue and the multiple the market will pay.',
         c: 'Track what is actually ordered and its compliance date, then decide whether the exit multiple in the bear case is still generous enough.',
       },
-      {
-        h: 'YouTube and subscription ARPU',
-        m: 'Subscriptions as a share of the mix',
-        b: 'Subscriptions are the least cyclical revenue line and the strongest argument for a higher multiple.',
-        c: 'Watch subscription revenue as a share of the total and the direction of YouTube ad pricing. A rising non-advertising mix is what justifies the top of the P/E band.',
-      },
     ],
   },
 
+  // FY2025 rev $11.70B with a NET LOSS of $443M · TTM rev $15.32B, NI $551M (3.6%)
+  // · TTM EBITDA $658M · 308.33M shares · net cash ~$3.59B (mkt cap $9.39B less EV
+  // $5.80B) · price $30.47 · FY2026E rev $18.74B (+60.2%), EPS $1.75 · FY2027E EPS
+  // $1.88 · trailing P/E 16.0 · PT $30.40 (essentially at the money)
   OSCR: {
     name: 'Oscar Health',
     cssvar: '--tick-oscr',
     shares: 100,
-    cost: 18.0,
-    prevRev: 12.0,
-    growth: [18, 15, 13, 11, 10],
-    niMargin: [1.5, 2.5, 3.2, 3.8, 4.2],
-    ebMargin: [3, 4, 5, 5.5, 6],
-    sharesOut: [0.26, 0.265, 0.27, 0.275, 0.28],
-    peLow: 12,
-    peHigh: 22,
+    cost: 30.47,
+    priceRef: 30.47,
+    prevRev: 11.701,
+    growth: [60.2, 18, 14, 11, 9],
+    niMargin: [2.9, 3.0, 3.3, 3.6, 3.8],
+    ebMargin: [4.3, 4.5, 4.8, 5.0, 5.2],
+    sharesOut: [0.315, 0.322, 0.328, 0.334, 0.34],
+    peLow: 10,
+    peHigh: 20,
     evMult: 9,
-    netCash: 1.5,
+    netCash: 3.59,
     scen: {
       bear: {
         label: 'Bear',
-        thesis: 'Enhanced subsidies lapse, membership shrinks and the loss ratio stays high.',
-        rev: 19,
-        margin: 2,
-        pe: 10,
+        thesis: 'Subsidies lapse, membership shrinks and the loss ratio returns to 2025 levels.',
+        rev: 26,
+        margin: 1.5,
+        pe: 9,
       },
       base: {
         label: 'Base',
-        thesis: 'Membership compounds while the medical loss ratio grinds down to target.',
-        rev: 22.47,
-        margin: 4.2,
-        pe: 16,
+        thesis: 'Membership growth slows to normal while underwriting margin holds near 4%.',
+        rev: 30.5,
+        margin: 3.8,
+        pe: 15,
       },
       bull: {
         label: 'Bull',
-        thesis: 'Underwriting discipline holds and the +Oscar platform earns a software multiple.',
-        rev: 26,
-        margin: 6,
-        pe: 22,
+        thesis: 'Underwriting discipline sticks and the +Oscar platform earns a software multiple.',
+        rev: 34,
+        margin: 5.5,
+        pe: 20,
       },
     },
     sourced: false,
     watch: [
       {
         h: 'Medical loss ratio',
-        m: 'Full-year MLR guidance',
-        b: 'MLR is the share of premium paid out in claims. It is the single number that decides whether the margin in this model is real.',
-        c: 'Check MLR against the guided range. Roughly every point of MLR is a point of net margin, so a two-point miss erases the base case outright.',
+        m: 'FY2025 lost $443M; TTM margin only 3.6%',
+        b: 'MLR is the share of premium paid out in claims. Oscar lost money as recently as full-year 2025 and only turned a 3.6% margin over the trailing year — this is a thin-margin business by construction.',
+        c: 'Check MLR against the guided range. Roughly every point of MLR is a point of net margin, so a two-point miss erases the base case and puts the company back in a loss.',
       },
       {
-        h: 'Marketplace membership and the subsidy question',
-        m: 'Effectuated membership after open enrollment',
-        b: 'Almost all of the revenue is ACA marketplace premium, and enrollment is highly sensitive to how generous the subsidies are.',
-        c: 'Check effectuated membership after open enrollment, and what happened to enhanced subsidies. Membership is the volume half of the growth rate.',
+        h: 'Membership and the subsidy question',
+        m: 'FY2026E revenue $18.74B, +60%',
+        b: 'That 60% growth rate is a membership surge, not pricing. Almost all revenue is ACA marketplace premium, and enrollment is highly sensitive to how generous the subsidies are.',
+        c: 'Check effectuated membership after open enrollment and what happened to enhanced subsidies. Growth decelerating from 60% to the high teens is the single biggest assumption in this model.',
       },
       {
         h: 'Operating leverage on SG&A',
@@ -289,62 +329,77 @@ export const DEFAULTS = {
       {
         h: 'Risk adjustment true-up',
         m: 'The annual CMS transfer',
-        b: 'The risk-adjustment transfer settles once a year and can move by hundreds of millions against a thin margin.',
-        c: 'Check the direction and size of the accrual. A large unfavourable true-up can wipe out a full year of modelled net income on its own.',
+        b: 'The risk-adjustment transfer settles once a year and can move by hundreds of millions against a margin this thin.',
+        c: 'Check the direction and size of the accrual. A large unfavourable true-up can wipe out a full year of modelled net income on its own — that is roughly what happened in 2025.',
       },
       {
         h: '+Oscar platform revenue',
-        m: 'External platform contracts, disclosed separately',
-        b: 'Selling the technology stack to other payers is the only part of the business that would justify a software multiple.',
+        m: 'Analyst price target $30.40, at the money',
+        b: 'The market currently prices Oscar as an insurer with no premium. Selling the technology stack to other payers is the only part that would justify a software multiple.',
         c: 'Watch for platform revenue becoming a disclosed line with named contracts. Without it, the exit P/E belongs at the insurer end of the band.',
       },
     ],
   },
 
+  // FY2026 (Jan-end) rev $8.195B, NI $2.67B · TTM (Aug'26) rev $9.45B, NI $2.64B
+  // (27.9%, flattered by a divestiture gain) · TTM EBITDA $2.85B · 876.93M shares
+  // · net debt $1.03B · price $216.62 · trailing P/E 72.8 · next-FY consensus rev
+  // $11.56B (+41.1%), EPS $4.05 non-GAAP · PT $278.89
   MRVL: {
     name: 'Marvell Technology',
     cssvar: '--tick-mrvl',
     shares: 40,
-    cost: 95.0,
-    prevRev: 8.0,
-    growth: [28, 22, 18, 15, 12],
-    niMargin: [14, 18, 21, 23, 24],
-    ebMargin: [33, 36, 38, 39, 40],
-    sharesOut: [0.87, 0.86, 0.85, 0.84, 0.83],
+    cost: 216.62,
+    priceRef: 216.62,
+    prevRev: 8.195,
+    growth: [41.1, 25, 20, 16, 13],
+    // GAAP, deliberately below the non-GAAP consensus: Marvell carries heavy
+    // acquisition amortisation and stock compensation between the two.
+    niMargin: [16, 20, 23, 25, 26],
+    ebMargin: [31, 34, 36, 37, 38],
+    sharesOut: [0.877, 0.87, 0.862, 0.855, 0.848],
     peLow: 25,
-    peHigh: 40,
-    evMult: 22,
-    netCash: -3,
+    peHigh: 45,
+    evMult: 25,
+    netCash: -1.03,
+    caveat:
+      "Marvell's fiscal year ends in late January, so its reported years run roughly one month ahead of the calendar columns here. The CY2026 column is built from the next-fiscal-year consensus of $11.56B revenue. Note also that trailing net margin is flattered by a divestiture gain, and that consensus EPS of $4.05 is non-GAAP — the margins below are GAAP, which is why they look lower than the headline.",
     scen: {
       bear: {
         label: 'Bear',
         thesis: 'A custom silicon socket is lost and the non-data-centre portfolio stays cyclical.',
-        rev: 15,
-        margin: 16,
-        pe: 20,
+        rev: 17,
+        margin: 18,
+        pe: 22,
       },
       base: {
         label: 'Base',
         thesis: 'Data centre becomes most of the business and GAAP margin catches up with non-GAAP.',
-        rev: 18.99,
-        margin: 24,
-        pe: 32,
+        rev: 22.73,
+        margin: 26,
+        pe: 35,
       },
       bull: {
         label: 'Bull',
         thesis: 'Custom XPU and optics programmes ramp together at premium margin.',
-        rev: 24,
-        margin: 28,
-        pe: 40,
+        rev: 28,
+        margin: 30,
+        pe: 45,
       },
     },
     sourced: false,
     watch: [
       {
         h: 'Data centre share of revenue',
-        m: 'Data centre as a percentage of total',
-        b: 'The growth rates in this model are a data centre story. The rest of the portfolio — carrier, enterprise networking, automotive — is cyclical and roughly flat.',
+        m: 'Next-FY consensus revenue $11.56B, +41%',
+        b: 'A 41% consensus growth rate is a data centre story. The rest of the portfolio — carrier, enterprise networking, automotive — is cyclical and roughly flat.',
         c: 'Check data centre revenue as a share of total keeps rising. If total growth is being carried by a cyclical recovery instead, it will not compound.',
+      },
+      {
+        h: 'What you are paying for it',
+        m: 'Trailing P/E 72.8 at $216.62',
+        b: 'The stock already discounts several years of the growth in this model. The base case here returns very little because the entry multiple is high, not because the business is bad.',
+        c: 'Decide whether 25x–45x is the right 2030 band. That assumption moves the answer far more than any revenue line does.',
       },
       {
         h: 'Custom silicon programme ramps',
@@ -353,16 +408,10 @@ export const DEFAULTS = {
         c: 'Check start-of-production timing on named programmes, and listen for any hint of a socket lost at re-design. One lost programme is the bear case.',
       },
       {
-        h: 'Gross margin against custom mix',
-        m: 'Non-GAAP gross margin band',
-        b: 'Custom silicon carries lower gross margin than merchant optics and networking chips, so a good revenue mix can be a bad margin mix.',
-        c: 'Check gross margin holds inside the guided band as custom volume rises. Revenue growth bought with several points of gross margin does not reach the bottom line.',
-      },
-      {
         h: 'The GAAP-to-non-GAAP gap',
-        m: 'Stock comp plus acquisition amortisation',
-        b: 'This model uses GAAP net margin. Marvell has historically carried a large gap to non-GAAP from acquisition amortisation and stock compensation.',
-        c: 'Check the gap narrows as acquisition amortisation rolls off. If it does not, the 24% GAAP margin here is out of reach whatever the non-GAAP number says.',
+        m: 'Consensus EPS $4.05 is non-GAAP',
+        b: 'This model uses GAAP net margin. Marvell has historically carried a large gap to non-GAAP from acquisition amortisation and stock compensation, and posted GAAP losses as recently as FY2025.',
+        c: 'Check the gap narrows as acquisition amortisation rolls off. If it does not, the 26% GAAP margin here is out of reach whatever the non-GAAP number says.',
       },
       {
         h: 'Customer inventory behaviour',
@@ -373,40 +422,49 @@ export const DEFAULTS = {
     ],
   },
 
+  // FY2026 (Jun-end) rev $707M with a NET LOSS of $702.6M on $4.33B of capex
+  // · TTM EBITDA only $34.7M · 394.06M shares · cash $6.08B, debt $7.84B → net debt
+  // $1.76B · price $35.45 · next-FY consensus rev $2.87B (+306%), EPS -$1.00
+  // · PT $78.19
   IREN: {
     name: 'IREN',
     cssvar: '--tick-iren',
     shares: 100,
-    cost: 35.0,
-    prevRev: 0.9,
-    growth: [85, 60, 45, 30, 22],
-    niMargin: [18, 24, 28, 30, 30],
-    ebMargin: [45, 52, 56, 58, 58],
-    sharesOut: [0.3, 0.32, 0.33, 0.34, 0.35],
+    cost: 35.45,
+    priceRef: 35.45,
+    prevRev: 0.707,
+    growth: [305.9, 60, 40, 28, 20],
+    // Year one is a loss, matching the -$1.00 consensus EPS. Profitability here is a
+    // forecast about contracted AI compute, not something the company has yet shown.
+    niMargin: [-14, 8, 18, 24, 27],
+    ebMargin: [30, 42, 50, 54, 56],
+    sharesOut: [0.4, 0.42, 0.44, 0.455, 0.47],
     peLow: 15,
     peHigh: 35,
     evMult: 12,
-    netCash: -0.5,
+    netCash: -1.76,
+    caveat:
+      "IREN's fiscal year ends in June, so these calendar columns are approximate — the CY2026 column is built from the next-fiscal-year consensus of $2.87B. Two things to keep in front of you: the company lost $702.6M last year on $4.33B of capex, and trailing EBITDA was $34.7M, so every margin below year one is a forecast about a business that does not exist yet. The share count row is doing real work — this buildout has been funded partly with equity.",
     scen: {
       bear: {
         label: 'Bear',
         thesis: 'AI contracts stay small, bitcoin margin compresses and the buildout dilutes holders.',
-        rev: 3.5,
-        margin: 12,
+        rev: 5.5,
+        margin: 8,
         pe: 10,
       },
       base: {
         label: 'Base',
         thesis: 'Contracted AI compute becomes the majority of revenue at data-centre economics.',
-        rev: 6.13,
-        margin: 30,
+        rev: 9.87,
+        margin: 27,
         pe: 25,
       },
       bull: {
         label: 'Bull',
         thesis: 'Powered capacity is the scarce asset and IREN prices it like a hyperscaler landlord.',
-        rev: 9,
-        margin: 34,
+        rev: 14,
+        margin: 32,
         pe: 35,
       },
     },
@@ -414,9 +472,15 @@ export const DEFAULTS = {
     watch: [
       {
         h: 'Contracted AI compute versus mining',
-        m: 'Signed contract value and term',
-        b: 'A megawatt sold on a multi-year AI contract is worth a different multiple from a megawatt pointed at bitcoin.',
+        m: 'Next-FY consensus revenue $2.87B, +306%',
+        b: 'A megawatt sold on a multi-year AI contract is worth a different multiple from a megawatt pointed at bitcoin, and a 306% consensus growth rate assumes the contracts land.',
         c: 'Check signed contract value, counterparty and term length. The revenue mix shifting to contracted compute is the entire re-rating argument.',
+      },
+      {
+        h: 'The gap between revenue and profit',
+        m: 'Last FY: $707M revenue, -$702.6M net loss',
+        b: 'Revenue and losses were almost the same size last year. Depreciation on $4.33B of capex is what stands between growth and earnings.',
+        c: 'Check the depreciation line as capacity energises, and whether EBITDA — $34.7M trailing — actually scales with revenue. This is the assumption most likely to be wrong.',
       },
       {
         h: 'Energised capacity against schedule',
@@ -425,10 +489,10 @@ export const DEFAULTS = {
         c: 'Check MW actually energised against the schedule, plus grid interconnection dates. Slippage here moves every year of the model to the right.',
       },
       {
-        h: 'All-in power cost',
-        m: 'Cost per MWh',
-        b: 'Electricity is the dominant variable cost and the reason the modelled EBITDA margin is as high as it is.',
-        c: 'Check the all-in cost per MWh and how much is hedged or contracted. An unhedged power book turns a good margin into a volatile one.',
+        h: 'Funding and share count',
+        m: 'Net debt $1.76B; 394M shares and rising',
+        b: 'Building data centres is capital intensive, and the cheapest capital for a company like this has often been its own equity.',
+        c: 'Check share count against the dilution path in the drivers table. Capacity funded by dilution faster than revenue grows does not reach per-share earnings.',
       },
       {
         h: 'Bitcoin and hashprice exposure',
@@ -436,77 +500,78 @@ export const DEFAULTS = {
         b: 'Whatever capacity is still mining earns network hashprice, which is outside management control.',
         c: 'Check how much revenue still moves with bitcoin. The bear case is mostly a statement about this number staying high.',
       },
-      {
-        h: 'Funding and share count',
-        m: 'Shares outstanding, ATM and convertible issuance',
-        b: 'Building data centres is capital intensive, and the cheapest capital for a company like this has often been its own equity.',
-        c: 'Check share count against the plan in the drivers table. Capacity funded by dilution faster than revenue grows does not reach per-share earnings.',
-      },
     ],
   },
 
+  // FY2025 rev $2.348B, NI $128.4M (5.5%) · TTM rev $2.578B but NI -$142.0M and
+  // EBITDA -$10.2M — the trailing year swung to a loss · 233.31M shares
+  // · cash $841M, debt $1.55B → net debt $0.71B · price $28.84, down 34% over 52
+  // weeks · FY2026E rev $3.20B, EPS $0.54 · PT $31.23
   HIMS: {
     name: 'Hims & Hers Health',
     cssvar: '--tick-hims',
     shares: 60,
-    cost: 42.0,
-    prevRev: 2.3,
-    growth: [30, 25, 22, 18, 15],
-    niMargin: [8, 10, 12, 13, 14],
-    ebMargin: [14, 16, 18, 19, 20],
-    sharesOut: [0.23, 0.234, 0.238, 0.242, 0.246],
-    peLow: 18,
-    peHigh: 32,
-    evMult: 14,
-    netCash: 0.3,
+    cost: 28.84,
+    priceRef: 28.84,
+    prevRev: 2.348,
+    growth: [36.3, 20, 16, 13, 11],
+    // Year one matches the $0.54 consensus EPS. Note the trailing twelve months were
+    // a net loss, so even that first year is a recovery, not a continuation.
+    niMargin: [4.0, 6.0, 8.0, 9.0, 10.0],
+    ebMargin: [8, 11, 13, 14, 15],
+    sharesOut: [0.235, 0.239, 0.243, 0.247, 0.251],
+    peLow: 15,
+    peHigh: 30,
+    evMult: 12,
+    netCash: -0.71,
     scen: {
       bear: {
         label: 'Bear',
-        thesis: 'The weight-loss category is regulated away and growth reverts to the legacy book.',
-        rev: 4.5,
-        margin: 6,
-        pe: 14,
+        thesis: 'The weight-loss category is regulated away and losses persist.',
+        rev: 4.2,
+        margin: 4,
+        pe: 12,
       },
       base: {
         label: 'Base',
-        thesis: 'Subscribers compound across several categories with margin improving on scale.',
-        rev: 6.19,
-        margin: 14,
-        pe: 25,
+        thesis: 'Subscribers compound across several categories and margin recovers on scale.',
+        rev: 5.58,
+        margin: 10,
+        pe: 22,
       },
       bull: {
         label: 'Bull',
         thesis: 'A durable multi-category platform with pricing power and falling marketing intensity.',
-        rev: 8,
-        margin: 17,
-        pe: 32,
+        rev: 7.0,
+        margin: 13,
+        pe: 30,
       },
     },
     sourced: false,
     watch: [
       {
-        h: 'Subscribers and revenue per subscriber',
-        m: 'Subscriber count plus monthly revenue per subscriber',
-        b: 'Growth is the product of these two, and it is possible to buy one at the expense of the other.',
-        c: 'Check both rise together. Subscriber growth on falling revenue per subscriber means discounting, not demand.',
+        h: 'Back to profit at all',
+        m: 'TTM net income -$142.0M, EBITDA -$10.2M',
+        b: 'The company earned $128M in FY2025 and then lost $142M over the trailing twelve months. Year one of this model assumes a swing back to a 4% margin.',
+        c: 'Check what drove the loss — one-off charges, or structurally higher cost of revenue. If it is the latter, every margin below is too high.',
       },
       {
         h: 'GLP-1 offering and compounding rules',
         m: 'Regulatory status of compounded semaglutide',
-        b: 'Personalised compounded weight-loss medication drove the step-change in growth and sits on contested regulatory ground.',
+        b: 'Personalised compounded weight-loss medication drove the step-change in growth and sits on contested regulatory ground. The stock is down 34% over 52 weeks largely on this.',
         c: 'Check what remains legally sellable and on what terms. This is the single largest binary in the whole model.',
       },
       {
-        h: 'Gross margin',
-        m: 'Gross margin percentage',
-        b: 'Newer categories carry different input costs, so the mix can quietly reset the margin ceiling.',
-        c: 'Check gross margin holds as the category mix shifts. The net margin ramp in this model assumes it does.',
+        h: 'Subscribers and revenue per subscriber',
+        m: 'FY2026E revenue $3.20B, +36%',
+        b: 'Growth is the product of subscriber count and revenue per subscriber, and it is possible to buy one at the expense of the other.',
+        c: 'Check both rise together. Subscriber growth on falling revenue per subscriber means discounting, not demand.',
       },
       {
         h: 'Marketing intensity',
         m: 'Marketing spend as a share of revenue',
         b: 'Subscriber growth funded by ever more marketing is not the same asset as growth from retention and referral.',
-        c: 'Check marketing as a percentage of revenue trends down while subscribers still grow. That ratio is the operating leverage.',
+        c: 'Check marketing as a percentage of revenue trends down while subscribers still grow. That ratio is the operating leverage the margin ramp depends on.',
       },
       {
         h: 'Category concentration',
@@ -517,50 +582,62 @@ export const DEFAULTS = {
     ],
   },
 
+  // FY2025 rev $3.583B, NI $481.3M (13.4%), EPS $0.39 · TTM rev $4.268B, NI $636.3M
+  // (14.9%), EPS $0.47 · 1.29B shares · cash $3.37B, debt $3.42B · price $18.06
+  // · trailing P/E 38.0 · FY2026E rev $4.89B (+36.4%), EPS $0.60 · PT $20.02
   SOFI: {
     name: 'SoFi Technologies',
     cssvar: '--tick-sofi',
     shares: 200,
-    cost: 16.0,
-    prevRev: 3.4,
-    growth: [24, 20, 17, 15, 13],
-    niMargin: [12, 15, 17, 18, 19],
-    ebMargin: [25, 27, 29, 30, 31],
-    sharesOut: [1.25, 1.27, 1.29, 1.31, 1.33],
+    cost: 18.06,
+    priceRef: 18.06,
+    prevRev: 3.583,
+    growth: [36.5, 22, 18, 15, 13],
+    niMargin: [16, 17, 18, 19, 20],
+    ebMargin: [26, 28, 30, 31, 32],
+    sharesOut: [1.31, 1.34, 1.36, 1.38, 1.4],
     peLow: 15,
-    peHigh: 28,
+    peHigh: 30,
     evMult: 12,
-    netCash: 0,
+    netCash: -0.05,
+    caveat:
+      'SoFi is a lender with a bank charter, so the EV/EBITDA block is the weakest part of this page for it — EBITDA is not a meaningful measure for a balance-sheet business and data providers do not report one. Read the P/E ladder and ignore the cross-check, or replace the EBITDA margins with your own adjusted-EBITDA view. Tangible book value per share is the number a bank is really judged on, and this model does not compute it.',
     scen: {
       bear: {
         label: 'Bear',
         thesis: 'Credit normalises worse than modelled and lending stays the whole business.',
-        rev: 6.0,
-        margin: 10,
+        rev: 7.5,
+        margin: 12,
         pe: 12,
       },
       base: {
         label: 'Base',
         thesis: 'Fee-based revenue keeps taking share of the mix while credit behaves.',
-        rev: 7.69,
-        margin: 19,
-        pe: 25,
+        rev: 9.15,
+        margin: 20,
+        pe: 22,
       },
       bull: {
         label: 'Bull',
         thesis: 'The platform and fee businesses dominate and SoFi is priced as fintech, not a lender.',
-        rev: 9.5,
-        margin: 23,
-        pe: 28,
+        rev: 11,
+        margin: 24,
+        pe: 30,
       },
     },
     sourced: false,
     watch: [
       {
         h: 'Fee-based revenue share',
-        m: 'Fee-based as a percentage of adjusted net revenue',
-        b: 'Capital-light fee revenue is the entire argument for a fintech multiple rather than a bank multiple.',
+        m: 'FY2026E revenue $4.89B, +36%',
+        b: 'Capital-light fee revenue is the entire argument for a fintech multiple rather than a bank multiple, and 36% growth is not something a balance-sheet lender sustains.',
         c: 'Check fee-based revenue keeps taking share of the mix. If it stalls, the exit P/E belongs near the bear case, whatever revenue does.',
+      },
+      {
+        h: 'Credit performance',
+        m: 'Annualised net charge-off rate',
+        b: 'Personal loans are unsecured. Credit is the risk that turns a growth story into a loss year, as it did in 2023.',
+        c: 'Check charge-offs and delinquency stay inside the guided band, and watch the vintage curves rather than the blended number.',
       },
       {
         h: 'Net interest margin and deposit costs',
@@ -569,10 +646,10 @@ export const DEFAULTS = {
         c: 'Check NIM holds as rates move and what is being paid for deposits. A compressing spread hits the net margin directly.',
       },
       {
-        h: 'Credit performance',
-        m: 'Annualised net charge-off rate',
-        b: 'Personal loans are unsecured. Credit is the risk that turns a growth story into a loss year.',
-        c: 'Check charge-offs and delinquency stay inside the guided band, and watch the vintage curves rather than the blended number.',
+        h: 'Dilution against earnings',
+        m: '1.29B shares and rising; EPS $0.47 TTM',
+        b: 'A lender that grows earnings while issuing shares can leave each holder no better off. The share count row here rises to 1.40B by 2030.',
+        c: 'Check share count and tangible book value per share quarter over quarter. If dilution runs faster than the path in the drivers table, lower the 2030 EPS accordingly.',
       },
       {
         h: 'Loan platform volume',
@@ -580,65 +657,74 @@ export const DEFAULTS = {
         b: 'Originating loans for other buyers earns a fee without consuming capital, which is what makes the growth rate sustainable.',
         c: 'Check platform origination volume and the fee earned on it. A shift back to holding loans means growth is capital-constrained again.',
       },
-      {
-        h: 'Tangible book value per share',
-        m: 'TBV per share, quarter over quarter',
-        b: 'A lender that grows earnings while issuing shares can leave each holder no better off.',
-        c: 'Check TBV per share rises alongside revenue. The share count row in the drivers table is where you encode your answer.',
-      },
     ],
   },
 
+  // FY2025 rev $2.780B, NI $124.7M (4.5%), EPS $1.51 · TTM rev $3.219B, NI $199.3M
+  // (6.2%), EPS $2.40 · TTM EBITDA only $165.1M · 81.24M shares · cash $692.5M,
+  // debt $1.85B → net debt $1.16B · price $600.73 · trailing P/E 249.8
+  // · FY2026E rev $3.71B, EPS $7.71 non-GAAP · PT $693.40
   AXON: {
     name: 'Axon Enterprise',
     cssvar: '--tick-axon',
     shares: 6,
-    cost: 700.0,
-    prevRev: 2.6,
-    growth: [26, 23, 20, 18, 16],
-    niMargin: [14, 16, 18, 19, 20],
-    ebMargin: [25, 26, 27, 28, 29],
-    sharesOut: [0.079, 0.08, 0.081, 0.082, 0.083],
-    peLow: 45,
-    peHigh: 75,
-    evMult: 40,
-    netCash: 0.4,
+    cost: 600.73,
+    priceRef: 600.73,
+    prevRev: 2.78,
+    growth: [33.5, 25, 21, 18, 16],
+    // GAAP. Reported net margin was 4.5% in FY2025 and 6.2% trailing, well under the
+    // 16.9% implied by the non-GAAP consensus EPS — the gap is mostly stock compensation.
+    niMargin: [7, 10, 13, 15, 17],
+    ebMargin: [20, 22, 24, 25, 26],
+    sharesOut: [0.0815, 0.0825, 0.0835, 0.0845, 0.0855],
+    peLow: 40,
+    peHigh: 70,
+    evMult: 35,
+    netCash: -1.16,
+    caveat:
+      'Axon trades at roughly 250x trailing earnings, so the entry multiple — not the growth rate — decides the outcome here. Reported GAAP net margin is 4.5–6%, far below the ~17% implied by the non-GAAP consensus EPS of $7.71; the margins below are GAAP and ramp toward 17% by 2030, which is itself an assumption. Trailing EBITDA of $165M against a $50B enterprise value means the EV/EBITDA cross-check is close to meaningless until margin actually arrives.',
     scen: {
       bear: {
         label: 'Bear',
-        thesis: 'Agency budgets tighten, growth normalises and the multiple compresses to hardware-like.',
-        rev: 5.2,
-        margin: 14,
-        pe: 30,
+        thesis: 'Agency budgets tighten, growth normalises and the multiple compresses hard.',
+        rev: 6.2,
+        margin: 10,
+        pe: 25,
       },
       base: {
         label: 'Base',
         thesis: 'Software attach keeps rising and the recurring base compounds at a premium multiple.',
-        rev: 6.62,
-        margin: 20,
+        rev: 7.68,
+        margin: 17,
         pe: 55,
       },
       bull: {
         label: 'Bull',
         thesis: 'AI plans reprice the installed base and international opens a second TAM.',
-        rev: 8.0,
-        margin: 23,
+        rev: 9.2,
+        margin: 20,
         pe: 70,
       },
     },
     sourced: false,
     watch: [
       {
+        h: 'What the multiple already assumes',
+        m: 'Trailing P/E 249.8 at $600.73',
+        b: 'Even the base case here returns single-digit annualised, because 250x trailing earnings prices in most of a decade of growth.',
+        c: 'Decide what 2030 multiple you actually believe. Moving the exit P/E from 55x to 35x matters more than any revenue assumption on this page.',
+      },
+      {
         h: 'ARR and net revenue retention',
-        m: 'Annual recurring revenue plus NRR',
+        m: 'FY2026E revenue $3.71B, +33.5%',
         b: 'The premium multiple rests on recurring software revenue that expands inside existing agencies.',
         c: 'Check NRR stays above about 120%. Everything in the exit multiple here is a bet on that number holding.',
       },
       {
-        h: 'Software versus hardware mix',
-        m: 'Segment revenue split',
-        b: 'TASER and body cameras are the wedge; software and cloud are what the market is actually paying for.',
-        c: 'Check software keeps outgrowing hardware. A hardware-led quarter is a multiple problem even when revenue looks fine.',
+        h: 'GAAP margin actually arriving',
+        m: 'FY2025 GAAP margin 4.5%; consensus EPS is non-GAAP',
+        b: 'Reported GAAP profitability fell in 2025 even as revenue grew 33%, mostly on stock compensation.',
+        c: 'Check GAAP net margin trends toward the path in the drivers table. If it stays near 5%, the 2030 EPS here is roughly three times too high.',
       },
       {
         h: 'Future contracted revenue',
@@ -652,31 +738,32 @@ export const DEFAULTS = {
         b: 'Selling a higher-priced tier into the installed base is the cheapest growth available and the next pricing lever.',
         c: 'Check attach rate and pricing on the AI tiers. This is what would justify the bull case exit multiple rather than just the base.',
       },
-      {
-        h: 'International and enterprise',
-        m: 'Non-US revenue as a share of total',
-        b: 'US state and local law enforcement is a large but countable market. The 2030 revenue here needs more than that.',
-        c: 'Check whether non-US and non-police enterprise revenue is actually moving. If it is flat, the terminal growth rate is too high.',
-      },
     ],
   },
 
+  // FY2025 rev $477.2M · TTM rev $498.4M · TTM net income -$31.37B (bitcoin marks)
+  // · 384.23M shares · market cap $48.92B · total debt $6.77B · price $127.31, down
+  // 62.8% over 52 weeks · holds 840,447 BTC (~4% of supply) at a $75,385 average
+  // cost, worth roughly $66B in late Aug 2026; senior claims including preferreds
+  // are reported at roughly $22B
   MSTR: {
     name: 'Strategy',
     cssvar: '--tick-mstr',
     shares: 10,
-    cost: 180.0,
-    prevRev: 0.46,
-    growth: [2, 3, 4, 4, 5],
+    cost: 127.31,
+    priceRef: 127.31,
+    prevRev: 0.477,
+    growth: [4, 4, 5, 5, 5],
     niMargin: [5, 8, 10, 12, 14],
-    ebMargin: [10, 14, 16, 18, 20],
-    sharesOut: [0.31, 0.34, 0.37, 0.4, 0.43],
+    ebMargin: [12, 15, 17, 19, 20],
+    sharesOut: [0.384, 0.42, 0.46, 0.5, 0.54],
     peLow: 20,
     peHigh: 40,
     evMult: 20,
-    netCash: 52,
+    // Bitcoin treasury (~$66B) less senior claims including preferreds (~$22B).
+    netCash: 44,
     caveat:
-      'A multiple on software earnings does not value Strategy. The price tracks bitcoin held per share and the premium the market pays over that. The driver rows model only the software segment — small, slow and roughly break-even — so read the P/E ladder as noise. The EV/EBITDA block is the useful one: Net cash is set to the bitcoin treasury less convertible debt, which makes "Implied price per share" an approximate net asset value per share. Compare the market price against that to see the premium you are paying, and watch the diluted share count row, because issuing stock above NAV is the strategy.',
+      'A multiple on software earnings does not value Strategy, and reported net income is meaningless here — the trailing twelve months show a $31.4B loss purely from bitcoin marks running through the income statement. What matters: 840,447 BTC (about 4% of all bitcoin) at a $75,385 average cost, worth roughly $66B, against roughly $22B of senior claims once preferreds are counted. Net cash below is set to that difference, which makes the EV/EBITDA "Implied price per share" row read as approximate net asset value per share. Today that is about $115 against a $127 market price — an 11% premium. The share count row is the real story: it rises from 384M to 540M here, so if bitcoin does not appreciate, NAV per share falls even though the bitcoin pile does not. Treat the P/E ladder as noise.',
     scen: {
       bear: {
         label: 'Bear',
@@ -688,14 +775,14 @@ export const DEFAULTS = {
       base: {
         label: 'Base',
         thesis: 'Accumulation outpaces dilution and the premium to net asset value persists.',
-        rev: 0.55,
+        rev: 0.6,
         margin: 14,
         pe: 30,
       },
       bull: {
         label: 'Bull',
         thesis: 'Bitcoin re-rates and Strategy compounds bitcoin per share through cheap capital.',
-        rev: 0.6,
+        rev: 0.65,
         margin: 18,
         pe: 40,
       },
@@ -704,31 +791,31 @@ export const DEFAULTS = {
     watch: [
       {
         h: 'Bitcoin held per share',
-        m: 'BTC on the balance sheet ÷ diluted shares',
+        m: '840,447 BTC ÷ 384.23M shares ≈ 0.00219 BTC',
         b: 'This is the only per-share number that matters. Everything else is financing mechanics around it.',
-        c: 'Check bitcoin per share rose this quarter. If issuance outpaced accumulation, the strategy diluted you regardless of how much bitcoin was bought.',
+        c: 'Check bitcoin per share rose this quarter. Strategy made no purchases through much of August 2026 while still selling stock — that combination dilutes you.',
       },
       {
         h: 'Premium to net asset value',
-        m: 'Market cap ÷ (bitcoin value − debt)',
-        b: 'Buying at a premium to NAV means paying more than a dollar for a dollar of bitcoin, on the belief the premium persists.',
-        c: 'Work out the premium at the current price and compare it with the EV/EBITDA implied price on this page. That gap is your real entry risk.',
+        m: '~$66B BTC less ~$22B senior claims ≈ $115/share',
+        b: 'Buying at a premium to NAV means paying more than a dollar for a dollar of bitcoin, on the belief the premium persists. At $127.31 the premium is about 11%.',
+        c: 'Recompute NAV per share at the current bitcoin price and share count, then compare. That gap, not earnings, is your entry risk.',
       },
       {
-        h: 'Issuance this quarter',
-        m: 'Common shares and preferred instruments issued',
-        b: 'Selling equity above NAV is accretive to bitcoin per share; selling it below NAV is not.',
-        c: 'Check what was issued, at what price, and what it cost. Preferred instruments carry a coupon that has to be serviced whatever bitcoin does.',
+        h: 'Average cost against spot',
+        m: 'Average purchase price $75,385 per BTC',
+        b: 'The treasury was accumulated at an average well below recent levels, which is what keeps the balance sheet solvent through a drawdown.',
+        c: 'Check where spot sits against that $75,385 average. The distance between them is the cushion before the debt becomes the problem.',
       },
       {
-        h: 'Convertible debt maturities',
-        m: 'The maturity and conversion-price ladder',
-        b: 'Debt is what turns a drawdown into forced selling.',
-        c: 'Check the maturity schedule and where each conversion price sits against the share price. Nothing should force a sale at a bad bitcoin price.',
+        h: 'Issuance and senior claims',
+        m: '~$22B of claims ahead of common; $6.77B is debt',
+        b: 'Preferred instruments carry a coupon that must be serviced whatever bitcoin does, and they sit ahead of common stock.',
+        c: 'Check what was issued this quarter, at what price and what coupon. Selling equity above NAV is accretive; below NAV it is not.',
       },
       {
         h: 'Fair-value accounting swings',
-        m: 'Unrealised bitcoin gain or loss inside net income',
+        m: 'TTM net income -$31.4B on $498M of revenue',
         b: 'Under fair-value rules the bitcoin mark runs straight through the income statement, so reported net income tracks bitcoin, not the business.',
         c: 'Separate the operating result from the mark before reading any earnings number. A record profit quarter here can mean nothing changed operationally.',
       },
