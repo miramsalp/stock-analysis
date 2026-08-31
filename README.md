@@ -1,11 +1,12 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for 26 companies across 7 sectors. Enter your shares and average
-cost, edit the drivers, and every projection, scenario, multiple and IRR on the page re-runs.
+A CY2026–CY2030 equity model for 27 companies across 7 sectors. Enter your shares and average
+cost, edit the drivers, and every projection, scenario, multiple and IRR on the page re-runs —
+then section 07 ranks all 27 against each other on the assumptions you just set.
 
 | Sector | Tickers |
 | --- | --- |
-| Internet & Ads | APP · META · GOOGL · NFLX |
+| Internet & Ads | APP · META · GOOGL · NFLX · ZETA |
 | Semiconductors | MRVL · NVDA · TSM · AVGO |
 | Consumer & Commerce | AMZN · AAPL · SHOP · COST |
 | Software & Security | AXON · MSFT · CRM · NOW · CRWD |
@@ -16,7 +17,9 @@ cost, edit the drivers, and every projection, scenario, multiple and IRR on the 
 Nothing in this list is a recommendation. The coverage names exist so each holding has a
 comparison sitting next to it — AVGO against MRVL for custom silicon, LLY against HIMS on the
 same GLP-1 question, UNH against OSCR for what mature managed-care margin actually looks like,
-NOW against AXON for what a ~90x multiple demands, CEG against IREN on who owns the power.
+NOW against AXON for what a ~90x multiple demands, CEG against IREN on who owns the power, ZETA
+against APP and META for what the same ad budget is worth to a company that does not own the
+audience.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
@@ -40,6 +43,7 @@ npm run lint     # oxlint
 | 04 Range | Bear / base / bull 2030 endpoints, each with its own revenue, margin and exit multiple, plus a band chart against your cost basis. |
 | 05 Multiples | P/E low / high / midpoint price ladder with upside and IRR, cross-checked against EV/EBITDA plus net cash. |
 | 06 Verify | Five disclosures to check at the next earnings release, with a checkbox that persists. |
+| 07 Rank | All 27 companies sorted by annualised return to 2030, on a basis you choose. |
 
 ## The model
 
@@ -59,6 +63,37 @@ Scenarios do **not** inherit the driver table — each sets its own 2030 revenue
 multiple, so the three cases can disagree about more than one variable at a time.
 
 `yearsOut` counts CY2026 as one year out and CY2030 as five.
+
+### The ranking
+
+Section 07 runs every company through its own scenarios and sorts them. It measures from
+`priceRef` — the market price on the reference date — not from `cost`, so the ordering asks the
+same forward question for everyone instead of depending on what any one holder paid. The
+cost-basis return travels alongside in its own column.
+
+```
+weighted = 0.25 × bear.target + 0.50 × base.target + 0.25 × bull.target
+return   = (target / priceRef)^(1/5) − 1        target ≤ 0 → −1 (total loss)
+```
+
+Three ranking bases, because one hides the trade-off:
+
+| Basis | Sorts on | Rewards |
+| --- | --- | --- |
+| Expected | the 25 / 50 / 25 weighted target | the whole distribution |
+| Base case | `base.target` alone | the central estimate |
+| Downside first | `bear.target` alone | survivability |
+
+The names that top one list are rarely the names that top another — on the shipped defaults,
+only four of the base-case top five survive into the downside top five. The chart draws each name
+as a **bear-to-bull span** with a marker at the ranking basis, so a wide bar reads as what it is:
+a name the model is not confident about.
+
+A ticker can set `rankable: false` with a `rankReason` to stay out of the ranking entirely. Only
+**MSTR** does — its scenario targets run through the same P/E ladder as everything else, and that
+ladder is noise for a bitcoin treasury, so ranking on it would place Strategy last for a reason
+that has nothing to do with the asset anyone owns it for. Excluded names are named under the
+table, not silently dropped.
 
 ## Where the numbers come from
 
@@ -102,7 +137,21 @@ the earnings-multiple frame does not cleanly fit. Five carry one:
   exist yet.
 - **SOFI** — a balance-sheet lender, so EV/EBITDA is close to meaningless; read the P/E ladder.
 - **AXON** — ~250x trailing earnings, so the entry multiple decides the outcome, not growth.
+- **ZETA** — two problems at once, see below.
 - **MSTR** — see below.
+
+### ZETA is not from the same pull
+
+**ZETA is the one entry that does not share the 28–29 August 2026 snapshot.** Its figures are the
+last full fiscal year on record plus a modelled path — FY2025 revenue around $1.245B, adjusted
+EBITDA near 20% of revenue, roughly 252M diluted shares — and its `priceRef` is a placeholder, not
+a quote. Re-pull revenue, share count and price before reading any of it as current.
+
+The second problem is the GAAP gap, and it is the same one AXON and MRVL have, only larger: Zeta
+reports adjusted EBITDA and adjusted EPS, this model runs on GAAP, and stock compensation is big
+enough that CY2026 is still a net loss here. That makes the CY2026 EPS and implied-P/E cells
+negative on purpose. The share count row is the live risk — compensation paid in stock is what
+turns revenue growth into a smaller per-share result than it looks.
 
 ### MSTR is a special case
 
@@ -133,11 +182,13 @@ src/
   data/watchlist.js        the 16 coverage names
   data/tickers.js          merges both, groups by sector
   lib/model.js             the five-year projection
+  lib/rank.js              cross-company ranking and its three bases
   lib/format.js            number formatting
   lib/storage.js           localStorage load/persist (numbers only)
   hooks/useTip.js          shared chart tooltip plumbing
   components/              tables, cards, inputs, ticker picker
-  components/charts/       hand-rolled SVG band and path charts
+  components/Leaderboard.jsx  section 07: controls, ranked table, honesty note
+  components/charts/       hand-rolled SVG band, path and rank charts
   App.jsx                  page shell and state
   index.css                design tokens and all component styles
 ```
@@ -171,4 +222,5 @@ with its sector name.
 An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
 earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
 large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
-growth rate — decides the outcome. Sixteen of the 26 carry one.
+growth rate — decides the outcome. Seventeen of the 27 carry one, and section 07 marks every
+ranked row that has one.
