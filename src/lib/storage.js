@@ -18,6 +18,27 @@ export function resetTicker(key) {
 }
 
 /**
+ * A clean sheet across the whole book: one share of everything, bought at the market
+ * price on the reference date.
+ *
+ * Deliberately not the same as resetting each ticker in turn. `resetTicker` restores
+ * that company's shipped defaults, which for APP means a real $319.46 entry; this puts
+ * every name on the same footing instead, so the position column compares like with
+ * like and no holding is sized larger than another by accident. Drivers, scenarios and
+ * multiples are left exactly as the user has them — only the two position inputs move.
+ */
+export function resetPositions(data) {
+  const out = {}
+  for (const k of TICKERS) {
+    const d = clone(data[k])
+    d.shares = 1
+    d.cost = DEFAULTS[k].priceRef
+    out[k] = d
+  }
+  return out
+}
+
+/**
  * Only numbers survive a reload — copy and watch items always come from DEFAULTS, so
  * a saved model can never pin stale wording. A read that throws (private browsing, or
  * a corrupt payload) falls back to defaults rather than blanking the page.

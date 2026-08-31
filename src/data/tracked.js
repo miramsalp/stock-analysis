@@ -14,7 +14,7 @@ export const TRACKED = {
   APP: {
     name: 'AppLovin',
     sector: 'internet',
-    shares: 32,
+    shares: 1,
     cost: 319.46,
     priceRef: 317.76,
     prevRev: 5.4795, // CY2025 base, set so CY2026 lands on $8.00B
@@ -90,7 +90,7 @@ export const TRACKED = {
   META: {
     name: 'Meta Platforms',
     sector: 'internet',
-    shares: 5,
+    shares: 1,
     cost: 578.02,
     priceRef: 578.02,
     prevRev: 200.966,
@@ -166,7 +166,7 @@ export const TRACKED = {
   GOOGL: {
     name: 'Alphabet',
     sector: 'internet',
-    shares: 20,
+    shares: 1,
     cost: 346.59,
     priceRef: 346.59,
     prevRev: 402.8,
@@ -245,7 +245,7 @@ export const TRACKED = {
   OSCR: {
     name: 'Oscar Health',
     sector: 'health',
-    shares: 100,
+    shares: 1,
     cost: 30.47,
     priceRef: 30.47,
     prevRev: 11.701,
@@ -322,7 +322,7 @@ export const TRACKED = {
   MRVL: {
     name: 'Marvell Technology',
     sector: 'semis',
-    shares: 40,
+    shares: 1,
     cost: 216.62,
     priceRef: 216.62,
     prevRev: 8.195,
@@ -403,7 +403,7 @@ export const TRACKED = {
   IREN: {
     name: 'IREN',
     sector: 'infra',
-    shares: 100,
+    shares: 1,
     cost: 35.45,
     priceRef: 35.45,
     prevRev: 0.707,
@@ -484,7 +484,7 @@ export const TRACKED = {
   HIMS: {
     name: 'Hims & Hers Health',
     sector: 'health',
-    shares: 60,
+    shares: 1,
     cost: 28.84,
     priceRef: 28.84,
     prevRev: 2.348,
@@ -562,7 +562,7 @@ export const TRACKED = {
   SOFI: {
     name: 'SoFi Technologies',
     sector: 'finance',
-    shares: 200,
+    shares: 1,
     cost: 18.06,
     priceRef: 18.06,
     prevRev: 3.583,
@@ -641,7 +641,7 @@ export const TRACKED = {
   AXON: {
     name: 'Axon Enterprise',
     sector: 'software',
-    shares: 6,
+    shares: 1,
     cost: 600.73,
     priceRef: 600.73,
     prevRev: 2.78,
@@ -723,7 +723,7 @@ export const TRACKED = {
   MSTR: {
     name: 'Strategy',
     sector: 'infra',
-    shares: 10,
+    shares: 1,
     cost: 127.31,
     priceRef: 127.31,
     prevRev: 0.477,

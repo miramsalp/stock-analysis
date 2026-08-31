@@ -10,7 +10,7 @@ import {
 } from './data/tickers.js'
 import { bil, money, nf, sgnMoney, sgnPct, tone } from './lib/format.js'
 import { project } from './lib/model.js'
-import { loadStore, persist, resetTicker } from './lib/storage.js'
+import { loadStore, persist, resetPositions, resetTicker } from './lib/storage.js'
 
 import DriverTable from './components/DriverTable.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
@@ -76,6 +76,9 @@ export default function App() {
       data: { ...prev.data, [prev.active]: resetTicker(prev.active) },
     }))
 
+  const resetAll = () =>
+    setStore((prev) => ({ ...prev, data: resetPositions(prev.data) }))
+
   const toggleCheck = (i) =>
     setStore((prev) => {
       const key = `${prev.active}:${i}`
@@ -95,7 +98,21 @@ export default function App() {
 
         <TickerSelect active={active} onSelect={selectTicker} />
 
-        <button type="button" className="ghost" onClick={reset}>
+        <button
+          type="button"
+          className="ghost"
+          title={`Every company: 1 share at its market price on ${DATA_AS_OF}. Drivers and scenarios are left alone.`}
+          onClick={resetAll}
+        >
+          1 share of everything
+        </button>
+
+        <button
+          type="button"
+          className="ghost"
+          title={`Restore the shipped assumptions for ${active} — drivers, scenarios and position together.`}
+          onClick={reset}
+        >
           Reset {active}
         </button>
       </header>
