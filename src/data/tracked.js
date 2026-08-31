@@ -736,6 +736,12 @@ export const TRACKED = {
     evMult: 20,
     // Bitcoin treasury (~$66B) less senior claims including preferreds (~$22B).
     netCash: 44,
+    // Kept out of the cross-company ranking on purpose. The scenario targets here run
+    // through the same P/E ladder as everything else, and that ladder is noise for a
+    // bitcoin treasury — ranking on it would place Strategy last for a reason that has
+    // nothing to do with the asset anyone owns it for.
+    rankable: false,
+    rankReason: 'the P/E ladder does not value a bitcoin treasury — read net asset value per share instead',
     caveat:
       'A multiple on software earnings does not value Strategy, and reported net income is meaningless here — the trailing twelve months show a $31.4B loss purely from bitcoin marks running through the income statement. What matters: 840,447 BTC (about 4% of all bitcoin) at a $75,385 average cost, worth roughly $66B, against roughly $22B of senior claims once preferreds are counted. Net cash below is set to that difference, which makes the EV/EBITDA "Implied price per share" row read as approximate net asset value per share. Today that is about $115 against a $127 market price — an 11% premium. The share count row is the real story: it rises from 384M to 540M here, so if bitcoin does not appreciate, NAV per share falls even though the bitcoin pile does not. Treat the P/E ladder as noise.',
     scen: {

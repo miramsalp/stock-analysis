@@ -13,6 +13,7 @@ import { project } from './lib/model.js'
 import { loadStore, persist, resetTicker } from './lib/storage.js'
 
 import DriverTable from './components/DriverTable.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
 import NumField from './components/NumField.jsx'
 import ProjectionTable from './components/ProjectionTable.jsx'
 import ScenarioCard from './components/ScenarioCard.jsx'
@@ -106,7 +107,8 @@ export default function App() {
             title={`${TICKERS.length} companies, ${TICKERS_BY_SECTOR.length} sectors`}
           >
             Pick one to model. Grouped by sector so neighbours are comparable — AVGO next
-            to MRVL, LLY next to HIMS, UNH next to OSCR.
+            to MRVL, LLY next to HIMS, UNH next to OSCR. Section 07 ranks all of them
+            against each other once you have set the assumptions.
           </SectionHead>
           <div className="card">
             <TickerGrid active={active} onSelect={selectTicker} />
@@ -322,6 +324,17 @@ export default function App() {
               : `The ${d.name} benchmarks are structural — they name the disclosure to read, not a figure management has guided to. Replace each one with the actual guided number when the release lands, then judge the quarter against that.`}
           </p>
         </section>
+
+        <section>
+          <SectionHead eyebrow="07 / Rank" title="Where the model says the return is" tag="all companies">
+            The one comparative view on the page. Every company is run through its own scenarios,
+            then sorted by annualised return to CY2030 measured from the market price on{' '}
+            {DATA_AS_OF} — not from your cost, so the order is the same question for everyone.
+          </SectionHead>
+
+          <Leaderboard data={store.data} active={active} onSelect={selectTicker} />
+        </section>
+
       </main>
 
       <footer>

@@ -958,6 +958,86 @@ export const WATCHLIST = {
     ],
   },
 
+  // NOT from the 28–29 August 2026 pull — see the caveat. Figures below are the last
+  // full-year numbers on record plus a modelled path: FY2025 rev ~$1.245B (+24% on
+  // FY2024's $1.006B), adjusted EBITDA ~20% of revenue, GAAP still loss-making on
+  // stock compensation, ~252M diluted shares, cash slightly ahead of debt.
+  ZETA: {
+    name: 'Zeta Global',
+    sector: 'internet',
+    shares: 200,
+    cost: 24.0,
+    priceRef: 24.0,
+    prevRev: 1.245,
+    growth: [21, 18, 16, 14, 12],
+    // GAAP, not adjusted. Year one is still a small net loss: stock compensation is
+    // most of the gap, and the crossover to GAAP profit is the whole thesis here.
+    niMargin: [-2.5, 1.5, 5, 8, 10.5],
+    ebMargin: [21, 22.5, 24, 25, 26],
+    sharesOut: [0.252, 0.259, 0.265, 0.27, 0.274],
+    peLow: 22,
+    peHigh: 40,
+    evMult: 14,
+    netCash: 0.1,
+    caveat:
+      'Two separate warnings. First, these figures were not pulled on the same date as the rest of the book — they are the last full-year numbers on record plus a modelled path, and the price is a placeholder, so re-pull revenue, share count and price before you read anything below as current. Second, Zeta reports adjusted EBITDA and adjusted EPS, and the ladder here runs on GAAP: stock compensation is large enough that the company is still GAAP loss-making in year one, which is why the CY2026 EPS and P/E rows read negative and why every multiple quoted elsewhere will look cheaper than this one. The share count row is the live risk — compensation paid in stock is what turns revenue growth into a smaller per-share result than it looks.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Growth normalises to the ad market, GAAP profit never arrives and compensation keeps diluting.',
+        rev: 1.85,
+        margin: 5,
+        pe: 20,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Direct platform revenue compounds, stock compensation normalises and GAAP earnings emerge.',
+        rev: 2.63,
+        margin: 10.5,
+        pe: 31,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'The data-plus-activation stack wins budget from the walled gardens and earns a software margin.',
+        rev: 3.2,
+        margin: 14,
+        pe: 40,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Direct platform revenue mix',
+        m: 'Direct versus integrated-platform revenue',
+        b: 'Revenue routed through agency and integrated partners carries different economics and different durability from revenue the platform earns directly.',
+        c: 'Check the direct share of revenue and whether it is growing faster than the total. A headline growth rate carried by the integrated channel is a weaker result than the same number carried by direct.',
+      },
+      {
+        h: 'Stock compensation and diluted shares',
+        m: '~252M diluted shares in the model, rising to 274M',
+        b: 'This is the single largest gap between the adjusted numbers the company reports and the GAAP numbers this model runs on.',
+        c: 'Check stock compensation as a percentage of revenue and the diluted count against the drivers table. If the count grows faster than the path here, the 2030 EPS is wrong before any operating assumption is tested.',
+      },
+      {
+        h: 'The crossover to GAAP profit',
+        m: 'Year one modelled at a −2.5% GAAP net margin',
+        b: 'The base case is a claim that GAAP net income turns positive and reaches a double-digit margin by 2030. Nothing in the P/E ladder works until that first part happens.',
+        c: 'Check GAAP net income, not adjusted. The quarter it crosses zero — and whether it stays there — is the disclosure that confirms or breaks this model.',
+      },
+      {
+        h: 'Scaled customers and spend per customer',
+        m: 'Scaled customer count and ARPU',
+        b: 'Growth from more customers and growth from existing customers spending more are different businesses with different ceilings.',
+        c: 'Check both counts and the average spend, plus super-scaled customers separately. Flat customer additions with rising ARPU means the model depends on a narrow base.',
+      },
+      {
+        h: 'Cash conversion and the short thesis',
+        m: 'Free cash flow against adjusted EBITDA',
+        b: 'A published short thesis in late 2024 attacked the quality of the revenue and the customer-acquisition spend behind it, and the stock has not fully recovered. Cash is the answer to that argument or the confirmation of it.',
+        c: 'Check free cash flow against adjusted EBITDA. Persistent conversion is what settles the argument; EBITDA that never becomes cash is what the short case predicted.',
+      },
+    ],
+  },
   // ---------------------------------------------------------------- health
   // Price $1,174.61 · cap $1.05T · 891.36M shares · TTM rev $79.67B · TTM EBITDA
   // $41.71B · cash $8.95B, debt $54.91B · P/E 39.4 · FY2026E rev $88.18B (+35.29%),

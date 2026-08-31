@@ -958,6 +958,130 @@ svg.chart {
   color: var(--ink);
 }
 
+/* ---------- ranking ---------- */
+
+.rank-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  align-items: center;
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.seg-label {
+  margin-right: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.chart-note {
+  display: block;
+  margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* The span bar is the same fill the chart uses, at the same opacity. */
+.chart-legend i.span {
+  width: 16px;
+  height: 8px;
+  background: var(--ink-3);
+  opacity: 0.35;
+}
+
+.chart-legend i.tickmark {
+  width: 4px;
+  height: 14px;
+  background: var(--ink-2);
+}
+
+.rank-table th.rank-name {
+  text-align: left;
+  white-space: normal;
+}
+
+.rank-table td.rank-n {
+  width: 1%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+.rank-table td.strong {
+  font-weight: 600;
+}
+
+/* The row for whichever company is loaded above, so the ranking and the rest of the
+   page stay tied together while you scroll between them. */
+.rank-table tbody tr.is-active td,
+.rank-table tbody tr.is-active th {
+  background: var(--sunken);
+}
+
+.linkish {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.linkish i {
+  width: 8px;
+  height: 8px;
+  background: var(--sec);
+  border-radius: 2px;
+}
+
+.linkish:hover {
+  color: var(--accent);
+}
+
+.linkish:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.rank-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.flag {
+  margin-left: 7px;
+  padding: 1px 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  cursor: help;
+}
+
 /* ---------- notes and footer ---------- */
 
 .note {
