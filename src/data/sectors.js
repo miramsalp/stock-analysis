@@ -15,6 +15,9 @@ export const SECTORS = [
   { key: 'semis', label: 'Semiconductors' },
   { key: 'consumer', label: 'Consumer & Commerce' },
   { key: 'software', label: 'Software & Security' },
+  // Sits here for the palette, not for the taxonomy: olive validates against purple
+  // and pink as neighbours, and fails against the red at the end of the list.
+  { key: 'space', label: 'Space & Aerospace' },
   { key: 'health', label: 'Healthcare' },
   { key: 'finance', label: 'Financials' },
   { key: 'infra', label: 'Power & Digital Assets' },
