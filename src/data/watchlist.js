@@ -958,86 +958,98 @@ export const WATCHLIST = {
     ],
   },
 
-  // NOT from the 28–29 August 2026 pull — see the caveat. Figures below are the last
-  // full-year numbers on record plus a modelled path: FY2025 rev ~$1.245B (+24% on
-  // FY2024's $1.006B), adjusted EBITDA ~20% of revenue, GAAP still loss-making on
-  // stock compensation, ~252M diluted shares, cash slightly ahead of debt.
+  // Price $30.91 (31 Aug 2026) · cap $7.76B · EV $7.67B · 251.01M shares, +13.60% YoY
+  // · TTM rev $1.571B (+35.91%) · TTM EBITDA $115.94M · TTM net income −$2.17M · FCF
+  // $224.41M · cash $309.95M, debt $220.25M → net cash $89.70M · P/E n/a · EV/EBITDA
+  // 65.3x · FY2025 rev $1.305B (+29.72%), net −$31.51M · FY2026E rev $1.82B (+39.47%),
+  // EPS $0.96 · FY2027E rev $2.11B (+16.02%), EPS $1.21 · PT $31.36 (at the money)
   ZETA: {
     name: 'Zeta Global',
     sector: 'internet',
     shares: 200,
-    cost: 24.0,
-    priceRef: 24.0,
-    prevRev: 1.245,
-    growth: [21, 18, 16, 14, 12],
-    // GAAP, not adjusted. Year one is still a small net loss: stock compensation is
-    // most of the gap, and the crossover to GAAP profit is the whole thesis here.
-    niMargin: [-2.5, 1.5, 5, 8, 10.5],
-    ebMargin: [21, 22.5, 24, 25, 26],
-    sharesOut: [0.252, 0.259, 0.265, 0.27, 0.274],
-    peLow: 22,
-    peHigh: 40,
-    evMult: 14,
-    netCash: 0.1,
+    cost: 30.91,
+    priceRef: 30.91,
+    prevRev: 1.305,
+    // Two consensus years, not one: FY2026 at +39.47% and FY2027 at +16.02% are both
+    // published, and the deceleration between them is steep enough to be worth keeping
+    // rather than smoothing. Only 2028–2030 are judgement.
+    growth: [39.47, 16.02, 14, 12, 11],
+    // GAAP, and nowhere near the $0.96 consensus — that number is adjusted. Trailing GAAP
+    // net income is −$2.17M on $1.571B of revenue, so year one is a company that has only
+    // just reached break-even, not one earning a 20% margin.
+    niMargin: [1, 3.5, 6, 8, 10],
+    // Also GAAP-ish: trailing EBITDA of $115.94M is 7.4% of revenue, against the ~20%
+    // adjusted EBITDA margin the company reports. Stock compensation is the difference.
+    ebMargin: [8, 10, 12.5, 14.5, 16],
+    // The count rose 13.60% in the last year. This path assumes that decelerates hard to
+    // ~4% and then below — an assumption, and the one most likely to be too kind.
+    sharesOut: [0.259, 0.272, 0.283, 0.292, 0.3],
+    peLow: 25,
+    peHigh: 45,
+    // Not the 65.3x it trades at today. Holding that multiple to 2030 would be assuming
+    // the answer; this is where a mid-teens grower with real GAAP earnings could sit.
+    evMult: 20,
+    netCash: 0.0897,
     caveat:
-      'Two separate warnings. First, these figures were not pulled on the same date as the rest of the book — they are the last full-year numbers on record plus a modelled path, and the price is a placeholder, so re-pull revenue, share count and price before you read anything below as current. Second, Zeta reports adjusted EBITDA and adjusted EPS, and the ladder here runs on GAAP: stock compensation is large enough that the company is still GAAP loss-making in year one, which is why the CY2026 EPS and P/E rows read negative and why every multiple quoted elsewhere will look cheaper than this one. The share count row is the live risk — compensation paid in stock is what turns revenue growth into a smaller per-share result than it looks.',
+      'The widest GAAP-versus-adjusted gap in this book, and it is not close. The $0.96 FY2026 consensus EPS is adjusted; on GAAP the trailing twelve months show a $2.17M net loss, and trailing EBITDA of $115.94M is 7.4% of revenue against the roughly 20% adjusted EBITDA margin the company reports. Stock compensation is most of that difference, which makes it a share count problem as much as a margin one — the count rose 13.60% in a single year, and the path below assumes that decelerates to about 4%. Two more things before the numbers. The stock is at $30.91 against a $31.36 consensus price target and 65.3x EV/EBITDA, so the base case here is earnings catching up to the multiple, not the multiple re-rating. And free cash flow of $224.41M exceeds both trailing EBITDA and reported net income — the cash story is far stronger than the earnings story, which is exactly the argument the 2024 short thesis picked at.',
     scen: {
       bear: {
         label: 'Bear',
-        thesis: 'Growth normalises to the ad market, GAAP profit never arrives and compensation keeps diluting.',
-        rev: 1.85,
-        margin: 5,
-        pe: 20,
+        thesis: 'Growth reverts to the ad market, GAAP margin stalls near break-even and the multiple compresses.',
+        rev: 2.3,
+        margin: 6,
+        pe: 22,
       },
       base: {
         label: 'Base',
-        thesis: 'Direct platform revenue compounds, stock compensation normalises and GAAP earnings emerge.',
-        rev: 2.63,
-        margin: 10.5,
-        pe: 31,
+        thesis: 'Growth decelerates as consensus expects, stock compensation normalises and GAAP earnings arrive.',
+        rev: 2.99,
+        margin: 10,
+        pe: 35,
       },
       bull: {
         label: 'Bull',
-        thesis: 'The data-plus-activation stack wins budget from the walled gardens and earns a software margin.',
-        rev: 3.2,
+        thesis: 'The data-plus-activation stack takes budget from the walled gardens and earns a software margin.',
+        rev: 3.6,
         margin: 14,
-        pe: 40,
+        pe: 45,
       },
     },
     sourced: false,
     watch: [
       {
+        h: 'GAAP against adjusted',
+        m: 'FY2026E EPS $0.96 adjusted; TTM GAAP net income −$2.17M',
+        b: 'Every headline multiple quoted for this company uses the adjusted number. This model uses the GAAP one, and the two disagree by more than an order of magnitude.',
+        c: 'Read GAAP net income first, then the reconciliation to adjusted. The size of the stock-compensation line in that bridge is the single most important number in the release.',
+      },
+      {
+        h: 'Diluted share count',
+        m: '251.01M shares, +13.60% year over year',
+        b: 'Compensation paid in stock is what turns revenue growth into a smaller per-share result than it looks, and 13.6% in one year is fast.',
+        c: 'Check the diluted count against the drivers table, which assumes roughly 4% and falling. If dilution stays in double digits, the 2030 EPS is wrong before any operating assumption is tested.',
+      },
+      {
+        h: 'The deceleration consensus already expects',
+        m: 'FY2026E +39.5%, then FY2027E +16.0%',
+        b: 'Consensus itself has growth more than halving between 2026 and 2027. The model inherits that, so an early sign either way moves every year after it.',
+        c: 'Check the forward guide against the +16% shape for 2027, not just the beat on the current quarter. Twenty consecutive beat-and-raise quarters set an expectation that the estimate curve does not.',
+      },
+      {
+        h: 'Cash conversion',
+        m: 'FCF $224.41M against TTM EBITDA $115.94M',
+        b: 'Free cash flow is running ahead of both EBITDA and net income, largely because compensation paid in stock costs no cash. That is the bull case and the short case restated as one number.',
+        c: 'Track free cash flow per share, not in total — cash generated while the share count grows 13.6% is a different result from the same cash on a flat count.',
+      },
+      {
         h: 'Direct platform revenue mix',
-        m: 'Direct versus integrated-platform revenue',
+        m: 'FY2026E revenue $1.82B, +39.5%',
         b: 'Revenue routed through agency and integrated partners carries different economics and different durability from revenue the platform earns directly.',
-        c: 'Check the direct share of revenue and whether it is growing faster than the total. A headline growth rate carried by the integrated channel is a weaker result than the same number carried by direct.',
-      },
-      {
-        h: 'Stock compensation and diluted shares',
-        m: '~252M diluted shares in the model, rising to 274M',
-        b: 'This is the single largest gap between the adjusted numbers the company reports and the GAAP numbers this model runs on.',
-        c: 'Check stock compensation as a percentage of revenue and the diluted count against the drivers table. If the count grows faster than the path here, the 2030 EPS is wrong before any operating assumption is tested.',
-      },
-      {
-        h: 'The crossover to GAAP profit',
-        m: 'Year one modelled at a −2.5% GAAP net margin',
-        b: 'The base case is a claim that GAAP net income turns positive and reaches a double-digit margin by 2030. Nothing in the P/E ladder works until that first part happens.',
-        c: 'Check GAAP net income, not adjusted. The quarter it crosses zero — and whether it stays there — is the disclosure that confirms or breaks this model.',
-      },
-      {
-        h: 'Scaled customers and spend per customer',
-        m: 'Scaled customer count and ARPU',
-        b: 'Growth from more customers and growth from existing customers spending more are different businesses with different ceilings.',
-        c: 'Check both counts and the average spend, plus super-scaled customers separately. Flat customer additions with rising ARPU means the model depends on a narrow base.',
-      },
-      {
-        h: 'Cash conversion and the short thesis',
-        m: 'Free cash flow against adjusted EBITDA',
-        b: 'A published short thesis in late 2024 attacked the quality of the revenue and the customer-acquisition spend behind it, and the stock has not fully recovered. Cash is the answer to that argument or the confirmation of it.',
-        c: 'Check free cash flow against adjusted EBITDA. Persistent conversion is what settles the argument; EBITDA that never becomes cash is what the short case predicted.',
+        c: 'Check the direct share and whether it is growing faster than the total, plus scaled customer count against spend per customer. Growth carried by the integrated channel is a weaker result than the same headline carried by direct.',
       },
     ],
   },
+
   // ---------------------------------------------------------------- health
   // Price $1,174.61 · cap $1.05T · 891.36M shares · TTM rev $79.67B · TTM EBITDA
   // $41.71B · cash $8.95B, debt $54.91B · P/E 39.4 · FY2026E rev $88.18B (+35.29%),

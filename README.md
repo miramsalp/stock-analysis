@@ -99,7 +99,7 @@ table, not silently dropped.
 
 All reported figures, share counts and prices were pulled on **28–29 August 2026** from
 [stockanalysis.com](https://stockanalysis.com) (which sources S&P Global consensus), with MSTR's
-bitcoin holdings from company 8-K filings. `DATA_AS_OF` in `src/data/tickers.js` carries the date,
+bitcoin holdings from company 8-K filings and ZETA pulled two days later, on 31 August 2026. `DATA_AS_OF` in `src/data/tickers.js` carries the date,
 and the page footer shows it. **This is a snapshot, not a feed** — re-pull it when it matters.
 
 Each ticker was built the same way:
@@ -108,7 +108,7 @@ Each ticker was built the same way:
 | --- | --- |
 | `prevRev` | Last reported full fiscal year revenue |
 | `growth[0]` | Set so CY2026 lands on the **analyst consensus revenue estimate** |
-| `growth[1..4]` | A deceleration path — judgement, not consensus |
+| `growth[1..4]` | A deceleration path — judgement, not consensus. **ZETA** is the exception: FY2027 consensus was published too, so `growth[1]` is consensus there and only `growth[2..4]` are judgement |
 | `niMargin[0]` | Set so year one lands near the **consensus EPS** |
 | `sharesOut` | Actual current diluted share count, then a dilution/buyback path |
 | `peLow` / `peHigh` | A band around where the stock actually trades |
@@ -120,10 +120,11 @@ owner's own reading of the release, and `cost` is a real entry at $319.46. Every
 real reported history and real consensus behind year one, but the 2027–2030 path and the exit
 multiples are modelled assumptions.
 
-Three margins are deliberately set **below** the headline consensus, because consensus EPS for
+Four margins are deliberately set **below** the headline consensus, because consensus EPS for
 those names is non-GAAP while this model runs on GAAP: **MRVL** ($4.05 non-GAAP vs 16% GAAP
-margin here), **AXON** ($7.71 non-GAAP against a reported 4.5% GAAP margin), and **GOOGL**, whose
-FY2026 consensus EPS of $20.59 drops to $14.81 in FY2027 because 2026 carries a one-off gain.
+margin here), **AXON** ($7.71 non-GAAP against a reported 4.5% GAAP margin), **GOOGL**, whose
+FY2026 consensus EPS of $20.59 drops to $14.81 in FY2027 because 2026 carries a one-off gain, and
+**ZETA**, where the gap is widest of all — see below.
 
 ### Caveats
 
@@ -137,21 +138,27 @@ the earnings-multiple frame does not cleanly fit. Five carry one:
   exist yet.
 - **SOFI** — a balance-sheet lender, so EV/EBITDA is close to meaningless; read the P/E ladder.
 - **AXON** — ~250x trailing earnings, so the entry multiple decides the outcome, not growth.
-- **ZETA** — two problems at once, see below.
+- **ZETA** — the widest GAAP/non-GAAP gap in the book, see below.
 - **MSTR** — see below.
 
-### ZETA is not from the same pull
+### ZETA has the widest GAAP gap in the book
 
-**ZETA is the one entry that does not share the 28–29 August 2026 snapshot.** Its figures are the
-last full fiscal year on record plus a modelled path — FY2025 revenue around $1.245B, adjusted
-EBITDA near 20% of revenue, roughly 252M diluted shares — and its `priceRef` is a placeholder, not
-a quote. Re-pull revenue, share count and price before reading any of it as current.
+The same problem AXON and MRVL have, an order of magnitude larger. The FY2026 consensus EPS of
+**$0.96 is adjusted**; on GAAP the trailing twelve months show a **$2.17M net loss** on $1.571B of
+revenue. Trailing EBITDA is **$115.94M — 7.4% of revenue** — against the roughly 20% adjusted
+EBITDA margin the company reports. Stock compensation is most of both gaps, so `niMargin` starts
+at 1% and `ebMargin` at 8%, not at anything resembling the headline numbers.
 
-The second problem is the GAAP gap, and it is the same one AXON and MRVL have, only larger: Zeta
-reports adjusted EBITDA and adjusted EPS, this model runs on GAAP, and stock compensation is big
-enough that CY2026 is still a net loss here. That makes the CY2026 EPS and implied-P/E cells
-negative on purpose. The share count row is the live risk — compensation paid in stock is what
-turns revenue growth into a smaller per-share result than it looks.
+That makes it a share count problem as much as a margin one. The diluted count rose **13.60% in a
+single year**, to 251.01M. The `sharesOut` path assumes that decelerates to about 4% and then
+below — an assumption, and the one in this entry most likely to be too kind.
+
+Two things frame the result. The stock sits at **$30.91 against a $31.36 consensus price target**
+and **65.3x EV/EBITDA**, so `evMult` is set to 20 rather than held at today's multiple — the base
+case is earnings catching up to the multiple, not the multiple re-rating. And **free cash flow of
+$224.41M exceeds both trailing EBITDA and reported net income**, because compensation paid in
+stock costs no cash. That single comparison is the bull case and the 2024 short thesis restated as
+one number, which is why the watch items track free cash flow *per share* rather than in total.
 
 ### MSTR is a special case
 
