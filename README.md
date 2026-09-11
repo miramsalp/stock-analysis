@@ -1,20 +1,20 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for 40 companies across 8 sectors. Every company starts at one
+A CY2026–CY2030 equity model for 50 companies across 8 sectors. Every company starts at one
 share bought at its market price on the reference date, so nothing is sized larger than anything
 else by accident. Edit the drivers and every projection, scenario, multiple and IRR on the page
-re-runs — then section 07 ranks all 40 against each other on the assumptions you just set.
+re-runs — then section 07 ranks all 50 against each other on the assumptions you just set.
 
 | Sector | Tickers |
 | --- | --- |
-| Internet & Ads | APP · META · GOOGL · NFLX · ZETA |
-| Semiconductors | MRVL · NVDA · TSM · AVGO · ARM · ASML |
+| Internet & Ads | APP · META · GOOGL · NFLX · ZETA · TTD · RDDT |
+| Semiconductors | MRVL · NVDA · TSM · AVGO · ARM · ASML · AMD · MU |
 | Consumer & Commerce | AMZN · AAPL · SHOP · COST · KO · UBER · CHA |
-| Software & Security | AXON · MSFT · ORCL · CRM · NOW · CRWD · PLTR |
-| Space & Aerospace | SPCX · RKLB |
+| Software & Security | AXON · MSFT · ORCL · CRM · NOW · CRWD · PLTR · SNOW |
+| Space & Aerospace | SPCX · RKLB · LMT · ASTS |
 | Healthcare | OSCR · HIMS · LLY · UNH |
-| Financials | SOFI · V · JPM |
-| Power & Digital Assets | IREN · MSTR · CEG · VST · VRT · BE |
+| Financials | SOFI · V · JPM · HOOD · COIN |
+| Power & Digital Assets | IREN · MSTR · CEG · VST · VRT · BE · NBIS |
 
 Nothing in this list is a recommendation. The coverage names exist so each holding has a
 comparison sitting next to it — AVGO against MRVL for custom silicon, LLY against HIMS on the
@@ -26,6 +26,15 @@ a mature bank multiple looks like, ORCL against MSFT and AMZN for the same AI-ca
 different levels of leverage, UBER against SHOP for two take-rate marketplaces, CHA against COST
 at opposite ends of consumer scale, and VST, VRT and BE against IREN and CEG for four ways to sell
 the same datacentre buildout.
+
+Ten names were added on **11 September 2026**, on the same principle: TTD against APP for the
+demand side of the same ad budget, bought at a multiple that already assumes it is losing;
+RDDT against META and GOOGL for what a third-party audience is worth; AMD against NVDA
+for the same accelerator market at a different share of it; MU for what a cyclical looks like
+priced at a peak; LMT against SPCX and RKLB for a mature prime; ASTS against RKLB one stage
+earlier; HOOD against SOFI and COIN against MSTR for two more ways to own the same trading and
+crypto exposure; SNOW against PLTR and ORCL on data platforms; and NBIS against IREN for the
+other neocloud funded the same way.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
@@ -49,7 +58,7 @@ npm run lint     # oxlint
 | 04 Range | Bear / base / bull 2030 endpoints, each with its own revenue, margin and exit multiple, plus a band chart against your cost basis. |
 | 05 Multiples | P/E low / high / midpoint price ladder with upside and IRR, cross-checked against EV/EBITDA plus net cash. |
 | 06 Verify | Five disclosures to check at the next earnings release, with a checkbox that persists. |
-| 07 Rank | All 40 companies sorted by annualised return to 2030, on a basis you choose. |
+| 07 Rank | All 50 companies sorted by annualised return to 2030, on a basis you choose. |
 
 Two reset buttons sit in the header, and they do different things. **Reset \<TICKER\>** restores
 one company's shipped defaults — drivers, scenarios, multiples and position together. **1 share
@@ -101,11 +110,13 @@ only four of the base-case top five survive into the downside top five. The char
 as a **bear-to-bull span** with a marker at the ranking basis, so a wide bar reads as what it is:
 a name the model is not confident about.
 
-A ticker can set `rankable: false` with a `rankReason` to stay out of the ranking entirely. Only
-**MSTR** does — its scenario targets run through the same P/E ladder as everything else, and that
+A ticker can set `rankable: false` with a `rankReason` to stay out of the ranking entirely. Two
+do. **MSTR** — its scenario targets run through the same P/E ladder as everything else, and that
 ladder is noise for a bitcoin treasury, so ranking on it would place Strategy last for a reason
-that has nothing to do with the asset anyone owns it for. Excluded names are named under the
-table, not silently dropped.
+that has nothing to do with the asset anyone owns it for. And **ASTS**, which trades at 202x
+trailing *sales* with no trailing P/E at all: there is no 2030 earnings number solid enough to
+sort on, only a view about whether a constellation that does not exist yet gets built. Excluded
+names are named under the table, not silently dropped.
 
 ## Where the numbers come from
 
@@ -126,6 +137,19 @@ August are now behind stockanalysis.com's paywall. **ASML, PLTR, RKLB, ZETA, SPC
 and VRT** each use one in `growth[1]` or `niMargin[1]`. Those values are carried forward from the
 August pull rather than re-sourced, and both the data file and the driver comment say so at each
 site. Re-source them before leaning on year two.
+
+The ten names added on 11 September 2026 were pulled the same way, from the `/statistics/` and
+`/forecast/` pages for each ticker. The paywall meant none of them could source an FY2027 figure,
+so for those ten **every year after the first is modelled judgement** rather than carried-forward
+consensus — SNOW is the one exception, because its January fiscal year puts a still-public
+estimate over CY2026. Two of the ten sit on a non-calendar year: **MU** ends in August and
+**SNOW** on 31 January, which is offset far enough that year one uses the estimate the source
+labels FY2027, not FY2026. Both say so in the entry comment and the caveat.
+
+`netCash` is defined as total cash less total debt, and for **MU** and **SNOW** the source's own
+net-cash figure is larger than that because it counts long-term investments. Both entries carry
+the source figure instead, because that is the one the market-cap-less-enterprise-value bridge
+agrees with, and `netCash` feeds exactly that bridge. The entry comment records all three numbers.
 
 Three currencies are converted rather than reported: **TSM** at NT$31.5, **ASML** at EUR/USD
 1.1627 and **CHA** at USD/CNY 6.71. Growth rates and margins are currency-neutral; every absolute
@@ -178,13 +202,35 @@ anything on this page.
 ### Caveats
 
 An optional `caveat` string renders as an amber note above the summary stats, for tickers where
-the earnings-multiple frame does not cleanly fit. **31 of the 40** carry one. The ones worth
-knowing about before you read anything else:
+the earnings-multiple frame does not cleanly fit. **41 of the 50** carry one, and all ten of the
+names added on 11 September 2026 do. The ones worth knowing about before you read anything else:
 
 - **SPCX** — listed 12 June 2026, so no full year as a public company and no trading history to
   set a multiple against. TTM shows an $8.89B net loss and −$32.52B free cash flow; the share
   count rose 41.79% in a year. Both consensus years assume >135% revenue growth. See below.
 - **MSTR** — a bitcoin treasury, so the P/E ladder is noise. See below.
+- **ASTS** — 202x trailing sales, no trailing P/E, −$1.64B free cash flow and a share count up
+  39.67% in a year. Excluded from the ranking for the same reason MSTR is.
+- **MU** — the clearest cyclical here, and the only entry whose base case sits below the current
+  price. Consensus has FY2026 revenue up 247.09% at a 63% net margin; the driver table reverts
+  that margin toward 35% by 2030 rather than holding it. See below.
+- **SNOW** — $1.20B of free cash flow and a $1.09B GAAP net loss in the same twelve months, almost
+  entirely stock compensation. On the adjusted basis the consensus uses, the same revenue path
+  produces roughly twice the EPS.
+- **TTD** — consensus has revenue *falling* 5.23% in year one, one of three here that do (with
+  COIN and UNH), and the price target sits below the market price — one of two, with AAPL.
+- **NBIS** — 1,474x trailing earnings, 46x sales, −$5.88B free cash flow against $11.14B of capex,
+  and +22.12% shares in a year. The same trade as IREN, funded the same way.
+- **COIN** — GAAP loss-making *and* shrinking in the consensus year. Read it with MSTR and HOOD:
+  three entries earning from one asset price.
+- **HOOD** — a broker, so EV/EBITDA is meaningless; the source publishes none. Much of the margin
+  is net interest on customer balances, which is a rate bet.
+- **AMD** — 128.54x trailing earnings and 85.05x EV/EBITDA, so the entry multiple decides the
+  outcome. The MI-series path makes it the same bet as NVDA, not a diversification of it.
+- **RDDT** — consensus EPS implies a ~44% net margin; reported FY2025 *operating* margin was
+  20.06%, and the trailing net margin is flattered by interest income and tax items.
+- **LMT** — the frame fits, but the model prices no dividend and a 2.60% yield is a large part of
+  the return. A fixed-price programme charge can remove a year of profit with no warning.
 - **ZETA** — the widest GAAP/non-GAAP gap in the book. See below.
 - **ORCL** — the most leveraged AI-capex bet here: free cash flow of −$28.72B, net debt of
   $118.85B, and an enterprise value a quarter larger than the market cap. See below.
@@ -308,6 +354,30 @@ the ~26% the consensus EPS implies, because neither of those carries the depreci
 being bought now or the interest on $155.93B of debt. That step down is the single most important
 assumption in the entry, and it is judgement rather than consensus.
 
+### MU is the one entry whose base case is below the current price
+
+Micron is the only company in the book where the shipped base case values the equity *below* what
+it trades at today, and that is the honest output of the model rather than a slip in it.
+
+Consensus has FY2026 revenue at **$129.74B, up 247.09%**, on a net margin of about **63%** — a
+figure that lands year one almost exactly on the $73.40 consensus EPS. Both numbers are a cycle
+peak. Memory has never held one for five years, so `niMargin` reverts toward **35%** by 2030 and
+`growth` decelerates to low single digits, which leaves 2030 EPS around $56 against $72 in year
+one. At an 11x exit multiple — a mid-cycle memory multiple, not a growth-stock one — that is
+roughly $673 against a $977.41 share price.
+
+Reverse the single assumption and the answer reverses with it. If high-bandwidth memory has made
+this business structurally less cyclical than it has ever been, the 2030 margin and the exit
+multiple are both too low, and the entry looks entirely different. **That is the argument, and
+the page exists so you can have it with the numbers in front of you** — section 07 says it ranks
+assumptions rather than companies, and this is what that sentence means in practice.
+
+Two mechanical notes. The fiscal year ends in **August**, so every column sits about a quarter
+behind the calendar. And the 6.80x forward P/E is struck against an FY2027 estimate behind the
+paywall, implying roughly **$143** of EPS — nearly double FY2026, and a much stronger claim than
+anything modelled here. Source it properly before leaning on it; it is doing more work in the
+share price than any figure visible on the page.
+
 Nothing here is investment advice.
 
 ## Layout
@@ -315,9 +385,9 @@ Nothing here is investment advice.
 ```
 src/
   data/meta.js             years, scenario keys, DATA_AS_OF
-  data/sectors.js          the 7 sector groups and their render order
+  data/sectors.js          the 8 sector groups and their render order
   data/tracked.js          the 10 names this was built around
-  data/watchlist.js        the 16 coverage names
+  data/watchlist.js        the 40 coverage names
   data/tickers.js          merges both, groups by sector
   lib/model.js             the five-year projection
   lib/rank.js              cross-company ranking and its three bases
@@ -368,5 +438,5 @@ with its sector name.
 An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
 earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
 large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
-growth rate — decides the outcome. 31 of the 40 carry one, and section 07 marks every ranked row
+growth rate — decides the outcome. 41 of the 50 carry one, and section 07 marks every ranked row
 that has one.

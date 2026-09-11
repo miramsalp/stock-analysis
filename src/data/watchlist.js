@@ -25,6 +25,26 @@
  *   cost        the market price on the reference date — a PLACEHOLDER
  *
  * Years 2027–2030 and every exit multiple are modelled judgement, not consensus.
+ *
+ * Ten names were added on 11 September 2026 — TTD, RDDT, AMD, MU, LMT, ASTS, HOOD,
+ * COIN, SNOW and NBIS — on the same principle, each placed at the end of its sector
+ * group: TTD against APP for the demand side of the same ad budget, RDDT against META
+ * and GOOGL, AMD against NVDA, MU for a cyclical priced at a peak, LMT as the mature
+ * prime beside SPCX and RKLB, ASTS beside RKLB one stage earlier, HOOD against SOFI,
+ * COIN against MSTR on the same asset, SNOW against PLTR and ORCL, and NBIS against
+ * IREN as the other neocloud.
+ *
+ * The paywall meant none of the ten could source an FY2027 consensus figure, so for
+ * those entries EVERY year after the first is modelled judgement rather than a
+ * carried-forward estimate. SNOW is the exception: its 31 January fiscal year puts a
+ * still-public estimate over CY2026, and year one uses the column the source labels
+ * FY2027, not FY2026. MU is offset too, ending in August.
+ *
+ * Two of them qualify the netCash rule above. For MU and SNOW the source's own net
+ * cash exceeds total cash less total debt, because it counts long-term investments;
+ * both carry the source figure, since that is what the market-cap-less-EV bridge
+ * agrees with and netCash feeds exactly that bridge. The entry comments record all
+ * three numbers so a re-pull stays a diff.
  */
 export const WATCHLIST = {
   // ---------------------------------------------------------------- consumer
@@ -346,7 +366,7 @@ export const WATCHLIST = {
 
   // Price $87.83 · cap $377.89B · EV $405.78B · 4.30B shares (-0.09% YoY) · TTM rev
   // $50.13B · TTM EBITDA $17.00B (33.91%) · TTM NI $14.32B (28.56%) · FCF $14.30B
-  // · cash $16.37B, debt $44.26B -> net debt $27.89B · P/E 26.40 trailing, 25.84
+  // · cash $16.37B, debt $44.26B → net debt $27.89B · P/E 26.40 trailing, 25.84
   // forward · EV/EBITDA 23.87 · FY2026E rev $49.72B (+3.72%), EPS $3.30 · PT $94.70
   KO: {
     name: 'Coca-Cola',
@@ -852,7 +872,7 @@ export const WATCHLIST = {
 
   // Price $254.18 · cap $271.48B · EV $268.08B · 1.07B shares (+0.66% YoY) · TTM rev
   // $5.16B · TTM EBITDA $1.06B (20.63%) · TTM NI $1.04B (20.25%) · cash $3.89B, debt
-  // $485.00M -> net cash $3.40B · FCF $1.51B · P/E 259.45 trailing, 106.45 forward
+  // $485.00M → net cash $3.40B · FCF $1.51B · P/E 259.45 trailing, 106.45 forward
   // · EV/EBITDA 252.03 · FY2026E rev $4.92B (+22.79%), EPS $1.77 · FY2027E rev $6.06B
   // (+23.09%), EPS $2.23 · PT $288.36 · fiscal year ends 31 March
   ARM: {
@@ -937,7 +957,7 @@ export const WATCHLIST = {
 
   // Price $1,687.43 (USD), up 109.59% over 52 weeks · cap $658.34B · EV $651.83B
   // · 384.10M shares (-1.44% YoY) · TTM rev $40.29B USD · TTM EBITDA $15.38B (38.18%)
-  // · TTM NI $12.13B (30.11%), EPS $31.41 · cash $8.65B, debt $2.26B -> net cash
+  // · TTM NI $12.13B (30.11%), EPS $31.41 · cash $8.65B, debt $2.26B → net cash
   // $6.38B · FCF $11.66B · P/E 54.26 trailing, 30.19 forward · EV/EBITDA 42.37
   // · FY2026E rev €42.82B (+31.08%), EPS €38.19 · PT $2,168
   // ASML reports in EUR and trades in USD. The revenue figures below are converted at
@@ -1020,6 +1040,181 @@ export const WATCHLIST = {
         m: '30.11% GAAP net margin trailing',
         b: 'The margin path assumes mix keeps shifting toward EUV and High-NA.',
         c: 'Check gross margin against the EUV revenue share. Margin expanding without a mix shift is the number to be sceptical of.',
+      },
+    ],
+  },
+
+  // Price $503.60 · cap $822.11B · EV $813.28B · 1.63B shares (+1.07% YoY) · TTM rev
+  // $41.31B · TTM EBITDA $9.56B (23.15%) · TTM NI $6.43B (15.58%), EPS $3.90 · cash
+  // $13.11B, debt $4.28B → net cash $8.83B · FCF $8.40B on $1.68B capex · P/E 128.54
+  // trailing, 45.51 forward · EV/EBITDA 85.05 · PS 19.90 · FY2026E rev $50.83B
+  // (+46.75%), EPS $7.56 · PT $613.84 · 54 analysts
+  AMD: {
+    name: 'AMD',
+    sector: 'semis',
+    shares: 1,
+    cost: 503.6,
+    priceRef: 503.6,
+    prevRev: 34.634,
+    growth: [46.75, 32, 26, 22, 18],
+    // Consensus EPS $7.56 on ~1.64B shares implies a 24.4% net margin against a
+    // 15.58% GAAP trailing margin — an adjusted number. Year one splits the
+    // difference at 17%, on the view that scale rather than add-backs closes the gap.
+    niMargin: [17, 20, 23, 25, 26],
+    ebMargin: [25, 28, 31, 33, 34],
+    sharesOut: [1.64, 1.65, 1.66, 1.67, 1.68],
+    peLow: 25,
+    peHigh: 45,
+    evMult: 22,
+    netCash: 8.83,
+    caveat:
+      'The multiple, not the growth rate, decides this one. At 128.54x trailing earnings and 85.05x EV/EBITDA the price already contains a datacentre-accelerator business several times the size of the one AMD reports, so the base case below can be right about revenue and still return very little. Two things to hold separately: the consensus $7.56 FY2026 EPS is adjusted and implies a 24.4% net margin against a 15.58% GAAP trailing margin, and this model runs on the GAAP basis, which is why year one sits at 17%. The second is concentration — the revenue path here is an MI-series accelerator story, which makes AMD the same bet as NVDA at a different share of the same market rather than a diversification of it.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'MI-series stays a second source, the software lock holds and the multiple compresses toward the client business.',
+        rev: 85,
+        margin: 18,
+        pe: 20,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'AMD takes a durable minority share of accelerators while server CPU keeps compounding.',
+        rev: 121.72,
+        margin: 26,
+        pe: 33,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Open software matures, hyperscalers second-source at scale and AMD earns a merchant-silicon margin.',
+        rev: 150,
+        margin: 30,
+        pe: 40,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Accelerator revenue, disclosed separately',
+        m: 'FY2026E revenue $50.83B, +46.8%',
+        b: 'Almost all of the growth in this model is accelerators. Group revenue can grow on client and embedded while the part that justifies the multiple does not.',
+        c: 'Look for a datacentre GPU number given on its own, with named hyperscale customers behind it. A group figure alone does not settle it.',
+      },
+      {
+        h: 'GAAP margin against the adjusted headline',
+        m: 'FY2026E EPS $7.56 adjusted; 15.58% GAAP trailing margin',
+        b: 'The gap is most of a factor of two, and the driver table runs on the smaller number.',
+        c: 'Read GAAP gross and operating margin, and how much of the difference is acquisition amortisation versus stock compensation. Only one of those ends.',
+      },
+      {
+        h: 'Software maturity',
+        m: 'Framework support outside the largest buyers',
+        b: 'The bull case is that software stops being the reason to buy NVDA instead. That is a developer question, not a silicon one.',
+        c: 'Watch support landing upstream and inference deployments run by customers who are not being subsidised to try it.',
+      },
+      {
+        h: 'Foundry and packaging allocation',
+        m: 'Leading-edge and advanced packaging capacity',
+        b: 'AMD and NVDA buy the same wafers and the same packaging from the same supplier, which is already in this book as TSM.',
+        c: 'Check TSM capacity commentary alongside this entry. An allocation constraint caps both names at once and is invisible in either one on its own.',
+      },
+      {
+        h: 'Client and embedded as ballast',
+        m: 'Segment mix and PC demand',
+        b: 'The non-datacentre half funds the effort and cushions a slow accelerator ramp.',
+        c: 'Check whether client margin is holding. A weak PC cycle removes the cushion in exactly the year the ramp needs it.',
+      },
+    ],
+  },
+
+  // Fiscal year ends August, so the columns sit about a quarter behind the calendar —
+  // FY2026 covers September 2025 to August 2026.
+  // Price $977.41 · cap $1.10T · EV $1.08T · 1.13B shares (+0.62% YoY) · TTM rev
+  // $90.27B · TTM EBITDA $68.22B (75.57%) · TTM NI $50.47B (55.91%), EPS $44.31 ·
+  // cash $26.02B, debt $6.38B; the site's net cash of $23.75B is larger than cash less
+  // debt because it counts long-term investments, and the EV bridge (cap less EV)
+  // agrees with the larger figure, so that is what netCash carries here · FCF $26.17B
+  // on $25.26B capex · P/E 22.06 trailing, 6.80 forward · EV/EBITDA 15.83 · PS 12.23 ·
+  // FY2026E rev $129.74B (+247.09%), EPS $73.40 · PT $1,513 · 49 analysts
+  MU: {
+    name: 'Micron Technology',
+    sector: 'semis',
+    shares: 1,
+    cost: 977.41,
+    priceRef: 977.41,
+    prevRev: 37.379,
+    // Year one is the consensus. Years two to five are a cycle, not a trend: memory
+    // has never held a peak for five years, and the deceleration below is this
+    // model's judgement rather than anything sourced.
+    growth: [247.09, 18, 6, 4, 5],
+    // 63% lands year one on the $73.40 consensus EPS. The decline after it is
+    // deliberate — 55.91% trailing is a peak-cycle margin, and the path reverts
+    // toward something a memory maker can hold instead of extending the peak.
+    niMargin: [63, 52, 42, 33, 35],
+    ebMargin: [78, 72, 64, 56, 58],
+    sharesOut: [1.13, 1.13, 1.12, 1.11, 1.1],
+    // A cyclical is cheapest on trailing earnings exactly when it is most expensive.
+    // The band is low on purpose; it is not a growth-stock ladder.
+    peLow: 6,
+    peHigh: 14,
+    evMult: 6,
+    netCash: 23.75,
+    caveat:
+      'The base case here returns less than the current price, and that is the honest output rather than a slip. Consensus has FY2026 revenue up 247.09% at a 63% net margin, which is a cycle peak, and the driver table reverts margin toward 35% by 2030 instead of holding it. Reverse that one assumption and the answer reverses with it — which is exactly why section 07 says it ranks assumptions rather than companies. What the model cannot settle is whether high-bandwidth memory makes this business structurally less cyclical than it has ever been; if you think it does, raise the 2030 margin and the exit multiple and the entry looks entirely different. Two smaller notes: the fiscal year ends in August, so every column sits about a quarter behind the calendar, and the 6.80x forward P/E is struck against an FY2027 estimate that is behind the paywall, implying roughly $143 of EPS — nearly double the FY2026 consensus, and a far stronger claim than anything modelled below.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Capacity arrives, the cycle turns and memory prices do what memory prices do.',
+        rev: 95,
+        margin: 12,
+        pe: 8,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'AI demand raises the floor under the cycle, but the peak margin still normalises.',
+        rev: 177.21,
+        margin: 38,
+        pe: 11,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'High-bandwidth memory is a contracted, sold-forward business and memory re-rates permanently as an AI input.',
+        rev: 220,
+        margin: 45,
+        pe: 14,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'How much supply is already contracted',
+        m: 'Share of capacity sold forward',
+        b: 'The bull case rests on high-bandwidth memory behaving like a contracted component rather than a spot commodity.',
+        c: 'Check how much of the next year is committed, at what pricing, and for how long. Sold out is not the same as priced.',
+      },
+      {
+        h: 'Industry capex, not just Micron capex',
+        m: '$25.26B own capex against $26.17B free cash flow',
+        b: 'Memory downturns are made of everyone expanding at once. Competitor capacity decides the price Micron receives.',
+        c: 'Read the other large suppliers’ capacity plans alongside this. Micron spending alone does not cause the turn, and it will not prevent it.',
+      },
+      {
+        h: 'Conventional DRAM and NAND pricing',
+        m: '55.91% trailing net margin',
+        b: 'The non-HBM half is where the cycle shows up first, and it is still most of the bit supply.',
+        c: 'Track bit shipments against average selling price separately. Volume growth with falling price is the shape of a peak.',
+      },
+      {
+        h: 'The FY2027 estimate behind the paywall',
+        m: 'Forward P/E 6.80 implies roughly $143 of EPS',
+        b: 'The market is not paying 22x trailing earnings; it is paying under 7x an estimate that assumes the peak extends another year.',
+        c: 'Source the FY2027 consensus properly before leaning on it. It is doing more work in the share price than anything visible on this page.',
+      },
+      {
+        h: 'Capital return through the cycle',
+        m: '$23.75B net cash',
+        b: 'A strong balance sheet at the peak is what funds the trough. It is also what gets spent on capacity at the wrong moment.',
+        c: 'Watch buybacks and capex against the cycle position. Retiring stock at the peak is a worse use of it than surviving the bottom.',
       },
     ],
   },
@@ -1440,7 +1635,7 @@ export const WATCHLIST = {
 
   // Price $165.86 · cap $398.57B · EV $389.37B · 2.40B shares (+1.79% YoY) · TTM rev
   // $6.16B · TTM EBITDA $2.66B (43.25%) · TTM NI $3.02B (49.00%), EPS $1.17 · FCF
-  // $3.36B · cash $9.41B, debt $211.40M -> net cash $9.20B · P/E 141.85 trailing,
+  // $3.36B · cash $9.41B, debt $211.40M → net cash $9.20B · P/E 141.85 trailing,
   // 87.14 forward · EV/EBITDA 146.24 · PS 64.75 · FY2026E rev $8.19B (+82.97%),
   // EPS $1.61 · PT $193.88
   PLTR: {
@@ -1520,6 +1715,97 @@ export const WATCHLIST = {
         m: '142x trailing earnings, 146x EV/EBITDA',
         b: 'At this level the exit P/E is the whole investment case, and it is a judgement rather than a disclosure.',
         c: 'Set the 2030 P/E in the scenario cards first and read the result, then decide whether the growth assumptions matter at all.',
+      },
+    ],
+  },
+
+  // Fiscal year ends 31 January, so the labels are offset by almost a full year: the
+  // year stockanalysis.com calls FY2027 runs February 2026 to January 2027 and is the
+  // one that overlaps CY2026. That is the estimate used for year one here, not the
+  // FY2026 column, which has already finished.
+  // Price $329.72 · cap $116.21B · EV $114.64B · 352.46M shares (+3.43% YoY) · TTM rev
+  // $5.43B · TTM EBITDA -$1.04B (-19.07%) · TTM NI -$1.09B (-20.07%), EPS -$3.17 ·
+  // cash $2.34B, debt $2.76B; the site's net cash of $1.57B counts long-term
+  // investments and matches the EV bridge (cap less EV), so netCash carries that ·
+  // FCF $1.20B · no trailing P/E, forward 131.09 · PS 21.38 · FY2026E (Jan-end, done)
+  // rev $4.68B (+29.16%), EPS $1.25 · FY2027E rev $6.32B (+34.83%), EPS $2.20 — one of
+  // the few second years still outside the paywall · PT $413.29 · 51 analysts
+  SNOW: {
+    name: 'Snowflake',
+    sector: 'software',
+    shares: 1,
+    cost: 329.72,
+    priceRef: 329.72,
+    // Backs out of the FY2027 estimate at its stated growth rate, and lands on $4.687B
+    // — the FY2026 actual of $4.68B, which is the cross-check that the offset is right.
+    prevRev: 4.6874,
+    growth: [34.83, 28, 24, 21, 18],
+    // The consensus $2.20 EPS implies a 12.3% net margin; the trailing GAAP margin is
+    // -20.07%. Almost the whole gap is stock compensation, so this path stays negative
+    // for two years and crosses into profit in CY2028.
+    niMargin: [-8, -2, 4, 8, 12],
+    ebMargin: [-5, 2, 8, 13, 17],
+    sharesOut: [0.358, 0.365, 0.371, 0.376, 0.38],
+    peLow: 30,
+    peHigh: 55,
+    evMult: 20,
+    netCash: 1.57,
+    caveat:
+      'A GAAP-versus-adjusted gap wide enough to invert the answer, and the same one ZETA has at a much larger size. Snowflake generated $1.20B of free cash flow and a $1.09B GAAP net loss in the same twelve months; the difference is very largely stock-based compensation, which is also why the share count rises about 3.4% a year. This model is GAAP, so it shows losses until CY2028 and a base case below today’s price — on the adjusted basis the consensus uses, the same revenue path produces roughly twice the EPS and a completely different conclusion. Decide which basis you believe before reading the ladder, and note that at 21.38x sales the exit multiple is doing more work here than the growth rate. The fiscal year ending 31 January is the second trap: year one is the estimate labelled FY2027, not FY2026, which has already closed.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Consumption pricing cuts both ways in a slowdown and the lakehouse competitors commoditise storage and compute.',
+        rev: 10,
+        margin: 3,
+        pe: 25,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Snowflake stays the default governed data platform and operating leverage finally reaches GAAP.',
+        rev: 14.32,
+        margin: 14,
+        pe: 45,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'AI workloads run where the governed data already is, and the consumption meter runs much faster.',
+        rev: 18,
+        margin: 17,
+        pe: 55,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Net revenue retention',
+        m: 'FY2027E revenue $6.32B, +34.8%',
+        b: 'Consumption pricing means growth is mostly existing customers spending more, which is the first thing to move in either direction.',
+        c: 'Read net revenue retention with new-customer counts. Retention falling while headline growth holds means the mix is being carried by land, not expand.',
+      },
+      {
+        h: 'Stock compensation as a share of revenue',
+        m: '$1.20B free cash flow against a $1.09B GAAP net loss',
+        b: 'This is the entire gap between the two bases, and it is the reason the driver table disagrees with the consensus EPS.',
+        c: 'Track SBC against revenue each quarter. Falling as a percentage is what turns the adjusted story into a GAAP one; flat means the dilution continues.',
+      },
+      {
+        h: 'Share count',
+        m: '352.46M shares, +3.43% year over year',
+        b: 'Buybacks here largely offset issuance rather than shrinking the count, so per-share progress lags the business.',
+        c: 'Compare the diluted count year over year against buyback spend. Cash spent to stand still is a real cost that free cash flow flatters.',
+      },
+      {
+        h: 'AI workload attachment',
+        m: 'Consumption from AI and machine-learning features',
+        b: 'The bull case is that model training and inference pull compute to the data instead of the other way round.',
+        c: 'Look for disclosed consumption from AI products, not customer counts using them. Adoption without consumption does not pay.',
+      },
+      {
+        h: 'Competitive floor on pricing',
+        m: '21.38x sales',
+        b: 'Open table formats let customers keep data outside any one vendor, which caps what storage and governance can charge.',
+        c: 'Watch pricing commentary and gross margin. A stable gross margin under open-format pressure is the thing to verify, not assume.',
       },
     ],
   },
@@ -1698,12 +1984,189 @@ export const WATCHLIST = {
     ],
   },
 
+  // One of three entries whose consensus has revenue falling in year one — COIN is
+  // down 23.01% and UNH 0.32% — and one of two whose price target sits below the
+  // market price, AAPL being the other.
+  // Price $13.97 · cap $6.56B · EV $5.51B · 469.88M shares (-4.27% YoY) · TTM rev
+  // $2.99B · TTM EBITDA $697.98M (23.34%) · TTM NI $406.89M (13.61%), EPS $0.85 ·
+  // cash $1.49B, debt $434.11M → net cash $1.06B · FCF $863.05M on $218.63M capex ·
+  // P/E 16.43 trailing, 15.29 forward · EV/EBITDA 7.90 · PS 2.20 · FY2026E rev $2.74B
+  // (-5.23%), EPS $1.16 · PT $13.55, 3.01% BELOW the price · 36 analysts
+  TTD: {
+    name: 'The Trade Desk',
+    sector: 'internet',
+    shares: 1,
+    cost: 13.97,
+    priceRef: 13.97,
+    prevRev: 2.8912,
+    // Year one is the consensus decline. The recovery after it is modelled judgement:
+    // a business that stabilises and grows with connected-TV budgets, not one that
+    // returns to the 20%+ it compounded at before.
+    growth: [-5.23, 3, 6, 7, 7],
+    // Consensus EPS $1.16 implies a 19.9% net margin against 13.61% trailing GAAP.
+    // Year one sits at the GAAP level and improves only with scale.
+    niMargin: [14, 15, 16, 17, 18],
+    ebMargin: [23, 24, 25, 26, 26],
+    sharesOut: [0.465, 0.455, 0.446, 0.437, 0.429],
+    // A no-growth ad-tech band, not the one this company used to earn.
+    peLow: 10,
+    peHigh: 18,
+    evMult: 8,
+    netCash: 1.06,
+    caveat:
+      'Read this one as the counterexample to APP rather than as a second position in the same trade. Consensus has revenue declining 5.23% in CY2026 — one of only three negative year-one growth rates here, alongside COIN and UNH — and the average price target of $13.55 sits 3.01% below the market price — analysts covering it do not think it is cheap even here. At 2.20x sales and 7.90x EV/EBITDA the multiple already reflects that, which is the case for owning it and also the reason the base case below is a stabilisation story rather than a growth one. Two specifics to check before believing either: the consensus $1.16 EPS is adjusted and implies a 19.9% net margin against 13.61% GAAP trailing, and the whole question is whether the demand-side platform keeps its share of connected-TV budgets against retail media networks and the walled gardens — three of which (APP, META, GOOGL) are already in this book on the other side of the same trade.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'The open internet keeps losing budget to walled gardens and retail media, and the take rate follows it down.',
+        rev: 2.8,
+        margin: 10,
+        pe: 8,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Connected TV stabilises the business as the independent buy-side of the open internet.',
+        rev: 3.43,
+        margin: 18,
+        pe: 14,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Identity and supply-path products win back share, and the platform re-rates on renewed growth.',
+        rev: 4.2,
+        margin: 22,
+        pe: 20,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Whether revenue actually declines',
+        m: 'FY2026E revenue $2.74B, -5.2%',
+        b: 'A shrinking top line at an advertising platform is usually share loss, not a soft market — the market itself is still growing.',
+        c: 'Check reported revenue against the prior year each quarter. The entire entry turns on whether the decline is a reset or the start of a trend.',
+      },
+      {
+        h: 'Connected TV share of spend',
+        m: 'CTV as a proportion of gross spend',
+        b: 'CTV is the part of the business that justifies any recovery, and it competes with content owners selling their own inventory.',
+        c: 'Look for CTV growth disclosed separately, with named streaming supply partners. Group growth hides the mix.',
+      },
+      {
+        h: 'The price target below the price',
+        m: 'PT $13.55 against $13.97, 36 analysts',
+        b: 'Two entries in this book carry that inversion. It means the sell side sees the current price as full, not as a discount.',
+        c: 'Re-check the target after the next two prints. A target that keeps falling with the price is a different signal from one that holds.',
+      },
+      {
+        h: 'Retail media and walled-garden competition',
+        m: 'Take rate on managed spend',
+        b: 'AMZN, META and GOOGL all sell the same budget with first-party data the open internet cannot match.',
+        c: 'Read this entry beside APP and META in the same quarter. Budget moving between them shows up here first and worst.',
+      },
+      {
+        h: 'Buyback pace against the cash pile',
+        m: '469.88M shares, -4.27% year over year; $1.06B net cash',
+        b: 'Shrinking the count 4% a year is a meaningful part of the per-share return when revenue is flat.',
+        c: 'Check repurchases against free cash flow of $863.05M. A buyback funded from a declining business is a choice, not a given.',
+      },
+    ],
+  },
+
+  // FY2025 GAAP: revenue $2.203B, operating income $441.98M (20.06%), net income
+  // $529.72M — net income ABOVE operating income, on interest from a large cash
+  // balance plus tax effects. That gap matters for reading the trailing margin below.
+  // Price $155.34 · cap $29.89B · EV $27.12B · 192.40M shares (+8.43% YoY) · TTM rev
+  // $2.78B · TTM EBITDA $801.52M (28.84%) · TTM NI $871.10M (31.35%), EPS $4.29 ·
+  // cash $2.79B, debt $20.87M → net cash $2.77B · FCF $1.02B · P/E 36.21 trailing,
+  // 25.70 forward · EV/EBITDA 33.84 · PS 10.76 · FY2026E rev $3.38B (+53.66%), EPS
+  // $7.68 · PT $213.10 · 34 analysts
+  RDDT: {
+    name: 'Reddit',
+    sector: 'internet',
+    shares: 1,
+    cost: 155.34,
+    priceRef: 155.34,
+    // Backs out of the consensus at its stated growth rate to $2.20B, which matches
+    // the FY2025 reported revenue of $2.203B — the cross-check that the anchor is right.
+    prevRev: 2.203,
+    growth: [53.66, 35, 28, 22, 18],
+    // Consensus EPS $7.68 implies about a 44% net margin. Reported FY2025 operating
+    // margin was 20.06%; trailing net margin of 31.35% is itself flattered by interest
+    // income and tax items. Year one starts at 26% and climbs on operating leverage.
+    niMargin: [26, 28, 30, 31, 32],
+    ebMargin: [30, 33, 35, 37, 38],
+    sharesOut: [0.198, 0.205, 0.211, 0.216, 0.22],
+    peLow: 25,
+    peHigh: 45,
+    evMult: 25,
+    netCash: 2.77,
+    caveat:
+      'Three separate reasons the headline margin overstates the business. The consensus $7.68 FY2026 EPS implies roughly a 44% net margin, which no advertising platform in this book earns — META, the most profitable of them, does not. The trailing 31.35% GAAP net margin is itself above the 20.06% operating margin Reddit reported for FY2025, because interest on $2.77B of net cash and tax items sit below the operating line; strip those and the operating business is roughly a fifth-margin company growing quickly, not a third-margin one. And the share count rose 8.43% in a year, so per-share progress trails the company. What the model cannot price at all is the single largest swing factor: a meaningful share of traffic arrives through one search engine, owned by GOOGL, which is also in this book and is being paid separately for data licensing.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Search referrals fall away, AI answers absorb the queries and advertising growth stalls near current scale.',
+        rev: 5.5,
+        margin: 18,
+        pe: 18,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Reddit becomes a standard line on the social buy alongside its data-licensing income.',
+        rev: 8.41,
+        margin: 32,
+        pe: 30,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Community data proves uniquely valuable to both advertisers and model builders, and pricing power follows.',
+        rev: 11,
+        margin: 36,
+        pe: 40,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Traffic dependence on external search',
+        m: 'Logged-out users as a share of the base',
+        b: 'A large part of the audience arrives from one search engine. That is a supplier relationship, not a moat, and the supplier is GOOGL.',
+        c: 'Read daily active uniques split between logged-in and logged-out. Logged-in growth is the part that survives an algorithm change.',
+      },
+      {
+        h: 'Operating margin, not net margin',
+        m: 'FY2025 operating margin 20.06% against a 31.35% trailing net margin',
+        b: 'The difference is interest income and tax, neither of which is the advertising business getting better.',
+        c: 'Track operating income directly. It is the line the 2030 margin assumption below actually has to reach.',
+      },
+      {
+        h: 'Average revenue per user, by region',
+        m: 'FY2026E revenue $3.38B, +53.7%',
+        b: 'International users are most of the growth in users and a small part of the growth in money.',
+        c: 'Check ARPU for the US against the rest of the world separately. User growth in cheap markets does not fund this revenue path.',
+      },
+      {
+        h: 'Data licensing renewals',
+        m: 'Licensing income and its counterparties',
+        b: 'These are a handful of large contracts, high margin and lumpy, with the same companies that also send the traffic.',
+        c: 'Watch renewal terms and how much of revenue they represent. A non-renewal moves both the licensing line and the traffic behind it.',
+      },
+      {
+        h: 'Dilution',
+        m: '192.40M shares, +8.43% year over year',
+        b: 'Faster than any of the large-cap advertising platforms this entry is valued against.',
+        c: 'Compare the diluted count against the modelled path. If it keeps compounding at 8%, the per-share result falls well short of the business.',
+      },
+    ],
+  },
+
   // ---------------------------------------------------------------- space
   // Listed on Nasdaq 12 June 2026, so there is no full year as a public company and no
   // trading history to build a multiple band from.
   // Price $148.18 · cap $2.01T · EV $1.95T · 13.57B shares (+41.79% YoY) · TTM rev
   // $23.04B · TTM EBITDA $5.90B (25.59%) · TTM NI -$8.89B (-35.66%), EPS -$2.27 · FCF
-  // -$32.52B · cash $100.01B, debt $39.71B -> net cash $60.30B · fwd P/E 102.40
+  // -$32.52B · cash $100.01B, debt $39.71B → net cash $60.30B · fwd P/E 102.40
   // · EV/EBITDA 330.83 · PS 87.28 · FY2026E rev $44.74B (+139.58%), EPS $0.09
   // · FY2027E EPS $1.58; the FY2027 revenue estimate is now paywalled · PT $220.68
   SPCX: {
@@ -1789,7 +2252,7 @@ export const WATCHLIST = {
 
   // Price $61.96 · cap $37.08B · EV $34.83B · 598.46M shares (+15.68% YoY) · TTM rev
   // $769.15M · TTM EBITDA -$150.52M (-19.57%) · TTM NI -$165.46M (-21.51%), EPS -$0.28
-  // · FCF -$371.14M · cash $2.30B, debt $133.69M -> net cash $2.25B · P/E n/a, fwd P/E
+  // · FCF -$371.14M · cash $2.30B, debt $133.69M → net cash $2.25B · P/E n/a, fwd P/E
   // 2,753.78 · PS 48.21 · FY2026E rev $958.27M (+59.23%), EPS -$0.05 · FY2027E figures
   // are now paywalled · PT $111.00
   RKLB: {
@@ -1867,6 +2330,183 @@ export const WATCHLIST = {
         m: 'Contracted backlog and expected recognition',
         b: 'Backlog is the closest thing to visibility a launch company has, and its conversion rate is the honest growth signal.',
         c: 'Check total backlog, how much is expected within twelve months, and what converted last quarter against what was promised.',
+      },
+    ],
+  },
+
+  // The incumbent, added so SPCX and RKLB have something mature to sit against.
+  // Price $530.12 · cap $122.35B · EV $139.09B · 230.79M shares (-1.97% YoY) · TTM rev
+  // $77.01B · TTM EBITDA $9.68B (12.57%) · TTM NI $6.29B (8.16%), EPS $27.14 · cash
+  // $3.79B, debt $20.54B → net debt $16.75B · FCF $8.73B on $1.67B capex · P/E 19.53
+  // trailing, 17.23 forward · EV/EBITDA 14.37 · PS 1.59 · dividend yield 2.60% ·
+  // FY2026E rev $80.95B (+7.87%), EPS $30.47 · PT $637.84 · 21 analysts
+  LMT: {
+    name: 'Lockheed Martin',
+    sector: 'space',
+    shares: 1,
+    cost: 530.12,
+    priceRef: 530.12,
+    prevRev: 75.044,
+    // Defence procurement growth, not technology growth. Nothing past year one is
+    // sourced; 4-5% is roughly the pace of the budgets this revenue comes out of.
+    growth: [7.87, 5, 4, 4, 4],
+    // Consensus EPS $30.47 implies 8.69% against an 8.16% trailing margin. Close
+    // enough that no adjustment is needed — one of the few entries where the
+    // consensus and the GAAP basis agree.
+    niMargin: [8.5, 8.8, 9, 9.2, 9.5],
+    ebMargin: [12.6, 13, 13.2, 13.5, 13.8],
+    sharesOut: [0.229, 0.225, 0.221, 0.217, 0.213],
+    peLow: 15,
+    peHigh: 21,
+    evMult: 13,
+    netCash: -16.75,
+    caveat:
+      'The frame fits this one better than almost anything else in the book, which is exactly why the two omissions matter. The model prices no dividend, and at a 2.60% yield that is a large part of the expected total return on a company growing 4% — the same problem KO has here. And a fixed-price development programme can take a multi-billion-dollar charge in a single quarter with no warning in any line above, which is the specific way defence primes lose money; an 8-9% net margin looks stable until one does. Two further notes: revenue is a function of government budgets rather than of demand, so the growth path is a political forecast wearing a financial one, and $16.75B of net debt against $122.35B of market cap means the equity is modestly levered to it.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Budget pressure caps procurement, a fixed-price programme takes charges and the multiple stays where defence multiples go.',
+        rev: 88,
+        margin: 7,
+        pe: 13,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Sustained defence spending and a long F-35 sustainment tail compound slowly and reliably.',
+        rev: 95.61,
+        margin: 9.5,
+        pe: 18,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Munitions replenishment, missile defence and classified work lift both growth and mix.',
+        rev: 105,
+        margin: 11,
+        pe: 21,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Fixed-price programme charges',
+        m: '8.16% trailing net margin',
+        b: 'This is the mechanism by which a prime loses a year of profit at once, and none of it is visible before it is announced.',
+        c: 'Read the charges disclosure every quarter, not the annual summary. A single classified fixed-price programme has done most of the damage in recent years.',
+      },
+      {
+        h: 'Backlog and book-to-bill',
+        m: 'FY2026E revenue $80.95B, +7.9%',
+        b: 'Backlog converts to revenue over years, so it leads the income statement by longer than most businesses.',
+        c: 'Track total backlog and new orders against revenue. Backlog falling while revenue grows is the shape of the following slowdown.',
+      },
+      {
+        h: 'F-35 sustainment versus production',
+        m: 'Segment mix within Aeronautics',
+        b: 'Sustainment carries a better margin than building aircraft, and the fleet keeps growing regardless of the production rate.',
+        c: 'Check delivery counts and the sustainment revenue split separately. Fewer deliveries with more fleet hours is not the bad outcome it reads as.',
+      },
+      {
+        h: 'The dividend the model ignores',
+        m: '2.60% yield',
+        b: 'On a company growing 4%, the dividend is most of the total return and the page shows none of it.',
+        c: 'Add the yield to any figure in the ladder before comparing this entry with the growth names beside it.',
+      },
+      {
+        h: 'Space segment against the new entrants',
+        m: 'Launch and satellite revenue',
+        b: 'The part of Lockheed that competes directly with SPCX and RKLB is a minority of revenue and the part under most pressure.',
+        c: 'Read the Space segment on its own. Group stability can conceal that half of it losing share to the two names beside it here.',
+      },
+    ],
+  },
+
+  // Pre-scale: $115.30M of trailing revenue against a $23.32B market cap, so the PS
+  // ratio is 202.21 and there is no P/E at all.
+  // Price $59.91 · cap $23.32B · EV $24.02B · 389.17M shares (+39.67% YoY) · TTM rev
+  // $115.30M · TTM EBITDA -$406.32M · TTM NI -$618.76M, EPS -$2.16 · cash $2.29B,
+  // debt $2.99B → net debt $705.48M · FCF -$1.64B on $1.49B capex · PS 202.21 ·
+  // FY2026E rev $168.84M (+138.08%), EPS -$2.04 · PT $79.61 · 13 analysts
+  ASTS: {
+    name: 'AST SpaceMobile',
+    sector: 'space',
+    shares: 1,
+    cost: 59.91,
+    priceRef: 59.91,
+    prevRev: 0.07092,
+    // Every one of these is a forecast about a constellation that is not built yet.
+    // Year one is the consensus; the rest is a satellite-deployment schedule expressed
+    // as revenue, which is a different kind of number from the ones above it.
+    growth: [138.08, 180, 120, 80, 55],
+    // -500% lands year one on the consensus -$2.04 EPS. Profitability arrives in the
+    // model in CY2029, which assumes the constellation is finished and carrying traffic.
+    niMargin: [-500, -120, -20, 12, 22],
+    ebMargin: [-350, -80, 0, 25, 35],
+    // Up 39.67% in a year, behind only CHA, SPCX and IREN. Satellites are paid for
+    // with equity until they earn, and this path assumes the pace roughly halves.
+    sharesOut: [0.42, 0.46, 0.5, 0.53, 0.55],
+    peLow: 20,
+    peHigh: 40,
+    evMult: 15,
+    netCash: -0.70548,
+    rankable: false,
+    rankReason:
+      'there is no meaningful 2030 earnings number to rank — 202x sales, no trailing P/E, and a result that depends entirely on whether a constellation that does not exist yet gets built',
+    caveat:
+      'The price already contains the outcome. At 202.21x trailing sales, a $23.32B market cap rests on $115.30M of revenue, so the base case below — which assumes the constellation is built, operating and carrying a 22% net margin on $2.9B of revenue in 2030 — still values the equity at less than today. That is not a forecast that the business fails; it is what a 202x sales multiple means arithmetically, and it is the same shape as SPCX and RKLB at an earlier stage. Everything else compounds it: free cash flow of -$1.64B against $1.49B of capex, $705.48M of net debt, and a share count up 39.67% in a year because satellites are funded with equity until they earn. This entry is excluded from the section 07 ranking for the same reason MSTR is — the earnings ladder has nothing real to stand on. Read the deployment schedule and the mobile-network agreements instead.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Deployment slips, funding comes at a worse price and direct-to-device stays a niche beside terrestrial coverage.',
+        rev: 1.2,
+        margin: 2,
+        pe: 12,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'The constellation reaches continuous coverage and carriers pay wholesale for the gaps in their networks.',
+        rev: 2.9,
+        margin: 22,
+        pe: 30,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Direct-to-device becomes a standard feature on every handset and the wholesale agreements scale with it.',
+        rev: 5,
+        margin: 30,
+        pe: 40,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Satellites actually in orbit and operating',
+        m: 'FY2026E revenue $168.84M',
+        b: 'Continuous service needs a constellation, not a demonstration. Every revenue figure below year one assumes a launch schedule holds.',
+        c: 'Count operational satellites against the plan, not launches attempted. Slippage here moves every later column.',
+      },
+      {
+        h: 'Carrier agreements converting to payments',
+        m: 'Definitive agreements versus memoranda',
+        b: 'Most announced partnerships are non-binding. The revenue path needs wholesale contracts with money attached.',
+        c: 'Check which agreements are definitive, with committed minimums, and which are still letters of intent.',
+      },
+      {
+        h: 'Funding and dilution',
+        m: '389.17M shares, +39.67% year over year; FCF -$1.64B',
+        b: 'The constellation costs more than the company earns for years, so the gap is filled with equity and converts.',
+        c: 'Track the cash balance against quarterly burn and every convertible issue with its strike. This is the assumption most likely to be too kind.',
+      },
+      {
+        h: 'Spectrum rights',
+        m: 'Regulatory approvals by market',
+        b: 'Operating a direct-to-device network requires spectrum access granted country by country, and it can be refused.',
+        c: 'Watch national regulator decisions in the large markets. The technology working does not confer the right to use it.',
+      },
+      {
+        h: 'The price target against the model',
+        m: 'PT $79.61 on 13 analysts',
+        b: 'The sell side sees upside from here while this model, run on GAAP earnings at a 30x exit, does not.',
+        c: 'Work out which assumption differs. It is almost always the 2030 revenue, and it is worth forming your own view of it rather than adopting either.',
       },
     ],
   },
@@ -2192,6 +2832,178 @@ export const WATCHLIST = {
     ],
   },
 
+  // Price $113.33 · cap $101.89B · EV $100.91B · 899.08M shares (+0.89% YoY) · TTM rev
+  // $4.93B · TTM NI $2.07B (42.01%), EPS $2.26 · EBITDA and EV/EBITDA both n/a on the
+  // source, which is the tell for a brokerage · cash $23.91B, debt $22.93B → net cash
+  // $980.00M · FCF $219.00M · P/E 50.19 trailing, 47.22 forward · PS 20.66 · FY2026E
+  // rev $5.20B (+16.26%), EPS $2.53 · PT $126.85 · 28 analysts
+  HOOD: {
+    name: 'Robinhood Markets',
+    sector: 'finance',
+    shares: 1,
+    cost: 113.33,
+    priceRef: 113.33,
+    prevRev: 4.4727,
+    growth: [16.26, 14, 12, 11, 10],
+    // Consensus EPS $2.53 implies 43.7% against a 42.01% trailing margin. They agree,
+    // which is unusual here — but both are flattered by interest income earned on
+    // customer balances, which is a rate bet rather than a business improving.
+    niMargin: [42, 42, 43, 43, 44],
+    // A placeholder. See the caveat: EBITDA is not reported for this business and the
+    // source does not compute EV/EBITDA for it, so the EV row this feeds is noise.
+    ebMargin: [50, 50, 51, 51, 52],
+    sharesOut: [0.905, 0.912, 0.918, 0.924, 0.93],
+    peLow: 20,
+    peHigh: 40,
+    evMult: 15,
+    netCash: 0.98,
+    caveat:
+      'Read the P/E ladder and ignore the EV/EBITDA row entirely — the same problem JPM and SOFI have here. The source publishes no EBITDA and no EV/EBITDA for this company because a broker’s funding and interest costs are its cost of goods, and the $980.00M of "net cash" is what is left after netting $23.91B against $22.93B on a balance sheet that holds customer money; it is not distributable cash. Two things decide the outcome and neither is in the driver table. A large share of revenue is net interest on customer balances, so an interest-rate cut cuts earnings directly with no change in the business. And transaction revenue is concentrated in options and crypto, which means the 42% margin was earned in an active market — the same trading conditions that show up in COIN two entries down. At 50.19x trailing earnings the entry multiple then decides the rest.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Rates fall, retail engagement normalises and both halves of the revenue line contract at once.',
+        rev: 6,
+        margin: 25,
+        pe: 15,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Retirement accounts and subscriptions turn a trading app into a durable relationship.',
+        rev: 8.106,
+        margin: 44,
+        pe: 30,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Robinhood becomes the primary account for a generation and cross-sells advisory, banking and credit into it.',
+        rev: 10.5,
+        margin: 48,
+        pe: 38,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Net interest revenue as a share of the total',
+        m: '42.01% trailing net margin',
+        b: 'Interest on customer cash and margin lending is earned from the rate environment, not from the product.',
+        c: 'Split revenue into transaction, net interest and other every quarter. A rate cut takes the second one down with no warning in the first.',
+      },
+      {
+        h: 'Transaction mix',
+        m: 'Options and crypto share of transaction revenue',
+        b: 'The high-margin volume is concentrated in the most cyclical products, and crypto volume moves with the same prices COIN and MSTR depend on.',
+        c: 'Read the three transaction lines separately. Equities volume holding while options and crypto fall is the version that hurts.',
+      },
+      {
+        h: 'Net deposits and funded accounts',
+        m: 'FY2026E revenue $5.20B, +16.3%',
+        b: 'Assets under custody are what converts a trading app into a compounding business; account counts on their own do not.',
+        c: 'Track net deposits and assets under custody against funded accounts. Growth in accounts without deposits is the weaker result.',
+      },
+      {
+        h: 'Subscription revenue',
+        m: 'Gold subscribers and revenue per subscriber',
+        b: 'Subscription income is the only part of the model that does not move with markets or rates.',
+        c: 'Check subscriber count with revenue per subscriber. This is the line that would justify the base-case multiple.',
+      },
+      {
+        h: 'Regulation of payment for order flow',
+        m: 'Transaction-based revenue',
+        b: 'A structural change to how retail orders are routed and paid for is a rule change, not a competitive one.',
+        c: 'Watch rulemaking on order routing and execution quality. It arrives as an external decision with no lead time in the numbers.',
+      },
+    ],
+  },
+
+  // Loss-making on a GAAP basis with revenue FALLING in the consensus year — the only
+  // entry in the book with both at once.
+  // Price $172.28 · cap $45.45B · EV $43.33B · 263.84M shares (-4.45% YoY) · TTM rev
+  // $6.04B · TTM EBITDA $699.55M (11.57%) · TTM NI -$987.77M (-16.34%), EPS -$3.73 ·
+  // cash $8.79B, debt $6.67B → net cash $2.12B · FCF $1.71B · no trailing P/E,
+  // forward 147.11 · EV/EBITDA 61.94 · PS 7.52 · FY2026E rev $5.30B (-23.01%), EPS
+  // -$1.97 · PT $198.97 · 34 analysts
+  COIN: {
+    name: 'Coinbase Global',
+    sector: 'finance',
+    shares: 1,
+    cost: 172.28,
+    priceRef: 172.28,
+    prevRev: 6.884,
+    // Year one is the consensus decline. The recovery after it is modelled judgement
+    // and, unavoidably, a view about crypto prices dressed up as a revenue forecast.
+    growth: [-23.01, 12, 15, 12, 10],
+    // -9.8% lands year one on the consensus -$1.97 EPS. The company is GAAP
+    // loss-making over the trailing year despite positive EBITDA and $1.71B of free
+    // cash flow, largely on crypto asset marks.
+    niMargin: [-9.8, 5, 14, 18, 20],
+    ebMargin: [10, 18, 25, 28, 30],
+    sharesOut: [0.264, 0.266, 0.268, 0.27, 0.272],
+    peLow: 15,
+    peHigh: 35,
+    evMult: 18,
+    netCash: 2.12,
+    caveat:
+      'Everything below year one is a forecast about the price of an asset the company does not control, which is the same exposure MSTR has — hold both and it is one bet, not two, at different levels of directness. The specifics: consensus has revenue falling 23.01% in CY2026 and a GAAP loss of $1.97 a share, so this entry starts underwater on both lines, and the forward P/E of 147.11 is struck against an estimate that is itself a loss turning into a small profit. Trading volume, custody balances and interest income all move together with the crypto price, so the bear and bull cases below are much further apart than the arithmetic makes them look. And a regulatory decision can change the revenue mix in one quarter with no lead time in any of these numbers.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'A long crypto winter takes volumes and balances down together, and fee pressure does the rest.',
+        rev: 5,
+        margin: 5,
+        pe: 12,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Custody, staking and subscription revenue build a floor under the trading cycle.',
+        rev: 8.41,
+        margin: 20,
+        pe: 25,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Coinbase becomes the regulated financial infrastructure for tokenised assets, well beyond trading.',
+        rev: 13,
+        margin: 26,
+        pe: 35,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Transaction revenue against subscription revenue',
+        m: 'FY2026E revenue $5.30B, -23.0%',
+        b: 'Subscription and services income is the part that does not require anyone to trade, and it is the whole case for a non-cyclical multiple.',
+        c: 'Read the two lines separately every quarter. Subscription growth through a volume decline is the result that would change this entry.',
+      },
+      {
+        h: 'Retail take rate',
+        m: 'Fees per dollar of retail volume',
+        b: 'Retail trading carries most of the margin and is where competition shows up first.',
+        c: 'Track retail take rate over time, not just volume. Volume growth at a falling take rate is not the same business.',
+      },
+      {
+        h: 'The GAAP loss and what caused it',
+        m: 'TTM net loss $987.77M against $1.71B of free cash flow',
+        b: 'Positive EBITDA and positive free cash flow with a GAAP loss means marks on crypto holdings, which reverse in both directions.',
+        c: 'Read the crypto asset gains and losses line in the income statement. It tells you how much of any result is operating and how much is the price.',
+      },
+      {
+        h: 'Regulatory perimeter',
+        m: 'Which listed assets count as securities',
+        b: 'A ruling on staking, listings or custody changes the revenue mix by decree rather than by competition.',
+        c: 'Watch enforcement actions and legislation directly. There is no version of this number that can be derived from the financial statements.',
+      },
+      {
+        h: 'Correlation with the rest of the book',
+        m: 'Read alongside MSTR and HOOD',
+        b: 'Three entries here earn from the same asset price: a treasury, an exchange and a broker taking crypto volume.',
+        c: 'Check the combined exposure before treating these as separate positions. They fall together, and the model shows them separately.',
+      },
+    ],
+  },
+
   // ---------------------------------------------------------------- infra
   // Price $285.97 · cap $101.32B · EV $125.32B · 354.31M shares (+6.85% YoY) · TTM rev
   // $31.27B · TTM EBITDA $7.95B (25.43%) · TTM NI $3.47B (11.08%), EPS $10.33 · FCF
@@ -2278,7 +3090,7 @@ export const WATCHLIST = {
   },
   // Price $147.05 · cap $49.36B · EV $69.43B · 335.64M shares (+0.45% YoY) · TTM rev
   // $19.21B · TTM EBITDA $6.65B (34.59%) · TTM NI $2.03B (11.55%), EPS $5.87 · cash
-  // $435.00M, debt $20.51B -> net debt $20.07B · FCF $2.26B · P/E 25.07 trailing, 14.28
+  // $435.00M, debt $20.51B → net debt $20.07B · FCF $2.26B · P/E 25.07 trailing, 14.28
   // forward · EV/EBITDA 10.45 · PS 2.57 · FY2026E rev $22.83B (+28.70%), EPS $8.62
   // · PT $217.42 (+47.85%)
   // growth[1] (+4.98%) was the published FY2027 consensus on 29 August; that estimate
@@ -2362,7 +3174,7 @@ export const WATCHLIST = {
 
   // Price $248.13, up 97.59% over 52 weeks · cap $95.53B · EV $95.75B · 384.99M shares
   // (+1.06% YoY) · TTM rev $11.48B · TTM EBITDA $2.68B (23.34%) · TTM NI $1.73B
-  // (15.09%), EPS $4.42 · cash $3.11B, debt $3.34B -> net debt $227.60M · FCF $2.93B
+  // (15.09%), EPS $4.42 · cash $3.11B, debt $3.34B → net debt $227.60M · FCF $2.93B
   // · P/E 56.16 trailing, 31.67 forward · EV/EBITDA 35.75 · PS 8.32 · FY2026E rev
   // $14.02B (+37.04%), EPS $6.73 · PT $338.15
   // growth[1] (+29.49%) was the published FY2027 consensus on 29 August; that estimate
@@ -2524,6 +3336,94 @@ export const WATCHLIST = {
         m: 'Tax credit eligibility and grid queue times',
         b: 'The demand case rests on interconnection queues being slow and incentives being available. Both are set by policy, not by the company.',
         c: 'Check any change to the credit regime and to interconnection timelines in the large markets. Faster grid connections weaken the whole thesis.',
+      },
+    ],
+  },
+
+  // The other neocloud, added so IREN has a direct comparison rather than only the
+  // power producers. Price $228.11 · cap $62.52B · EV $64.68B · 274.10M shares
+  // (+22.12% YoY) · TTM rev $1.36B · TTM EBITDA $258.00M (19.04%) · TTM NI $42.40M
+  // (3.13%), EPS $0.16 · cash $8.04B, debt $10.20B → net debt $2.15B · FCF -$5.88B on
+  // $11.14B capex · P/E 1,474.64 trailing, forward n/a · EV/EBITDA 250.69 · PS 46.14 ·
+  // FY2026E rev $3.34B (+531.06%), EPS -$2.08 · PT $286.69 · 18 analysts
+  NBIS: {
+    name: 'Nebius Group',
+    sector: 'infra',
+    shares: 1,
+    cost: 228.11,
+    priceRef: 228.11,
+    // Backs out of the consensus at its stated growth rate to $529M for CY2025. Note
+    // the trailing twelve months already show $1.36B, so the business is growing
+    // through the year rather than starting it from the CY2025 base.
+    prevRev: 0.52927,
+    growth: [531.06, 95, 55, 38, 28],
+    // -17.5% lands year one on the consensus -$2.08 EPS. Trailing GAAP net income is
+    // barely positive at $42.40M, and turns negative as the capex depreciates.
+    niMargin: [-17.5, -6, 4, 10, 14],
+    ebMargin: [22, 30, 38, 43, 46],
+    // Up 22.12% in a year. Datacentres bought with equity, the same way IREN and
+    // ASTS fund theirs, and the path assumes the pace decelerates rather than stops.
+    sharesOut: [0.285, 0.305, 0.322, 0.335, 0.345],
+    peLow: 25,
+    peHigh: 45,
+    evMult: 18,
+    netCash: -2.15,
+    caveat:
+      'Read this beside IREN rather than instead of it: two companies renting the same accelerators to the same customers, funded the same way. The numbers are extreme in every direction. Consensus has revenue up 531.06% in CY2026 — by far the largest year-one growth rate in the book — and a GAAP loss of $2.08 a share at the same time, because the capex that produces the revenue depreciates before it earns. Free cash flow is -$5.88B against $11.14B of capex, net debt is $2.15B, the share count rose 22.12% in a year, and the trailing multiple is 1,474.64x earnings and 46.14x sales. What none of that prices is customer concentration: revenue of this shape comes from a small number of very large contracts, so the difference between the bear and base cases below is mostly whether one or two counterparties renew. The 2030 margin also assumes accelerator rental does not become a commodity, which is the one thing a market with this much capital entering it usually does.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Capacity outruns demand, rental prices fall toward the cost of the hardware and the debt stays.',
+        rev: 9,
+        margin: 2,
+        pe: 18,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Nebius holds a durable European position as contracted capacity for model builders.',
+        rev: 17.83,
+        margin: 14,
+        pe: 32,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Inference demand keeps utilisation and pricing high, and the platform layer earns a software margin on top.',
+        rev: 25,
+        margin: 18,
+        pe: 42,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Contracted revenue and who it is with',
+        m: 'FY2026E revenue $3.34B, +531.1%',
+        b: 'A sixfold revenue year is an order-book claim. It comes from a handful of contracts, and concentration is the risk the growth rate hides.',
+        c: 'Check annualised run-rate revenue, contracted backlog, and how much of it sits with the largest one or two customers.',
+      },
+      {
+        h: 'Capex funding and dilution',
+        m: 'FCF -$5.88B on $11.14B capex; shares +22.12%',
+        b: 'The hardware is bought years before the contracts pay for it, and the gap is filled with equity and debt.',
+        c: 'Track the cash balance against committed capex, plus every convertible and its strike. This is where the per-share result is decided.',
+      },
+      {
+        h: 'Utilisation and rental pricing',
+        m: 'EV/EBITDA 250.69',
+        b: 'The whole margin path assumes accelerator rental does not commoditise while a great deal of capital builds the same capacity.',
+        c: 'Look for utilisation and revenue per accelerator over time. Falling price per unit with rising volume is the commoditisation case arriving.',
+      },
+      {
+        h: 'Depreciation schedule',
+        m: 'Useful life assumed for accelerators',
+        b: 'Stretching the assumed life flatters current earnings and postpones the cost. It is an accounting choice with a large effect here.',
+        c: 'Read the stated useful life and any change to it. A lengthened schedule is the fastest way to make this margin path look achieved.',
+      },
+      {
+        h: 'Power and siting',
+        m: 'Contracted capacity by site',
+        b: 'The constraint on this business is energy and interconnection, which is the same constraint CEG, VST, VRT and BE sell into on the other side.',
+        c: 'Check secured power capacity against the buildout plan. Read it with the power names in this book rather than on its own.',
       },
     ],
   },
