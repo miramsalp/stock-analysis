@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Ad Stack 2030 — a CY2026–CY2030 equity model for 37 companies. React 19 + Vite, no backend,
+Ad Stack 2030 — a CY2026–CY2030 equity model for 40 companies. React 19 + Vite, no backend,
 no router, no state library, no chart library. `README.md` is the substantive document: how each
 number was derived, what is sourced versus modelled, and why. Read it before changing data.
 
@@ -39,10 +39,19 @@ This is deliberate — do not "fix" it by deriving scenarios from the drivers.
 implied P/E and the price ladder go negative for that column. That is the honest output of a GAAP
 model on a GAAP-unprofitable company, not a bug to clamp away.
 
-**Consensus EPS is often non-GAAP; this model is not.** Seven entries deliberately sit far below
-the headline consensus for that reason — ZETA, BE, ARM, AXON, MRVL, VRT and GOOGL. Do not
-"correct" a margin toward a consensus EPS without first checking which basis that consensus is on.
-ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss.
+**Consensus EPS is often non-GAAP; this model is not.** Nine entries deliberately sit far below
+the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT and GOOGL. Do
+not "correct" a margin toward a consensus EPS without first checking which basis that consensus is
+on. ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss.
+
+**The gap can run the other way.** UBER's consensus EPS sits *below* GAAP, because reported
+earnings carry non-recurring tax and equity-investment gains the estimate strips out. Its forward
+P/E is higher than its trailing one for the same reason. Check the direction, not just the size.
+
+**Three entries are currency conversions.** TSM is converted at NT$31.5, ASML at EUR/USD 1.1627
+and CHA at USD/CNY 6.71 — all recorded in their caveats. Revenue is held in USD so it matches the
+USD share price; holding it in the reporting currency silently breaks every per-share figure,
+which is exactly the bug the September 2026 pull fixed in ASML.
 
 **Positions all start at 1 share.** Every `shares` field in the data files is `1`, so the position
 column compares like with like. Do not reintroduce per-ticker share counts. `resetTicker(key)`
@@ -52,7 +61,7 @@ header has a button for each.
 
 ## Data
 
-`tracked.js` (10 names) and `watchlist.js` (27) have identical shape — the split is editorial,
+`tracked.js` (10 names) and `watchlist.js` (30) have identical shape — the split is editorial,
 not structural. `tickers.js` merges them. Adding a company means one object in `watchlist.js`
 with an existing `sector` key; nothing else needs touching.
 
@@ -64,8 +73,8 @@ extend, and expect to solve for *position in the list* as much as for hue: Space
 fifth because its olive fails against the red at the end and passes between the purple and the
 pink. The exact commands are in README.md.
 
-Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 29 August 2026, with
-ZETA pulled on 31 August. Figures come from stockanalysis.com; each entry's header comment records
+Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 10 September 2026.
+Figures come from stockanalysis.com; each entry's header comment records
 the exact numbers it was built from, so a re-pull is a diff rather than a re-derivation. **Do not
 model a ticker from memory.** Fetch the quote, financials, statistics and forecast pages first —
 estimated figures look identical to sourced ones on the page and are indistinguishable a week

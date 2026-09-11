@@ -19,10 +19,12 @@ re-runs — then section 07 ranks all 40 against each other on the assumptions y
 Nothing in this list is a recommendation. The coverage names exist so each holding has a
 comparison sitting next to it — AVGO against MRVL for custom silicon, LLY against HIMS on the
 same GLP-1 question, UNH against OSCR for what mature managed-care margin actually looks like,
-NOW against AXON for what a ~90x multiple demands, CEG against IREN on who owns the power, ZETA
+NOW against AXON for what an ~80x multiple demands, CEG against IREN on who owns the power, ZETA
 against APP and META for what the same ad budget is worth to a company that does not own the
 audience, ARM against ASML for two monopolies priced very differently, JPM against SOFI for what
-a mature bank multiple looks like, and VST, VRT and BE against IREN and CEG for four ways to sell
+a mature bank multiple looks like, ORCL against MSFT and AMZN for the same AI-capex bet at three
+different levels of leverage, UBER against SHOP for two take-rate marketplaces, CHA against COST
+at opposite ends of consumer scale, and VST, VRT and BE against IREN and CEG for four ways to sell
 the same datacentre buildout.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
@@ -176,7 +178,7 @@ anything on this page.
 ### Caveats
 
 An optional `caveat` string renders as an amber note above the summary stats, for tickers where
-the earnings-multiple frame does not cleanly fit. **26 of the 37** carry one. The ones worth
+the earnings-multiple frame does not cleanly fit. **31 of the 40** carry one. The ones worth
 knowing about before you read anything else:
 
 - **SPCX** — listed 12 June 2026, so no full year as a public company and no trading history to
@@ -184,44 +186,61 @@ knowing about before you read anything else:
   count rose 41.79% in a year. Both consensus years assume >135% revenue growth. See below.
 - **MSTR** — a bitcoin treasury, so the P/E ladder is noise. See below.
 - **ZETA** — the widest GAAP/non-GAAP gap in the book. See below.
-- **RKLB** — loss-making at net income, EBITDA and free cash flow simultaneously, on a $38.16B
-  cap. No trailing P/E; the forward P/E is 2,834x. The price is a claim about Neutron.
-- **BE** — 230x trailing earnings, 143.8x EV/EBITDA, +24.65% share count in one year, and a
-  consensus that has revenue more than doubling in 2026.
-- **IREN** — fiscal year ends in June; lost $702.6M last year on $4.33B of capex, with trailing
-  EBITDA of just $34.7M. Everything past year one is a forecast about a business that does not
-  exist yet.
-- **ARM** — fiscal year ends 31 March, so columns are offset; 244x trailing earnings; consensus
+- **ORCL** — the most leveraged AI-capex bet here: free cash flow of −$28.72B, net debt of
+  $118.85B, and an enterprise value a quarter larger than the market cap. See below.
+- **RKLB** — loss-making at net income, EBITDA and free cash flow simultaneously, on a $37.08B
+  cap. No trailing P/E; the forward P/E is 2,753x. The price is a claim about Neutron.
+- **BE** — 291x trailing earnings, 182.2x EV/EBITDA, +24.65% share count in one year, and a
+  consensus that has revenue more than doubling in 2026. The multiple got worse in a fortnight:
+  the price rose 27% on unchanged estimates.
+- **IREN** — fiscal year ends in June; lost $702.62M last year, with trailing EBITDA of just
+  $38.35M and free cash flow of −$2.23B. The Altman Z-score is 0.98. Everything past year one is a
+  forecast about a business that does not exist yet.
+- **ARM** — fiscal year ends 31 March, so columns are offset; 259x trailing earnings; consensus
   EPS is non-GAAP and implies nearly double the GAAP margin.
-- **PLTR** — 159x trailing earnings, and the 49% GAAP net margin is flattered by interest income
+- **CHA** — reports in yuan and trades in dollars; the consensus EPS is adjusted and about 60%
+  above GAAP; the share count rose 44.05% in a year, the fastest here. It is also the cheapest
+  entry in the book on every multiple, which is the thing to explain before buying it.
+- **HIMS** — consensus FY2026 EPS was halved from $0.54 to $0.29 between the two pulls, and the
+  trailing twelve months are a GAAP net loss with an Altman Z-score of 1.98.
+- **PLTR** — 142x trailing earnings, and the 49% GAAP net margin is flattered by interest income
   and tax items.
 - **MRVL** — fiscal year ends in January, so columns are offset; trailing margin is flattered by a
-  divestiture gain.
+  divestiture gain; up 239.56% over 52 weeks to 76x trailing earnings.
+- **UBER** — the GAAP/non-GAAP gap runs backwards, so the consensus EPS is *below* GAAP rather
+  than above it. The model cannot see the autonomous-vehicle question that decides the decade.
 - **JPM** and **SOFI** — balance-sheet lenders, so EV/EBITDA is meaningless; read the P/E ladder,
   and for JPM read it against $133.01 of book value per share.
-- **VST** — $20.07B of net debt against a $46.04B cap, so the equity is a levered claim on the
+- **VST** — $20.07B of net debt against a $49.36B cap, so the equity is a levered claim on the
   power price.
-- **VRT** — a pure derivative of hyperscaler capex, so holding it beside NVDA, AMZN, MSFT or IREN
-  is one bet rather than two.
+- **VRT** — a pure derivative of hyperscaler capex, so holding it beside NVDA, AMZN, MSFT, ORCL or
+  IREN is one bet rather than two.
+- **ASML** — reports in euros and trades in dollars. Until the September pull the revenue line sat
+  in euros against a dollar share price, which understated the implied P/E by roughly the exchange
+  rate; it is now converted at 1.1627.
+- **TSM** — reports in New Taiwan dollars, and the ADR-equivalent share count is derived from
+  market cap divided by the ADR price rather than from the 5:1 ratio, which do not agree.
 - **KO** — the frame fits, but the model prices no dividend, and a 2.39% yield is the larger half
   of the expected total return.
-- **AXON** — ~250x trailing earnings, so the entry multiple decides the outcome, not growth.
+- **AXON** — ~200x trailing earnings, so the entry multiple decides the outcome, not growth.
 
 ### SPCX is a three-month-old listing
 
 SpaceX came to Nasdaq on **12 June 2026**, which makes it the only entry with no full year as a
-public company and no trading history to set a multiple band against. It is also, at a $1.93T
+public company and no trading history to set a multiple band against. It is also, at a $2.01T
 market capitalisation, one of the largest names here — so getting it wrong costs more than
 getting a small one wrong.
 
 What the trailing twelve months actually show: **$23.04B of revenue, an $8.89B net loss, and
 −$32.52B of free cash flow**, funded out of a $100.01B cash pile, with the share count up
-**41.79%** in a year. EV/EBITDA is 317.8x.
+**41.79%** in a year. EV/EBITDA is 330.8x.
 
 Everything that makes the model work happens inside the consensus rather than the history.
-Revenue is forecast to rise **139% in 2026 and a further 136% in 2027**, and net margin to go from
-**2.7% to 20.6%** across the same step — both consensus figures, both carried straight into the
-driver table. Nothing else in this book asks you to believe a margin step that large in one year.
+Revenue is forecast to rise **139.6% in 2026 and a further 136% in 2027**, and net margin to go
+from **2.8% to about 21%** across the same step. The 2026 figures are current; the 2027 revenue
+estimate is now paywalled and carried forward from the August pull, which is worth knowing given
+how much of this entry rests on it. Nothing else in this book asks you to believe a margin step
+that large in one year.
 `growth[2..4]` is a guess at how a curve like that decays, and it is a guess about a business that
 does not exist yet. Treat the position sizing, not the model, as the risk control here.
 
@@ -237,8 +256,8 @@ That makes it a share count problem as much as a margin one. The diluted count r
 single year**, to 251.01M. The `sharesOut` path assumes that decelerates to about 4% and then
 below — an assumption, and the one in this entry most likely to be too kind.
 
-Two things frame the result. The stock sits at **$30.91 against a $31.36 consensus price target**
-and **65.3x EV/EBITDA**, so `evMult` is set to 20 rather than held at today's multiple — the base
+Two things frame the result. The stock sits at **$30.56 against a $31.36 consensus price target**
+and **65.4x EV/EBITDA**, so `evMult` is set to 20 rather than held at today's multiple — the base
 case is earnings catching up to the multiple, not the multiple re-rating. And **free cash flow of
 $224.41M exceeds both trailing EBITDA and reported net income**, because compensation paid in
 stock costs no cash. That single comparison is the bull case and the 2024 short thesis restated as
@@ -250,16 +269,44 @@ A multiple on software earnings does not value Strategy, and reported net income
 the trailing twelve months show a **$31.4B loss** purely from bitcoin marks running through the
 income statement under fair-value rules. So the P/E ladder for MSTR is noise, and the page says so.
 
-What was done instead: `netCash` is set to the **bitcoin treasury less senior claims** — 840,447
-BTC (about 4% of all bitcoin) at a $75,385 average cost, worth roughly $66B, against roughly $22B
-of debt and preferreds. That makes the EV/EBITDA **"Implied price per share" row read as
-approximate net asset value per share**: about **$115** against a **$127.31** market price, an 11%
-premium.
+What was done instead: `netCash` is set to the **bitcoin treasury less senior claims** — 845,050
+BTC (about 4% of all bitcoin) at a blended cost of about $75,412, worth roughly **$65.0B** at the
+$76,902 bitcoin price on 10 September 2026, against roughly $22B of debt and preferreds. That last
+figure is carried forward from the August pull and is the softest number in the entry. The result
+makes the EV/EBITDA **"Implied price per share" row read as approximate net asset value per
+share**: about **$115** against a **$128.56** market price, a premium of roughly 12%.
 
-The share count row is the real story. It rises from 384M to 540M, so on a flat bitcoin price NAV
-per share falls to about $86 by 2030 even though the bitcoin pile does not shrink. The five watch
-items are about bitcoin per share, the NAV premium, average cost against spot, senior claims and
-the accounting swing — not software revenue.
+The cushion is nearly gone. Spot sits about **2% above the treasury's own blended cost**, where in
+August it was closer to 4%, and the most recent tranche — 4,603 BTC for roughly $369.7M — was
+bought at $80,318, *above* today's spot. Buying above spot raises the average and thins the
+cushion in the same transaction.
+
+The share count row is still the real story. It rises from 384M to 540M, so on a flat bitcoin
+price NAV per share falls to about $84 by 2030 even though the bitcoin pile does not shrink. The
+five watch items are about bitcoin per share, the NAV premium, blended cost against spot, senior
+claims and the accounting swing — not software revenue.
+
+### ORCL is the leveraged version of the AI-capex bet
+
+Every hyperscaler in this book is spending ahead of the revenue. Oracle is the one doing it with
+borrowed money, and the market has already repriced it: the stock is **down 36.67% over 52 weeks**.
+
+Free cash flow is **−$28.72B** against $34.21B of trailing EBITDA. Net debt is **$118.85B**, so
+enterprise value ($559.39B) exceeds market capitalisation ($440.54B) by more than a quarter — the
+only name here where the debt is a larger part of the story than the equity. AMZN and MSFT carry
+the same shape at a fraction of the leverage: Amazon's free cash flow has just turned negative
+(−$11.63B on $173.03B of capex) and Microsoft converts only half its net income to cash.
+
+Three qualifications sit on top. The fiscal year ends **31 May**, so the CY2026 column is built
+from FY2027 and the calendar labels are offset by roughly half a year. The $8.06 consensus EPS is
+non-GAAP against about **$5.90** of GAAP EPS for FY2026. And the +32.68% consensus growth rate is a
+backlog-conversion forecast — it assumes contracted AI compute is delivered on schedule, which
+requires the capex producing the negative free cash flow in the first place.
+
+`niMargin` therefore starts at **21%**, below both the 25.2% Oracle actually earned in FY2026 and
+the ~26% the consensus EPS implies, because neither of those carries the depreciation on assets
+being bought now or the interest on $155.93B of debt. That step down is the single most important
+assumption in the entry, and it is judgement rather than consensus.
 
 Nothing here is investment advice.
 
@@ -321,5 +368,5 @@ with its sector name.
 An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
 earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
 large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
-growth rate — decides the outcome. 26 of the 37 carry one, and section 07 marks every ranked row
+growth rate — decides the outcome. 31 of the 40 carry one, and section 07 marks every ranked row
 that has one.
