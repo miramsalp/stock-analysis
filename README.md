@@ -1,16 +1,16 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for 37 companies across 8 sectors. Every company starts at one
+A CY2026–CY2030 equity model for 40 companies across 8 sectors. Every company starts at one
 share bought at its market price on the reference date, so nothing is sized larger than anything
 else by accident. Edit the drivers and every projection, scenario, multiple and IRR on the page
-re-runs — then section 07 ranks all 37 against each other on the assumptions you just set.
+re-runs — then section 07 ranks all 40 against each other on the assumptions you just set.
 
 | Sector | Tickers |
 | --- | --- |
 | Internet & Ads | APP · META · GOOGL · NFLX · ZETA |
 | Semiconductors | MRVL · NVDA · TSM · AVGO · ARM · ASML |
-| Consumer & Commerce | AMZN · AAPL · SHOP · COST · KO |
-| Software & Security | AXON · MSFT · CRM · NOW · CRWD · PLTR |
+| Consumer & Commerce | AMZN · AAPL · SHOP · COST · KO · UBER · CHA |
+| Software & Security | AXON · MSFT · ORCL · CRM · NOW · CRWD · PLTR |
 | Space & Aerospace | SPCX · RKLB |
 | Healthcare | OSCR · HIMS · LLY · UNH |
 | Financials | SOFI · V · JPM |
@@ -47,7 +47,7 @@ npm run lint     # oxlint
 | 04 Range | Bear / base / bull 2030 endpoints, each with its own revenue, margin and exit multiple, plus a band chart against your cost basis. |
 | 05 Multiples | P/E low / high / midpoint price ladder with upside and IRR, cross-checked against EV/EBITDA plus net cash. |
 | 06 Verify | Five disclosures to check at the next earnings release, with a checkbox that persists. |
-| 07 Rank | All 37 companies sorted by annualised return to 2030, on a basis you choose. |
+| 07 Rank | All 40 companies sorted by annualised return to 2030, on a basis you choose. |
 
 Two reset buttons sit in the header, and they do different things. **Reset \<TICKER\>** restores
 one company's shipped defaults — drivers, scenarios, multiples and position together. **1 share
@@ -107,10 +107,27 @@ table, not silently dropped.
 
 ## Where the numbers come from
 
-All reported figures, share counts and prices were pulled on **28–29 August 2026** from
+All reported figures, share counts and prices were pulled on **10–11 September 2026** from
 [stockanalysis.com](https://stockanalysis.com) (which sources S&P Global consensus), with MSTR's
-bitcoin holdings from company 8-K filings and ZETA pulled two days later, on 31 August 2026. `DATA_AS_OF` in `src/data/tickers.js` carries the date,
-and the page footer shows it. **This is a snapshot, not a feed** — re-pull it when it matters.
+bitcoin holdings and the $76,902 bitcoin price taken alongside it. `DATA_AS_OF` in
+`src/data/tickers.js` carries the date, and the page footer shows it. **This is a snapshot, not a
+feed** — re-pull it when it matters.
+
+This replaced an earlier pull dated 28–29 August 2026. A fortnight moved prices and price targets
+far more than it moved reported financials: most TTM figures were identical, while AXON fell about
+20%, SHOP 17%, BE rose 27% and ORCL sat 36.67% below where it traded a year earlier. Where a
+consensus estimate itself moved — HIMS FY2026 EPS halved from $0.54 to $0.29, MRVL's next-year
+revenue rose from $11.56B to $12.05B — the entry comment in the data file says so.
+
+One thing got worse between the two pulls: several FY2027 consensus figures that were public in
+August are now behind stockanalysis.com's paywall. **ASML, PLTR, RKLB, ZETA, SPCX, JPM, CEG, VST
+and VRT** each use one in `growth[1]` or `niMargin[1]`. Those values are carried forward from the
+August pull rather than re-sourced, and both the data file and the driver comment say so at each
+site. Re-source them before leaning on year two.
+
+Three currencies are converted rather than reported: **TSM** at NT$31.5, **ASML** at EUR/USD
+1.1627 and **CHA** at USD/CNY 6.71. Growth rates and margins are currency-neutral; every absolute
+figure for those three moves with the rate.
 
 Each ticker was built the same way:
 
@@ -118,7 +135,7 @@ Each ticker was built the same way:
 | --- | --- |
 | `prevRev` | Last reported full fiscal year revenue |
 | `growth[0]` | Set so CY2026 lands on the **analyst consensus revenue estimate** |
-| `growth[1..4]` | A deceleration path — judgement, not consensus. **ZETA** is the exception: FY2027 consensus was published too, so `growth[1]` is consensus there and only `growth[2..4]` are judgement |
+| `growth[1..4]` | A deceleration path — judgement, not consensus. The exceptions are the nine names above whose FY2027 consensus was published in August, where `growth[1]` is a (now paywalled) consensus figure and only `growth[2..4]` are judgement |
 | `niMargin[0]` | Set so year one lands near the **consensus EPS** |
 | `sharesOut` | Actual current diluted share count, then a dilution/buyback path |
 | `peLow` / `peHigh` | A band around where the stock actually trades |
@@ -126,24 +143,35 @@ Each ticker was built the same way:
 | `cost` | The market price on the reference date — a **placeholder** for your real cost basis |
 
 Only **APP** is `sourced: true`: its drivers and the five Q2 CY2026 watch items come from the
-owner's own reading of the release, and `cost` is a real entry at $319.46. Everything else has
+owner's own reading of the release, and `cost` is a real entry at $319.46. Its drivers were left
+untouched by the September re-pull, so they land CY2026 on $8.00B against a consensus that has
+since moved to $8.11B — a 1.4% gap, kept rather than quietly overwritten. Everything else has
 real reported history and real consensus behind year one, but the 2027–2030 path and the exit
 multiples are modelled assumptions.
 
-Seven margins are deliberately set **below** the headline consensus, because consensus EPS for
+Nine margins are deliberately set **below** the headline consensus, because consensus EPS for
 those names is non-GAAP while this model runs on GAAP:
 
 | Ticker | The gap |
 | --- | --- |
 | ZETA | $0.96 adjusted against a GAAP trailing **net loss** — the widest here, see below |
+| CHA | FY2025 consensus basis CNY 10.07 against GAAP EPS of CNY 6.18 for the same year |
 | BE | $2.71 implies a 19.4% margin; GAAP trailing is 7.87% |
 | ARM | $1.77 implies 38%; GAAP trailing is 20.25% |
-| AXON | $7.71 non-GAAP against a reported 4.5% GAAP margin |
-| MRVL | $4.05 non-GAAP against the 16% GAAP margin used here |
-| VRT | $6.71 implies 18.4%; GAAP trailing is 15.09% — year one sits between the two |
-| GOOGL | FY2026 consensus EPS of $20.59 drops to $14.81 in FY2027 because 2026 carries a one-off gain |
+| AXON | $7.67 non-GAAP against a reported 4.5% GAAP margin |
+| MRVL | $4.20 non-GAAP against the 16% GAAP margin used here |
+| ORCL | $8.06 non-GAAP against about $5.90 of GAAP EPS for FY2026 |
+| VRT | $6.73 implies 18.5%; GAAP trailing is 15.09% — year one sits between the two |
+| GOOGL | A 54.77% trailing net margin, and a forward P/E (24.93) above the trailing one (16.69), because 2026 carries a one-off gain |
 
-Check which basis a consensus EPS is on before trusting it against anything on this page.
+**UBER runs the gap backwards**, and is the reason to check the direction rather than assume it.
+Its consensus EPS of $3.36 sits *below* GAAP — FY2025 reported $4.73 — because GAAP earnings carry
+non-recurring tax and equity-investment gains the estimate strips out. Its forward P/E (17.37)
+being higher than its trailing one (15.83) is the same fact. The driver table uses the lower,
+consensus-implied margin, which here is the conservative choice.
+
+Check which basis a consensus EPS is on, and which direction it runs, before trusting it against
+anything on this page.
 
 ### Caveats
 

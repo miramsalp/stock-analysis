@@ -5,4 +5,4 @@ export const SCEN_KEYS = ['bear', 'base', 'bull']
  * Reference date for every price, share count and reported figure in the data files.
  * Market data is a snapshot, not a feed — re-pull it when it matters.
  */
-export const DATA_AS_OF = '29 August 2026'
+export const DATA_AS_OF = '10 September 2026'
