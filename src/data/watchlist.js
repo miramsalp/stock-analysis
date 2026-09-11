@@ -2,10 +2,18 @@
  * Broader coverage set — added to give the model something to compare the tracked
  * names against, not because anyone is recommending them. Each one is here because
  * it sits next to something already in the book: AVGO against MRVL, LLY against HIMS,
- * UNH against OSCR, V against SOFI, NOW against AXON's multiple, CEG against IREN.
+ * UNH against OSCR, V against SOFI, NOW against AXON's multiple, CEG against IREN,
+ * ORCL against MSFT on the same AI-capex question, UBER against SHOP as the other
+ * take-rate marketplace, and CHA against COST at the opposite end of consumer scale.
  *
- * Every figure below was pulled 28–29 August 2026 from stockanalysis.com (S&P Global
- * consensus). Built the same way as `./tracked.js`:
+ * Every figure below was pulled 10–11 September 2026 from stockanalysis.com (S&P
+ * Global consensus), replacing the 28–29 August pull this file was first built from.
+ * A fortnight moved prices and price targets far more than it moved reported
+ * financials; where a consensus estimate itself moved, the entry comment says so.
+ * Several FY2027 estimates that were public in August now sit behind a paywall — the
+ * entries that relied on one say where the figure came from.
+ *
+ * Built the same way as `./tracked.js`:
  *
  *   prevRev     backed out of the consensus estimate and its stated growth rate,
  *               or trailing-twelve-month revenue where no growth rate was published
@@ -20,17 +28,19 @@
  */
 export const WATCHLIST = {
   // ---------------------------------------------------------------- consumer
-  // Price $266.43 · cap $2.87T · 10.79B shares · TTM rev $775.68B · TTM EBITDA
-  // $168.91B · cash $122.99B, debt $251.64B · P/E 21.4 · FY2026E rev $828.19B
-  // (+15.52%), EPS $12.48 · PT $327.67
+  // Price $251.89 · cap $2.72T · EV $2.85T · 10.79B shares (+0.88% YoY) · TTM rev
+  // $775.68B · TTM EBITDA $168.91B (21.78%) · TTM NI $135.28B (17.44%) · FCF -$11.63B
+  // on $173.03B of capex · cash $122.99B, debt $251.64B → net debt $128.65B · P/E
+  // 20.26 trailing, 27.19 forward · EV/EBITDA 16.85 · FY2026E rev $828.28B (+15.53%),
+  // EPS $12.55 · PT $328.17
   AMZN: {
     name: 'Amazon',
     sector: 'consumer',
     shares: 1,
-    cost: 266.43,
-    priceRef: 266.43,
+    cost: 251.89,
+    priceRef: 251.89,
     prevRev: 716.92,
-    growth: [15.52, 13, 12, 11, 10],
+    growth: [15.53, 13, 12, 11, 10],
     niMargin: [16.3, 17.5, 18.5, 19.5, 20],
     ebMargin: [22, 23, 24, 25, 26],
     sharesOut: [10.79, 10.75, 10.71, 10.67, 10.63],
@@ -49,7 +59,7 @@ export const WATCHLIST = {
       base: {
         label: 'Base',
         thesis: 'AWS and advertising keep lifting the blended margin as retail scales.',
-        rev: 1279.9,
+        rev: 1280.2,
         margin: 20,
         pe: 26,
       },
@@ -65,7 +75,7 @@ export const WATCHLIST = {
     watch: [
       {
         h: 'AWS growth and backlog',
-        m: 'FY2026E revenue $828.19B, +15.5%',
+        m: 'FY2026E revenue $828.28B, +15.5%',
         b: 'Retail is most of the revenue but AWS is most of the profit. The margin ramp in this model is an AWS-and-advertising story.',
         c: 'Check AWS growth and committed backlog separately from group revenue. Retail growth with flat AWS does not produce the 2030 margin here.',
       },
@@ -77,9 +87,9 @@ export const WATCHLIST = {
       },
       {
         h: 'Capex and the depreciation tail',
-        m: 'Net debt $128.65B; TTM EBITDA $168.91B',
-        b: 'Amazon carries real net debt and is spending heavily on AI infrastructure, which lands as depreciation later.',
-        c: 'Check the capex guide against operating cash flow. If capex grows faster than EBITDA, the free cash flow story weakens even as revenue compounds.',
+        m: 'FCF -$11.63B on $173.03B of capex',
+        b: 'Free cash flow has gone negative: $173.03B of capex against $168.91B of trailing EBITDA, alongside $128.65B of net debt. AI infrastructure lands as depreciation later.',
+        c: 'Check the capex guide against operating cash flow. Capex already exceeds EBITDA, so the margin path below is a bet on those assets earning before the depreciation arrives.',
       },
       {
         h: 'Retail operating margin by segment',
@@ -96,24 +106,26 @@ export const WATCHLIST = {
     ],
   },
 
-  // Price $319.70 · cap $4.67T · 14.59B shares · TTM rev $466.82B · TTM EBITDA
-  // $167.96B · cash $146.52B, debt $84.34B · P/E 36.7 · FY2026E rev $477.68B
-  // (+14.78%), EPS $8.82 · PT $324.45 (essentially at the money)
+  // Price $326.57 · cap $4.77T · EV $4.70T · 14.59B shares (-2.13% YoY) · TTM rev
+  // $466.82B · TTM EBITDA $167.96B (35.98%) · TTM NI $128.93B (27.62%) · FCF $136.68B
+  // · cash $146.52B, debt $84.34B → net cash $62.17B · P/E 37.46 trailing, 35.48
+  // forward · EV/EBITDA 28.01 · FY2026E (Sep-end) rev $477.81B (+14.81%), EPS $8.83
+  // · PT $324.53 — 0.6% BELOW the market price
   AAPL: {
     name: 'Apple',
     sector: 'consumer',
     shares: 1,
-    cost: 319.7,
-    priceRef: 319.7,
-    prevRev: 416.17,
-    growth: [14.78, 8, 7, 6, 6],
+    cost: 326.57,
+    priceRef: 326.57,
+    prevRev: 416.16,
+    growth: [14.81, 8, 7, 6, 6],
     niMargin: [26.9, 27.5, 28, 28.5, 29],
     ebMargin: [36, 36.5, 37, 37.5, 38],
     sharesOut: [14.59, 14.3, 14.0, 13.7, 13.4],
     peLow: 25,
     peHigh: 38,
     evMult: 22,
-    netCash: 62.18,
+    netCash: 62.17,
     scen: {
       bear: {
         label: 'Bear',
@@ -125,7 +137,7 @@ export const WATCHLIST = {
       base: {
         label: 'Base',
         thesis: 'Services keeps lifting the margin while buybacks shrink the share count.',
-        rev: 620.3,
+        rev: 619.2,
         margin: 29,
         pe: 31,
       },
@@ -141,7 +153,7 @@ export const WATCHLIST = {
     watch: [
       {
         h: 'Services growth and gross margin',
-        m: 'FY2026E revenue $477.68B, +14.8%',
+        m: 'FY2026E revenue $477.81B, +14.8%',
         b: 'Services carries roughly double the hardware gross margin, so the mix decides the margin path more than volume does.',
         c: 'Check services revenue growth and its gross margin separately. Hardware-led growth does not get you to 29% net margin.',
       },
@@ -165,24 +177,26 @@ export const WATCHLIST = {
       },
       {
         h: 'What the AI cycle actually delivers',
-        m: 'Price target $324.45 — analysts see almost no upside',
+        m: 'Price target $324.53 — just below the market price',
         b: 'The consensus target sits within 2% of the price, which says the market is waiting for evidence rather than pricing a new cycle.',
         c: 'Check whether on-device AI features actually shorten the replacement cycle. The bull case here needs a hardware refresh, not a software update.',
       },
     ],
   },
 
-  // Price $152.90 · cap $196.73B · 1.29B shares · TTM rev $13.27B · TTM EBITDA
-  // $2.40B · cash $4.95B, debt $178M · P/E 103.2 · FY2026E rev $15.23B (+31.82%),
-  // EPS $1.91 · PT $171.15
+  // Price $126.60, down from $152.90 a fortnight earlier · cap $162.89B · EV $157.60B
+  // · 1.29B shares (-0.74% YoY) · TTM rev $13.27B · TTM EBITDA $2.40B (18.05%) · TTM
+  // NI $1.93B (14.53%) · FCF $2.35B · cash $4.95B, debt $178.00M · P/E 85.45 trailing,
+  // 59.95 forward · EV/EBITDA 65.80 · FY2026E rev $15.24B (+31.84%), EPS $1.91
+  // · PT $171.08
   SHOP: {
     name: 'Shopify',
     sector: 'consumer',
     shares: 1,
-    cost: 152.9,
-    priceRef: 152.9,
-    prevRev: 11.55,
-    growth: [31.82, 24, 20, 17, 15],
+    cost: 126.6,
+    priceRef: 126.6,
+    prevRev: 11.56,
+    growth: [31.84, 24, 20, 17, 15],
     niMargin: [14.5, 16, 18, 19, 20],
     ebMargin: [18, 20, 22, 23, 24],
     sharesOut: [1.29, 1.3, 1.31, 1.32, 1.33],
@@ -191,7 +205,7 @@ export const WATCHLIST = {
     evMult: 30,
     netCash: 4.77,
     caveat:
-      'Shopify trades at roughly 103x trailing earnings, so the exit multiple decides most of the outcome here. Note also that revenue is largely a take rate on merchant sales, which makes it a leveraged bet on e-commerce volume — the same volume AppLovin is trying to sell advertising against.',
+      'Shopify trades at roughly 85x trailing earnings — down from 103x a fortnight earlier, on a 17% fall in the share price with the estimates barely moving — so the exit multiple decides most of the outcome here. Note also that revenue is largely a take rate on merchant sales, which makes it a leveraged bet on e-commerce volume: the same volume AppLovin is trying to sell advertising against, and the same take-rate shape as UBER further down this file.',
     scen: {
       bear: {
         label: 'Bear',
@@ -203,7 +217,7 @@ export const WATCHLIST = {
       base: {
         label: 'Base',
         thesis: 'Take rate holds while enterprise merchants lift gross merchandise volume.',
-        rev: 30.5,
+        rev: 30.51,
         margin: 20,
         pe: 48,
       },
@@ -219,13 +233,13 @@ export const WATCHLIST = {
     watch: [
       {
         h: 'Gross merchandise volume and take rate',
-        m: 'FY2026E revenue $15.23B, +31.8%',
+        m: 'FY2026E revenue $15.24B, +31.8%',
         b: 'Revenue is roughly volume times take rate. Only one of those two is under management control.',
         c: 'Check GMV growth and take rate separately. Revenue growth driven by take rate increases has a ceiling; volume growth does not.',
       },
       {
         h: 'What 103x already assumes',
-        m: 'Trailing P/E 103.2 at $152.90',
+        m: 'Trailing P/E 85.5 at $126.60',
         b: 'The multiple prices in years of the growth in this model. The bear case here is mostly a multiple compression scenario.',
         c: 'Decide what 2030 multiple you believe before touching the revenue line — it moves the answer more.',
       },
@@ -250,26 +264,28 @@ export const WATCHLIST = {
     ],
   },
 
-  // Price $945.47 · cap $419.30B · 443.48M shares · TTM rev $293.59B · TTM EBITDA
-  // $13.79B · cash $20.00B, debt $8.23B · P/E 47.6 · FY2026E rev $301.58B (+9.57%),
-  // EPS $20.58 · FY2027E EPS $22.66 · PT $1,077
+  // Price $902.38, down 7.85% over 52 weeks · cap $400.19B · EV $388.42B · 443.48M
+  // shares (-0.09% YoY) · TTM rev $293.59B · TTM EBITDA $13.79B (4.70%) · TTM NI
+  // $8.84B (3.01%) · FCF $8.81B · cash $20.00B, debt $8.23B → net cash $11.76B
+  // · P/E 45.40 trailing, 41.33 forward · EV/EBITDA 28.14 · FY2026E (Aug-end) rev
+  // $301.98B (+9.72%), EPS $20.58 · PT $1,072.20
   COST: {
     name: 'Costco',
     sector: 'consumer',
     shares: 1,
-    cost: 945.47,
-    priceRef: 945.47,
+    cost: 902.38,
+    priceRef: 902.38,
     prevRev: 275.24,
-    growth: [9.57, 8, 7.5, 7, 7],
+    growth: [9.72, 8, 7.5, 7, 7],
     niMargin: [3.03, 3.1, 3.2, 3.3, 3.4],
     ebMargin: [4.7, 4.8, 4.9, 5.0, 5.1],
     sharesOut: [0.4435, 0.443, 0.4425, 0.442, 0.4415],
     peLow: 30,
     peHigh: 50,
     evMult: 25,
-    netCash: 11.77,
+    netCash: 11.76,
     caveat:
-      'Costco earns a ~3% net margin and trades at ~48x earnings, which is unusual enough to be the whole thesis: the market is paying for membership fee durability and inventory turns, not for margin. Small changes to the exit multiple swamp anything the revenue line does. It is in this book as the low-beta anchor against a lot of high-multiple growth.',
+      'Costco earns a ~3% net margin and trades at ~45x earnings, which is unusual enough to be the whole thesis: the market is paying for membership fee durability and inventory turns, not for margin. Small changes to the exit multiple swamp anything the revenue line does. It is in this book as the low-beta anchor against a lot of high-multiple growth — though it is down 7.85% over 52 weeks, so the anchor has not been still. Its fiscal year ended 31 August 2026, so the CY2026 column is built from a year already reported rather than forecast.',
     scen: {
       bear: {
         label: 'Bear',
@@ -281,7 +297,7 @@ export const WATCHLIST = {
       base: {
         label: 'Base',
         thesis: 'Membership renewal holds, warehouses keep opening, multiple stays rich.',
-        rev: 400.8,
+        rev: 401.4,
         margin: 3.4,
         pe: 40,
       },
@@ -315,7 +331,7 @@ export const WATCHLIST = {
       },
       {
         h: 'The multiple',
-        m: 'P/E 47.6 on a 3% net margin',
+        m: 'P/E 45.4 on a 3.01% net margin',
         b: 'You are paying a software multiple for a retail margin. That is the risk, and it is a re-rating risk rather than an earnings risk.',
         c: 'Ask what would have to be true for 40x to still be right in 2030. If the answer is only "it always has been", the bear case deserves more weight.',
       },
@@ -328,16 +344,16 @@ export const WATCHLIST = {
     ],
   },
 
-  // Price $88.80 · cap $382.04B · EV $409.93B · 4.30B shares (-0.09% YoY) · TTM rev
-  // $50.13B · TTM EBITDA $17.00B · TTM NI $14.32B (28.56%) · cash $16.37B, debt
-  // $44.26B -> net debt $27.89B · P/E 26.95 · EV/EBITDA 24.18 · yield 2.39% · FY2026E
-  // rev $49.72B (+3.72%), EPS $3.30 · FY2027E EPS $3.53 · PT $94.70
+  // Price $87.83 · cap $377.89B · EV $405.78B · 4.30B shares (-0.09% YoY) · TTM rev
+  // $50.13B · TTM EBITDA $17.00B (33.91%) · TTM NI $14.32B (28.56%) · FCF $14.30B
+  // · cash $16.37B, debt $44.26B -> net debt $27.89B · P/E 26.40 trailing, 25.84
+  // forward · EV/EBITDA 23.87 · FY2026E rev $49.72B (+3.72%), EPS $3.30 · PT $94.70
   KO: {
     name: 'Coca-Cola',
     sector: 'consumer',
     shares: 1,
-    cost: 88.8,
-    priceRef: 88.8,
+    cost: 87.83,
+    priceRef: 87.83,
     prevRev: 47.94,
     growth: [3.72, 4.5, 4.5, 4, 4],
     // Consensus EPS $3.30 on 4.30B shares implies a 28.5% margin against a 28.56%
@@ -390,7 +406,7 @@ export const WATCHLIST = {
       },
       {
         h: 'Net debt against a defensive multiple',
-        m: 'Net debt $27.89B; EV $409.93B against a $382.04B cap',
+        m: 'Net debt $27.89B; EV $405.78B against a $377.89B cap',
         b: 'A staples business carries debt cheaply, but the debt is why the EV/EBITDA row sits above the P/E row here.',
         c: 'Check net debt and the average coupon. Refinancing at higher rates is the quiet way a defensive name loses its margin.',
       },
