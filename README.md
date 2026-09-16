@@ -1,9 +1,9 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for 51 companies across 8 sectors. Every company starts at one
+A CY2026–CY2030 equity model for 52 companies across 8 sectors. Every company starts at one
 share bought at its market price on the reference date, so nothing is sized larger than anything
 else by accident. Edit the drivers and every projection, scenario, multiple and IRR on the page
-re-runs — then section 07 ranks all 51 against each other on the assumptions you just set.
+re-runs — then section 07 ranks all 52 against each other on the assumptions you just set.
 
 | Sector | Tickers |
 | --- | --- |
@@ -13,7 +13,7 @@ re-runs — then section 07 ranks all 51 against each other on the assumptions y
 | Software & Security | AXON · MSFT · ORCL · CRM · NOW · CRWD · PLTR · SNOW |
 | Space & Aerospace | SPCX · RKLB · LMT · ASTS |
 | Healthcare | OSCR · HIMS · LLY · UNH |
-| Financials | SOFI · V · JPM · HOOD · COIN |
+| Financials | SOFI · V · JPM · HOOD · COIN · BULL |
 | Power & Digital Assets | IREN · MSTR · CEG · VST · VRT · BE · NBIS |
 
 Nothing in this list is a recommendation. The coverage names exist so each holding has a
@@ -36,10 +36,12 @@ earlier; HOOD against SOFI and COIN against MSTR for two more ways to own the sa
 crypto exposure; SNOW against PLTR and ORCL on data platforms; and NBIS against IREN for the
 other neocloud funded the same way.
 
-**GRAB** was added on **17 September 2026**, against UBER as the other take-rate mobility and
-delivery marketplace — and as the cheaper, earlier, riskier version of the same shape. Its figures
-were pulled that day rather than on the reference date the rest of the book carries, so its price
-and multiples are a week younger than everything else here.
+**GRAB** and **BULL** were added on **17 September 2026** — GRAB against UBER as the other
+take-rate mobility and delivery marketplace, and the cheaper, earlier, riskier version of the same
+shape; BULL (Webull) against HOOD and SOFI as a third retail broker at a fraction of the size, and
+the only de-SPAC listing in the book. Both were pulled that day rather than on the reference date
+the rest of the book carries, so their prices and multiples are a week younger than everything
+else here.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
@@ -63,7 +65,7 @@ npm run lint     # oxlint
 | 04 Range | Bear / base / bull 2030 endpoints, each with its own revenue, margin and exit multiple, plus a band chart against your cost basis. |
 | 05 Multiples | P/E low / high / midpoint price ladder with upside and IRR, cross-checked against EV/EBITDA plus net cash. |
 | 06 Verify | Five disclosures to check at the next earnings release, with a checkbox that persists. |
-| 07 Rank | All 51 companies sorted by annualised return to 2030, on a basis you choose. |
+| 07 Rank | All 52 companies sorted by annualised return to 2030, on a basis you choose. |
 
 Two reset buttons sit in the header, and they do different things. **Reset \<TICKER\>** restores
 one company's shipped defaults — drivers, scenarios, multiples and position together. **1 share
@@ -156,12 +158,14 @@ net-cash figure is larger than that because it counts long-term investments. Bot
 the source figure instead, because that is the one the market-cap-less-enterprise-value bridge
 agrees with, and `netCash` feeds exactly that bridge. The entry comment records all three numbers.
 
-**GRAB** is the one entry not on the reference date. It was pulled on **17 September 2026**, a
-week later, from the same two pages, so its price, market capitalisation and every multiple derived
-from them sit a week ahead of the other fifty. `DATA_AS_OF` was deliberately left at 10 September
-rather than moved forward, because moving it would claim a re-pull of fifty entries that did not
-happen; the GRAB entry comment carries its own date instead. Its FY2027 consensus is paywalled too,
-so every year after the first is modelled judgement.
+**GRAB** and **BULL** are the two entries not on the reference date. Both were pulled on
+**17 September 2026**, a week later, from the same pages, so their prices, market capitalisations
+and every multiple derived from them sit a week ahead of the other fifty. `DATA_AS_OF` was
+deliberately left at 10 September rather than moved forward, because moving it would claim a
+re-pull of fifty entries that did not happen; the two entry comments carry their own date instead.
+Both have a paywalled FY2027 consensus, so for both, every year after the first is modelled
+judgement. BULL needed a third page — the `/financials/` annual income statement — because its
+forecast table is on an adjusted basis far from GAAP, the same reason CHA and UBER need one.
 
 Three currencies are converted rather than reported: **TSM** at NT$31.5, **ASML** at EUR/USD
 1.1627 and **CHA** at USD/CNY 6.71. Growth rates and margins are currency-neutral; every absolute
@@ -187,7 +191,7 @@ since moved to $8.11B — a 1.4% gap, kept rather than quietly overwritten. Ever
 real reported history and real consensus behind year one, but the 2027–2030 path and the exit
 multiples are modelled assumptions.
 
-Nine margins are deliberately set **below** the headline consensus, because consensus EPS for
+Ten margins are deliberately set **below** the headline consensus, because consensus EPS for
 those names is non-GAAP while this model runs on GAAP:
 
 | Ticker | The gap |
@@ -201,6 +205,7 @@ those names is non-GAAP while this model runs on GAAP:
 | ORCL | $8.06 non-GAAP against about $5.90 of GAAP EPS for FY2026 |
 | VRT | $6.73 implies 18.5%; GAAP trailing is 15.09% — year one sits between the two |
 | GOOGL | A 54.77% trailing net margin, and a forward P/E (24.93) above the trailing one (16.69), because 2026 carries a one-off gain |
+| BULL | $0.24 for FY2026 implies a 16.07% net margin against a 6.34% GAAP trailing one; the forecast page's own FY2025 comparator is $0.28 against GAAP **−$1.23** |
 
 **UBER runs the gap backwards**, and is the reason to check the direction rather than assume it.
 Its consensus EPS of $3.36 sits *below* GAAP — FY2025 reported $4.73 — because GAAP earnings carry
@@ -214,7 +219,7 @@ anything on this page.
 ### Caveats
 
 An optional `caveat` string renders as an amber note above the summary stats, for tickers where
-the earnings-multiple frame does not cleanly fit. **42 of the 51** carry one, and all ten of the
+the earnings-multiple frame does not cleanly fit. **43 of the 52** carry one, and all ten of the
 names added on 11 September 2026 do. The ones worth knowing about before you read anything else:
 
 - **SPCX** — listed 12 June 2026, so no full year as a public company and no trading history to
@@ -237,6 +242,11 @@ names added on 11 September 2026 do. The ones worth knowing about before you rea
   three entries earning from one asset price.
 - **HOOD** — a broker, so EV/EBITDA is meaningless; the source publishes none. Much of the margin
   is net interest on customer balances, which is a rate bet.
+- **BULL** — listed 11 April 2025 through a de-SPAC, so under eighteen months of history and a
+  share count up 143.55% in a year. FY2024 and FY2025 show GAAP net losses of $517.78M and $487.52M
+  against *positive* operating income; the losses are listing-related. Consensus EPS is adjusted and
+  year one here sits about 61% below it. No EBITDA published, so ignore the EV row as with HOOD.
+  See below.
 - **GRAB** — trailing operating income is $138.00M on $3.73B of revenue, a 3.70% margin, while net
   income is $598.00M, a 16.03% margin, because most of the profit is interest on $6.53B of cash.
   Free cash flow is negative over the same twelve months. Net cash is 38% of the market
@@ -395,6 +405,33 @@ paywall, implying roughly **$143** of EPS — nearly double FY2026, and a much s
 anything modelled here. Source it properly before leaning on it; it is doing more work in the
 share price than any figure visible on the page.
 
+### BULL is the only de-SPAC here, and its GAAP history says so
+
+Webull began trading on Nasdaq on **11 April 2025** through a business combination with SK Growth
+Opportunities. Everything odd about the entry follows from that, and none of it is a modelling
+error.
+
+The share count is up **143.55%** in twelve months, to 539.62M. FY2024 and FY2025 report GAAP net
+losses of **$517.78M** and **$487.52M** — while FY2025 operating income was **positive $53.01M**.
+Losses that large against a profitable operating line are listing accounting, not the business, so
+the watch items tell you to read income from operations first. The trailing twelve months to June
+2026, which sit mostly after the charges, show $672.28M of revenue, **$77.23M of operating income
+(11.49%)** and **$42.60M of net income (6.34%)**.
+
+That 6.34% is what `niMargin[0]` uses, and it is why this entry joins the ten that sit below the
+headline. Consensus EPS for FY2026 is **$0.24**, which implies a **16.07%** net margin — higher
+than the margin the business currently earns at the *operating* line. The forecast page's own
+FY2025 comparator is **$0.28**, against GAAP **−$1.23**. Year one here lands near **$0.09**, about
+**61% below** the headline, deliberately.
+
+Three more things frame it. There is **no published EBITDA and no EV/EBITDA**, because it is a
+broker — so `ebMargin` and `evMult` are placeholders and the EV row is noise, exactly as in HOOD.
+The **$1.85B of net cash is 44% of the market capitalisation** but sits on a balance sheet holding
+customer money; it is not distributable. And year one rests on **four analysts**, against twenty to
+fifty everywhere else in this book, with FY2027 paywalled — so nothing after the first column is
+sourced at all. At **97.63x trailing earnings**, the exit multiple decides this entry, not the
+growth rate.
+
 Nothing here is investment advice.
 
 ## Layout
@@ -404,7 +441,7 @@ src/
   data/meta.js             years, scenario keys, DATA_AS_OF
   data/sectors.js          the 8 sector groups and their render order
   data/tracked.js          the 10 names this was built around
-  data/watchlist.js        the 41 coverage names
+  data/watchlist.js        the 42 coverage names
   data/tickers.js          merges both, groups by sector
   lib/model.js             the five-year projection
   lib/rank.js              cross-company ranking and its three bases
@@ -455,5 +492,5 @@ with its sector name.
 An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
 earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
 large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
-growth rate — decides the outcome. 42 of the 51 carry one, and section 07 marks every ranked row
+growth rate — decides the outcome. 43 of the 52 carry one, and section 07 marks every ranked row
 that has one.

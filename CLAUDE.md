@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Ad Stack 2030 — a CY2026–CY2030 equity model for 51 companies. React 19 + Vite, no backend,
+Ad Stack 2030 — a CY2026–CY2030 equity model for 52 companies. React 19 + Vite, no backend,
 no router, no state library, no chart library. `README.md` is the substantive document: how each
 number was derived, what is sourced versus modelled, and why. Read it before changing data.
 
@@ -39,8 +39,9 @@ This is deliberate — do not "fix" it by deriving scenarios from the drivers.
 implied P/E and the price ladder go negative for that column. That is the honest output of a GAAP
 model on a GAAP-unprofitable company, not a bug to clamp away.
 
-**Consensus EPS is often non-GAAP; this model is not.** Nine entries deliberately sit far below
-the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT and GOOGL. Do
+**Consensus EPS is often non-GAAP; this model is not.** Ten entries deliberately sit far below
+the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT, GOOGL and
+BULL. Do
 not "correct" a margin toward a consensus EPS without first checking which basis that consensus is
 on. ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss.
 
@@ -61,7 +62,7 @@ header has a button for each.
 
 ## Data
 
-`tracked.js` (10 names) and `watchlist.js` (41) have identical shape — the split is editorial,
+`tracked.js` (10 names) and `watchlist.js` (42) have identical shape — the split is editorial,
 not structural. `tickers.js` merges them. Adding a company means one object in `watchlist.js`
 with an existing `sector` key; nothing else needs touching.
 

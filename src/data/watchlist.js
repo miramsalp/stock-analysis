@@ -51,6 +51,13 @@
  * come from a 17 September pull, a week after the reference date every other entry in
  * this file carries, so its price and multiples are a week younger than the rest of the
  * book — the entry comment says so. The FY2027 paywall applies to it too.
+ *
+ * BULL was added the same day, against HOOD and SOFI as a third retail broker and a much
+ * smaller one. It is the only entry here that listed through a de-SPAC, which is why its
+ * share count is up 143.55% in a year and why FY2024 and FY2025 both show nine-figure
+ * GAAP net losses against positive operating income. Its consensus EPS is adjusted and
+ * the gap is large enough that niMargin[0] is anchored on the trailing GAAP margin
+ * instead — the same treatment CHA gets above. Its figures are a 17 September pull too.
  */
 export const WATCHLIST = {
   // ---------------------------------------------------------------- consumer
@@ -3104,6 +3111,106 @@ export const WATCHLIST = {
         m: 'Read alongside MSTR and HOOD',
         b: 'Three entries here earn from the same asset price: a treasury, an exchange and a broker taking crypto volume.',
         c: 'Check the combined exposure before treating these as separate positions. They fall together, and the model shows them separately.',
+      },
+    ],
+  },
+
+  // Listed on Nasdaq 11 April 2025 through a de-SPAC with SK Growth Opportunities, which
+  // is the reason the share count is up 143.55% in twelve months and the reason both
+  // prior fiscal years show enormous GAAP net losses against POSITIVE operating income.
+  // Pulled 17 September 2026, alongside GRAB, a week after this file's reference date.
+  // Price $7.75 · cap $4.18B · EV $2.33B · 539.62M shares (+143.55% YoY) · TTM rev
+  // $672.28M · TTM operating income $77.23M (11.49%) · TTM NI $42.60M (6.34%), EPS $0.08
+  // · TTM EBITDA and EV/EBITDA NOT PUBLISHED — the source computes neither for this
+  // business · FCF $32.22M · cash $1.93B, debt $78.73M → net cash $1.85B · P/E 97.63
+  // trailing, 27.14 forward · PS 6.51 · FY2025 rev $564.33M, GAAP operating income
+  // $53.01M, GAAP NI -$487.52M, GAAP EPS -$1.23 · FY2024 rev $388.97M, GAAP NI
+  // -$517.78M, GAAP EPS -$3.73 · FY2026E rev $805.61M (+42.75%), EPS $0.24 (-16.07%) on
+  // an adjusted basis — the forecast page's own FY2025 comparator is $0.28 against that
+  // -$1.23 of GAAP · PT $13.00, +67.85%, on just 4 analysts
+  // FY2027 is behind the paywall, so every year after the first is modelled judgement.
+  BULL: {
+    name: 'Webull',
+    sector: 'finance',
+    shares: 1,
+    cost: 7.75,
+    priceRef: 7.75,
+    prevRev: 0.56433,
+    growth: [42.75, 25, 20, 17, 15],
+    // Anchored on the 6.34% TRAILING GAAP margin, not on the consensus EPS, which is
+    // adjusted: $0.24 for FY2026 against a stated FY2025 comparator of $0.28 while GAAP
+    // EPS for that year was -$1.23. That $0.24 implies a 16.07% net margin — above the
+    // 11.49% the business currently earns at the OPERATING line — so year one here lands
+    // near $0.09 of EPS, roughly 61% below the headline. The ramp after it assumes
+    // operating margin roughly doubles as the platform scales; that is the assumption to
+    // argue with, not year one.
+    niMargin: [6.34, 9, 11, 13, 15],
+    // A placeholder, exactly as in HOOD. No EBITDA is reported for this business and the
+    // source computes no EV/EBITDA, so the EV row this feeds is noise — see the caveat.
+    ebMargin: [14, 16, 18, 20, 22],
+    // Up 143.55% in a year on the de-SPAC. This path assumes it settles to low single
+    // digits, which is what a normal year would look like — not what the last one did.
+    sharesOut: [0.54, 0.57, 0.59, 0.605, 0.615],
+    peLow: 18,
+    peHigh: 40,
+    evMult: 15,
+    netCash: 1.85,
+    caveat:
+      'Three things about this entry before the numbers. It has traded since 11 April 2025, and only through a de-SPAC with SK Growth Opportunities — under eighteen months of history, a share count up 143.55% in twelve months, and GAAP net losses of $487.52M in FY2025 and $517.78M in FY2024 against POSITIVE operating income of $53.01M in FY2025. Those losses are listing-related, not operating; read the operating line. Second, the consensus EPS of $0.24 is adjusted, and the gap is the ZETA problem in this book repeated on a smaller share price: the forecast page shows FY2025 as $0.28 while GAAP for that year was -$1.23, and $0.24 for FY2026 implies a 16.07% net margin when the business currently earns 11.49% at the operating line and 6.34% at the net line. The driver table runs on that 6.34%, so year one sits about 61% below the headline — deliberately. Third, this is a broker, so ignore the EV/EBITDA row entirely, the same instruction HOOD, JPM and SOFI carry here. The source publishes no EBITDA and no EV/EBITDA for it, and the $1.85B of net cash — 44% of the market capitalisation — sits on a balance sheet that holds customer money and is not distributable. At 97.63x trailing earnings on a four-analyst price target, the entry multiple decides this, not the growth rate.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Growth continues but margin never expands past today, and a 97x multiple compresses to what a small broker is normally worth.',
+        rev: 1.1,
+        margin: 7,
+        pe: 14,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'International accounts and asset gathering scale the platform, and operating margin roughly doubles on the way.',
+        rev: 1.63,
+        margin: 15,
+        pe: 28,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'Webull becomes the default retail broker outside the US and earns a platform margin on a much larger asset base.',
+        rev: 2.2,
+        margin: 20,
+        pe: 38,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Operating income, not net income',
+        m: 'FY2025 operating income $53.01M against a $487.52M GAAP net loss',
+        b: 'The two numbers describe the same year and point in opposite directions. The loss is listing-related; the operating line is the business. Reading either one alone gets the company wrong by an order of magnitude.',
+        c: 'Read income from operations every quarter and check how much of the distance to net income is still de-SPAC accounting. When that distance closes, the GAAP margin here should move toward the consensus one.',
+      },
+      {
+        h: 'The share count after a de-SPAC',
+        m: '539.62M shares, +143.55% year over year',
+        b: 'The count more than doubled in twelve months. The driver table assumes it settles to low single digits; lock-up expiries and earnout tranches are what would break that.',
+        c: 'Check the diluted count each quarter against the path in the drivers, and read the earnout and lock-up terms once. This is the assumption in this entry most likely to be too kind — the same problem CHA and ZETA carry.',
+      },
+      {
+        h: 'Net interest on customer balances',
+        m: '$1.93B of cash on a broker balance sheet',
+        b: 'A large share of a retail broker’s revenue is interest earned on customer cash and margin lending, which is a rate bet rather than a business improving. HOOD in this same file is the larger version of the identical exposure.',
+        c: 'Split revenue into transaction, net interest and other every quarter. A rate cut takes the second one down with no warning in the first, and neither the margin path nor the multiple below can see it coming.',
+      },
+      {
+        h: 'Funded accounts and assets under custody',
+        m: 'FY2026E revenue $805.61M, +42.8%',
+        b: 'A 42.8% growth rate in a brokerage is account growth multiplied by what each account trades and holds, and only the second survives a quiet market.',
+        c: 'Track net deposits and assets under custody against funded account counts, and by region. Account growth without deposits is the weaker result, and it is the one that shows up first.',
+      },
+      {
+        h: 'Four analysts',
+        m: 'Price target $13.00, +67.85%, on 4 estimates',
+        b: 'Year one of this model is anchored on a consensus formed by four people. Everywhere else in this book that number is twenty to fifty, and a four-person average moves a long way when one of them changes their mind.',
+        c: 'Treat the FY2026 revenue and EPS figures as a thin estimate rather than a consensus, and re-check them after each report. The FY2027 figure is paywalled, so nothing after year one here is sourced at all.',
       },
     ],
   },
