@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Ad Stack 2030 — a CY2026–CY2030 equity model for 40 companies. React 19 + Vite, no backend,
+Ad Stack 2030 — a CY2026–CY2030 equity model for 51 companies. React 19 + Vite, no backend,
 no router, no state library, no chart library. `README.md` is the substantive document: how each
 number was derived, what is sourced versus modelled, and why. Read it before changing data.
 
@@ -61,7 +61,7 @@ header has a button for each.
 
 ## Data
 
-`tracked.js` (10 names) and `watchlist.js` (30) have identical shape — the split is editorial,
+`tracked.js` (10 names) and `watchlist.js` (41) have identical shape — the split is editorial,
 not structural. `tickers.js` merges them. Adding a company means one object in `watchlist.js`
 with an existing `sector` key; nothing else needs touching.
 

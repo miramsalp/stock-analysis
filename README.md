@@ -1,15 +1,15 @@
 # Ad Stack 2030
 
-A CY2026–CY2030 equity model for 50 companies across 8 sectors. Every company starts at one
+A CY2026–CY2030 equity model for 51 companies across 8 sectors. Every company starts at one
 share bought at its market price on the reference date, so nothing is sized larger than anything
 else by accident. Edit the drivers and every projection, scenario, multiple and IRR on the page
-re-runs — then section 07 ranks all 50 against each other on the assumptions you just set.
+re-runs — then section 07 ranks all 51 against each other on the assumptions you just set.
 
 | Sector | Tickers |
 | --- | --- |
 | Internet & Ads | APP · META · GOOGL · NFLX · ZETA · TTD · RDDT |
 | Semiconductors | MRVL · NVDA · TSM · AVGO · ARM · ASML · AMD · MU |
-| Consumer & Commerce | AMZN · AAPL · SHOP · COST · KO · UBER · CHA |
+| Consumer & Commerce | AMZN · AAPL · SHOP · COST · KO · UBER · CHA · GRAB |
 | Software & Security | AXON · MSFT · ORCL · CRM · NOW · CRWD · PLTR · SNOW |
 | Space & Aerospace | SPCX · RKLB · LMT · ASTS |
 | Healthcare | OSCR · HIMS · LLY · UNH |
@@ -36,6 +36,11 @@ earlier; HOOD against SOFI and COIN against MSTR for two more ways to own the sa
 crypto exposure; SNOW against PLTR and ORCL on data platforms; and NBIS against IREN for the
 other neocloud funded the same way.
 
+**GRAB** was added on **17 September 2026**, against UBER as the other take-rate mobility and
+delivery marketplace — and as the cheaper, earlier, riskier version of the same shape. Its figures
+were pulled that day rather than on the reference date the rest of the book carries, so its price
+and multiples are a week younger than everything else here.
+
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
 
 ## Run it
@@ -58,7 +63,7 @@ npm run lint     # oxlint
 | 04 Range | Bear / base / bull 2030 endpoints, each with its own revenue, margin and exit multiple, plus a band chart against your cost basis. |
 | 05 Multiples | P/E low / high / midpoint price ladder with upside and IRR, cross-checked against EV/EBITDA plus net cash. |
 | 06 Verify | Five disclosures to check at the next earnings release, with a checkbox that persists. |
-| 07 Rank | All 50 companies sorted by annualised return to 2030, on a basis you choose. |
+| 07 Rank | All 51 companies sorted by annualised return to 2030, on a basis you choose. |
 
 Two reset buttons sit in the header, and they do different things. **Reset \<TICKER\>** restores
 one company's shipped defaults — drivers, scenarios, multiples and position together. **1 share
@@ -151,6 +156,13 @@ net-cash figure is larger than that because it counts long-term investments. Bot
 the source figure instead, because that is the one the market-cap-less-enterprise-value bridge
 agrees with, and `netCash` feeds exactly that bridge. The entry comment records all three numbers.
 
+**GRAB** is the one entry not on the reference date. It was pulled on **17 September 2026**, a
+week later, from the same two pages, so its price, market capitalisation and every multiple derived
+from them sit a week ahead of the other fifty. `DATA_AS_OF` was deliberately left at 10 September
+rather than moved forward, because moving it would claim a re-pull of fifty entries that did not
+happen; the GRAB entry comment carries its own date instead. Its FY2027 consensus is paywalled too,
+so every year after the first is modelled judgement.
+
 Three currencies are converted rather than reported: **TSM** at NT$31.5, **ASML** at EUR/USD
 1.1627 and **CHA** at USD/CNY 6.71. Growth rates and margins are currency-neutral; every absolute
 figure for those three moves with the rate.
@@ -202,7 +214,7 @@ anything on this page.
 ### Caveats
 
 An optional `caveat` string renders as an amber note above the summary stats, for tickers where
-the earnings-multiple frame does not cleanly fit. **41 of the 50** carry one, and all ten of the
+the earnings-multiple frame does not cleanly fit. **42 of the 51** carry one, and all ten of the
 names added on 11 September 2026 do. The ones worth knowing about before you read anything else:
 
 - **SPCX** — listed 12 June 2026, so no full year as a public company and no trading history to
@@ -225,6 +237,11 @@ names added on 11 September 2026 do. The ones worth knowing about before you rea
   three entries earning from one asset price.
 - **HOOD** — a broker, so EV/EBITDA is meaningless; the source publishes none. Much of the margin
   is net interest on customer balances, which is a rate bet.
+- **GRAB** — trailing operating income is $138.00M on $3.73B of revenue, a 3.70% margin, while net
+  income is $598.00M, a 16.03% margin, because most of the profit is interest on $6.53B of cash.
+  Free cash flow is negative over the same twelve months. Net cash is 38% of the market
+  capitalisation, so the P/E ladder and the EV/EBITDA cross-check disagree by construction. Read it
+  with HOOD: two entries whose reported profitability is substantially a rate bet.
 - **AMD** — 128.54x trailing earnings and 85.05x EV/EBITDA, so the entry multiple decides the
   outcome. The MI-series path makes it the same bet as NVDA, not a diversification of it.
 - **RDDT** — consensus EPS implies a ~44% net margin; reported FY2025 *operating* margin was
@@ -387,7 +404,7 @@ src/
   data/meta.js             years, scenario keys, DATA_AS_OF
   data/sectors.js          the 8 sector groups and their render order
   data/tracked.js          the 10 names this was built around
-  data/watchlist.js        the 40 coverage names
+  data/watchlist.js        the 41 coverage names
   data/tickers.js          merges both, groups by sector
   lib/model.js             the five-year projection
   lib/rank.js              cross-company ranking and its three bases
@@ -438,5 +455,5 @@ with its sector name.
 An optional `caveat` string renders as an amber note above the summary stats. Use it whenever the
 earnings-multiple frame does not cleanly fit: a non-calendar fiscal year, a GAAP/non-GAAP gap
 large enough to mislead, a balance-sheet business, or a multiple extreme enough that it — not the
-growth rate — decides the outcome. 41 of the 50 carry one, and section 07 marks every ranked row
+growth rate — decides the outcome. 42 of the 51 carry one, and section 07 marks every ranked row
 that has one.

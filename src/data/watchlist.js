@@ -45,6 +45,12 @@
  * both carry the source figure, since that is what the market-cap-less-EV bridge
  * agrees with and netCash feeds exactly that bridge. The entry comments record all
  * three numbers so a re-pull stays a diff.
+ *
+ * GRAB was added on 17 September 2026, against UBER as the other take-rate mobility and
+ * delivery marketplace and against SHOP for the take-rate shape generally. Its figures
+ * come from a 17 September pull, a week after the reference date every other entry in
+ * this file carries, so its price and multiples are a week younger than the rest of the
+ * book — the entry comment says so. The FY2027 paywall applies to it too.
  */
 export const WATCHLIST = {
   // ---------------------------------------------------------------- consumer
@@ -620,6 +626,104 @@ export const WATCHLIST = {
         m: '8.5x forward earnings; 41% of the cap is cash',
         b: 'A profitable, growing, net-cash consumer brand at 8.5x forward earnings is either mispriced or is being marked down for China listing risk, governance, or doubt about the reported numbers.',
         c: 'Decide which before sizing anything. If the answer is listing and governance risk, the exit multiple band below — 10x to 20x — is the assumption to argue with, not the revenue line.',
+      },
+    ],
+  },
+
+  // Pulled 17 September 2026 — a week after the 10–11 September reference date the rest
+  // of this book carries, so this entry's price and multiples are not comparable to the
+  // others to the day. Reports in US dollars; no conversion.
+  // Price $2.885 · cap $11.77B · EV $7.27B · 4.08B shares (+4.45% YoY) · TTM rev $3.73B
+  // · TTM EBITDA $343.00M (9.19%) · TTM NI $598.00M (16.03%), EPS $0.11 — but TTM
+  // operating income only $138.00M (3.70%) · FCF -$160.00M · cash $6.53B, debt $2.03B →
+  // net cash $4.50B · P/E 25.22 trailing, 16.55 forward · EV/EBITDA 21.19 · PS 3.15 ·
+  // FY2025 rev $3.37B, GAAP NI $268.00M, GAAP EPS $0.06 · FY2026E rev $4.19B (+24.44%),
+  // EPS $0.13 (+94.29%) · PT $5.86, +103.12% on 26 analysts
+  // FY2027 consensus is behind the paywall, so every year after the first is modelled
+  // judgement rather than a carried-forward estimate — the same position as the ten names
+  // added on 11 September.
+  GRAB: {
+    name: 'Grab Holdings',
+    sector: 'consumer',
+    shares: 1,
+    cost: 2.885,
+    priceRef: 2.885,
+    prevRev: 3.37,
+    growth: [24.44, 20, 18, 16, 14],
+    // GAAP, and the consensus series is on the same basis: FY2025 net income of $268.00M
+    // over ~4.0B shares is the $0.07 the forecast page shows as the actual, and $0.13 for
+    // FY2026 is the +94.29% growth it quotes off it. 12.65% lands year one on that $0.13.
+    // What the number hides is where the profit comes from. Trailing operating margin is
+    // 3.70%; the 16.03% net margin is mostly interest on $6.53B of cash plus other
+    // non-operating items. Interest income is roughly fixed in dollars, so it shrinks as a
+    // share of revenue — carrying 12.65% to 16% by 2030 requires operating margin to go
+    // from about 4% to about 13%. That is the whole bet in this entry.
+    niMargin: [12.65, 13, 14, 15, 16],
+    // Reported basis, not the adjusted EBITDA Grab guides to.
+    ebMargin: [10, 12, 14, 16, 18],
+    // Up 4.45% in a year. This path assumes that decelerates to about 2% — an assumption,
+    // not a disclosure.
+    sharesOut: [4.08, 4.24, 4.37, 4.48, 4.57],
+    peLow: 15,
+    peHigh: 32,
+    evMult: 14,
+    netCash: 4.5,
+    caveat:
+      'Read the operating line before the net line. Trailing operating income is $138.00M on $3.73B of revenue — a 3.70% margin — while net income is $598.00M, a 16.03% margin, because the company earns interest on $6.53B of cash and books other non-operating items on top. Free cash flow is NEGATIVE $160.00M over the same twelve months. So the profitability that makes the trailing P/E of 25.22 look reasonable is not, for the most part, coming from moving people and food yet. The margin path in the drivers requires operating margin to roughly triple by 2030, since interest income is fixed in dollars and shrinks against a growing revenue line. Two structural notes. Net cash of $4.50B is 38% of the $11.77B market capitalisation, so the P/E ladder and the EV/EBITDA cross-check below are answering different questions and will disagree. And revenue is a take rate on gross merchandise value across mobility, deliveries and financial services in eight Southeast Asian countries, reported in US dollars but earned in local currency — a leveraged claim on volume, with an FX leg none of the drivers can see. The consensus price target of $5.86 is 103% above the market price, which is a measure of how wide the range of opinion is, not of the return.',
+    scen: {
+      bear: {
+        label: 'Bear',
+        thesis: 'Incentive competition holds take rate down, the digital banks keep absorbing capital and operating margin stays near zero.',
+        rev: 6.0,
+        margin: 7,
+        pe: 14,
+      },
+      base: {
+        label: 'Base',
+        thesis: 'Mid-teens volume growth with advertising and financial services lifting the blended take rate, and operating margin finally carrying the net line.',
+        rev: 7.85,
+        margin: 16,
+        pe: 24,
+      },
+      bull: {
+        label: 'Bull',
+        thesis: 'The superapp compounds across all three segments, lending scales without credit losses, and the market pays a platform multiple.',
+        rev: 9.5,
+        margin: 20,
+        pe: 32,
+      },
+    },
+    sourced: false,
+    watch: [
+      {
+        h: 'Operating income, not net income',
+        m: 'TTM operating income $138.00M against $598.00M of net income',
+        b: 'The gap is interest on the cash pile and other non-operating items. A 16% net margin on a 3.7% operating margin is a balance-sheet result, not a business result, and it moves with interest rates rather than with the platform.',
+        c: 'Read income from operations first, every quarter, and check it against the margin path in the drivers. UBER in this same file has a version of the same problem — GAAP earnings carrying items the estimate strips out.',
+      },
+      {
+        h: 'Free cash flow against reported earnings',
+        m: 'FCF -$160.00M on $598.00M of net income',
+        b: 'Cash is going out while accounting profit is going up. For a company whose fintech arm lends, that can be the loan book growing rather than anything wrong — but it is the opposite sign to the earnings line and worth resolving.',
+        c: 'Reconcile operating cash flow to net income and check how much of the difference is loans originated. Treat sustained negative FCF against rising net income as unexplained until the filing explains it.',
+      },
+      {
+        h: 'Take rate on gross merchandise value',
+        m: 'FY2026E revenue $4.19B, +24.4%',
+        b: 'Revenue is a cut of what riders, eaters and borrowers spend, so growth is volume growth multiplied by any change in the cut Grab keeps. The cut is the part competitors can attack directly.',
+        c: 'Check GMV and revenue growth separately, and by segment. Revenue outgrowing GMV is take-rate expansion; the reverse is incentives being paid to hold volume.',
+      },
+      {
+        h: 'Digital banks and the loan book',
+        m: 'Lending balances, credit losses and segment losses',
+        b: 'The financial services segment is the fastest-growing and the least like a marketplace: it carries credit risk on the balance sheet and regulatory capital requirements in each country it banks in.',
+        c: 'Check non-performing loans and provisions alongside loan growth, and whether the digital banks are still loss-making at the segment line. Credit costs arrive after the growth, not with it.',
+      },
+      {
+        h: 'Dilution, and the currency underneath',
+        m: '4.08B shares, +4.45% year over year',
+        b: 'The count grew 4.45% in twelve months and the driver table assumes that slows to about 2%. Separately, revenue is reported in dollars but earned in Singapore dollars, rupiah, ringgit, baht and dong, so the reported growth rate already contains a currency move.',
+        c: 'Check the diluted count each quarter against the path in the drivers, and read the constant-currency growth rate next to the reported one. Both are assumptions this model cannot see.',
       },
     ],
   },
