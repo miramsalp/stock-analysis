@@ -39,18 +39,22 @@ This is deliberate — do not "fix" it by deriving scenarios from the drivers.
 implied P/E and the price ladder go negative for that column. That is the honest output of a GAAP
 model on a GAAP-unprofitable company, not a bug to clamp away.
 
-**Consensus EPS is often non-GAAP; this model is not.** Ten entries deliberately sit far below
-the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT, GOOGL and
-BULL. Do
+**Consensus EPS is often non-GAAP; this model is not.** Nine entries deliberately sit far below
+the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT and BULL. Do
 not "correct" a margin toward a consensus EPS without first checking which basis that consensus is
-on. ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss.
+on. ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss. GOOGL left this list
+in the October 2026 pull: its FY2026 consensus EPS fell from $20.60 to $11.81 once it stopped
+carrying a one-off gain, so year one now lands on consensus rather than below it.
 
 **The gap can run the other way.** UBER's consensus EPS sits *below* GAAP, because reported
 earnings carry non-recurring tax and equity-investment gains the estimate strips out. Its forward
-P/E is higher than its trailing one for the same reason. Check the direction, not just the size.
+P/E is higher than its trailing one for the same reason. AMZN has the same signature since the
+October pull — $8.31 consensus against $8.53 of GAAP EPS already reported for H1 2026 — but its
+driver table stays on the GAAP run-rate rather than dropping to the consensus-implied margin.
+Check the direction, not just the size.
 
-**Three entries are currency conversions.** TSM is converted at NT$31.5, ASML at EUR/USD 1.1627
-and CHA at USD/CNY 6.71 — all recorded in their caveats. Revenue is held in USD so it matches the
+**Three entries are currency conversions.** TSM is converted at NT$31.788, ASML at EUR/USD 1.1204
+and CHA at USD/CNY 6.70 — all recorded in their caveats. Revenue is held in USD so it matches the
 USD share price; holding it in the reporting currency silently breaks every per-share figure,
 which is exactly the bug the September 2026 pull fixed in ASML.
 
@@ -74,8 +78,9 @@ extend, and expect to solve for *position in the list* as much as for hue: Space
 fifth because its olive fails against the red at the end and passes between the purple and the
 pink. The exact commands are in README.md.
 
-Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 10 September 2026.
-Figures come from stockanalysis.com; each entry's header comment records
+Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 6 October 2026,
+for prices at the 5 October close. All 52 entries share that date. Figures come from
+stockanalysis.com; each entry's header comment records
 the exact numbers it was built from, so a re-pull is a diff rather than a re-derivation. **Do not
 model a ticker from memory.** Fetch the quote, financials, statistics and forecast pages first —
 estimated figures look identical to sourced ones on the page and are indistinguishable a week
@@ -84,8 +89,9 @@ later. If a figure genuinely cannot be verified, say so in the entry's `caveat`.
 ## Tone
 
 The page is written to resist being read as advice. Where the earnings-multiple frame does not
-fit a company, an amber `caveat` string renders *above* the summary stats — before the numbers,
-not after. Section 07's ranking carries a note saying it ranks assumptions rather than companies.
+fit a company, an amber `caveat` string renders on the summary card *above* the price, targets and returns —
+before the numbers, not after. The Compare ranking at the foot of the page carries a note saying
+it ranks assumptions rather than companies.
 Keep that posture: when a change makes a number look more authoritative than it is, add the
 qualifier in the same commit.
 
