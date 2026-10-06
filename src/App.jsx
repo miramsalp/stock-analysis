@@ -1,26 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import {
-  DATA_AS_OF,
-  SCEN_KEYS,
-  SECTOR_LABEL,
-  sectorVar,
-  TICKERS,
-  TICKERS_BY_SECTOR,
-} from './data/tickers.js'
-import { bil, money, nf, sgnMoney, sgnPct, tone } from './lib/format.js'
+import { DATA_AS_OF, SCEN_KEYS, sectorVar, TICKERS } from './data/tickers.js'
+import { bil, nf } from './lib/format.js'
 import { project } from './lib/model.js'
 import { loadStore, persist, resetPositions, resetTicker } from './lib/storage.js'
 
 import DriverTable from './components/DriverTable.jsx'
+import Fold from './components/Fold.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
-import NumField from './components/NumField.jsx'
 import ProjectionTable from './components/ProjectionTable.jsx'
 import ScenarioCard from './components/ScenarioCard.jsx'
+import Summary from './components/Summary.jsx'
 import ValuationTable from './components/ValuationTable.jsx'
 import WatchCard from './components/WatchCard.jsx'
 import { TickerGrid, TickerSelect } from './components/TickerPicker.jsx'
-import { ORow, SectionHead, Stat } from './components/Primitives.jsx'
+import { SectionHead } from './components/Primitives.jsx'
 import BandChart from './components/charts/BandChart.jsx'
 import PathChart from './components/charts/PathChart.jsx'
 
@@ -85,27 +79,16 @@ export default function App() {
       return { ...prev, checks: { ...prev.checks, [key]: !prev.checks[key] } }
     })
 
-  const base = c.scen.base
-
   return (
     <>
       <header className="topbar">
         <div className="brand">
           <span className="mark">▚▚</span>
           <h1>Ad Stack 2030</h1>
-          <span className="sub">CY26–CY30 model</span>
+          <span className="sub">where could it be in 2030?</span>
         </div>
 
         <TickerSelect active={active} onSelect={selectTicker} />
-
-        <button
-          type="button"
-          className="ghost"
-          title={`Every company: 1 share at its market price on ${DATA_AS_OF}. Drivers and scenarios are left alone.`}
-          onClick={resetAll}
-        >
-          1 share of everything
-        </button>
 
         <button
           type="button"
@@ -115,17 +98,21 @@ export default function App() {
         >
           Reset {active}
         </button>
+
+        <button
+          type="button"
+          className="ghost"
+          title={`Every company: 1 share at its market price on ${DATA_AS_OF}. Drivers and scenarios are left alone.`}
+          onClick={resetAll}
+        >
+          Reset all positions
+        </button>
       </header>
 
       <main>
         <section>
-          <SectionHead
-            eyebrow="00 / Coverage"
-            title={`${TICKERS.length} companies, ${TICKERS_BY_SECTOR.length} sectors`}
-          >
-            Pick one to model. Grouped by sector so neighbours are comparable — AVGO next
-            to MRVL, LLY next to HIMS, UNH next to OSCR. Section 07 ranks all of them
-            against each other once you have set the assumptions.
+          <SectionHead eyebrow="Pick a company" title={`${TICKERS.length} companies, grouped by sector`}>
+            Click a ticker to load it. Everything below updates.
           </SectionHead>
           <div className="card">
             <TickerGrid active={active} onSelect={selectTicker} />
@@ -133,125 +120,26 @@ export default function App() {
         </section>
 
         <section>
-          <SectionHead
-            eyebrow="01 / Position"
-            title={`Your ${d.name} holding`}
-            tag={SECTOR_LABEL[d.sector]}
+          <Summary ticker={active} d={d} c={c} setScalar={setScalar} />
+        </section>
+
+        <section className="folds">
+          <Fold
+            title="Bear, base and bull in detail"
+            hint="Each case sets its own 2030 revenue, margin and P/E"
+            tag="editable"
           >
-            Everything below is priced off these two numbers. Edit either and the whole model
-            re-runs. Cost defaults to the market price on {DATA_AS_OF} — replace it with what you
-            actually paid.
-          </SectionHead>
-
-          {/* Sits above the summary stats on purpose: on a ticker the earnings frame
-              does not fit, the caveat has to be read before the numbers are. */}
-          {d.caveat ? (
-            <p className="note warn">
-              <strong>Read this first.</strong> {d.caveat}
-            </p>
-          ) : null}
-
-          <div className="deck">
-            <div className="card entry">
-              <div className="field">
-                <label htmlFor="shares">Shares held</label>
-                <div className="inwrap">
-                  <NumField
-                    id="shares"
-                    value={d.shares}
-                    step={1}
-                    min={0}
-                    ariaLabel="Shares held"
-                    onChange={(v) => setScalar('shares', Math.max(0, v))}
-                  />
-                </div>
-              </div>
-
-              <div className="field">
-                <label htmlFor="cost">Average cost / share</label>
-                <div className="inwrap">
-                  <span className="pre">$</span>
-                  <NumField
-                    id="cost"
-                    value={d.cost}
-                    step={0.01}
-                    min={0}
-                    ariaLabel="Average cost per share"
-                    onChange={(v) => setScalar('cost', Math.max(0, v))}
-                  />
-                </div>
-              </div>
-
-              <ORow label="Total invested" value={money(c.invested)} />
-              <ORow
-                label={`Market ${DATA_AS_OF.slice(0, 6)}`}
-                value={money(d.priceRef)}
-                toneClass={d.cost > 0 ? tone(d.priceRef - d.cost) : ''}
-              />
+            <div className="scen">
+              {SCEN_KEYS.map((k) => (
+                <ScenarioCard
+                  key={k}
+                  scenKey={k}
+                  scen={d.scen[k]}
+                  out={c.scen[k]}
+                  setScen={setScen}
+                />
+              ))}
             </div>
-
-            <div className="stats">
-              <Stat
-                label="2030 base target"
-                value={money(base.target)}
-                sub={`${nf(d.scen.base.pe, 1)}x on ${money(base.eps)} EPS`}
-              />
-              <Stat
-                label="Position value 2030"
-                value={money(base.value, 0)}
-                sub={`${nf(d.shares, 0)} shares @ ${money(d.cost)}`}
-              />
-              <Stat
-                label="Net profit"
-                value={sgnMoney(base.profit)}
-                toneClass={tone(base.profit)}
-                sub={`${sgnPct(base.roi)} on cost`}
-              />
-              <Stat
-                label="Annualised (5 yr)"
-                value={sgnPct(base.cagr)}
-                toneClass={tone(base.cagr)}
-                sub="base case, 2026 → 2030"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <SectionHead eyebrow="02 / Drivers" title="Model assumptions" tag="editable">
-            The only numbers you have to believe. Revenue compounds off the prior year, so changing
-            one growth rate moves every year after it.
-          </SectionHead>
-          <DriverTable d={d} setSeries={setSeries} setScalar={setScalar} />
-        </section>
-
-        <section>
-          <SectionHead eyebrow="03 / Build" title="Earnings projection">
-            Derived from the drivers above. Implied P/E is what you paid divided by that year&apos;s
-            EPS — the multiple your entry looks like in hindsight.
-          </SectionHead>
-          <ProjectionTable c={c} />
-        </section>
-
-        <section>
-          <SectionHead eyebrow="04 / Range" title="2030 scenarios" tag="editable">
-            Three independent 2030 endpoints. Each sets its own revenue, margin and exit multiple —
-            they do not inherit the driver table.
-          </SectionHead>
-
-          <div className="scen">
-            {SCEN_KEYS.map((k) => (
-              <ScenarioCard
-                key={k}
-                scenKey={k}
-                scen={d.scen[k]}
-                out={c.scen[k]}
-                setScen={setScen}
-              />
-            ))}
-          </div>
-
-          <div className="card">
             <div className="chart-head">
               <h3>2030 price per share by scenario</h3>
             </div>
@@ -271,92 +159,97 @@ export default function App() {
               </span>
               <span>
                 <i className="dash" />
-                Your cost basis
+                Your cost
               </span>
             </div>
-          </div>
-        </section>
+          </Fold>
 
-        <section>
-          <SectionHead eyebrow="05 / Multiples" title="Valuation ladder" tag="editable multiples">
-            Same earnings, two lenses. The P/E band brackets the equity price; EV/EBITDA
-            cross-checks it on cash flow and adds back net cash.
-          </SectionHead>
+          <Fold
+            title="Growth and margin, year by year"
+            hint="Revenue growth, profit margin and share count for 2026–2030"
+            tag="editable"
+          >
+            <p className="note">
+              Revenue compounds off the year before, so changing one growth rate moves every year
+              after it. Year one is set to analyst consensus; later years are judgement.
+            </p>
+            <DriverTable d={d} setSeries={setSeries} setScalar={setScalar} />
+            <p className="note">
+              <strong>What that produces.</strong> Implied P/E is your cost divided by that
+              year&apos;s earnings per share — what your entry looks like in hindsight.
+            </p>
+            <ProjectionTable c={c} />
+          </Fold>
 
-          <div className="deck stack">
+          <Fold
+            title="Valuation cross-check"
+            hint={`P/E band and EV/EBITDA — midpoint ${nf(c.peMid, 1)}x`}
+            tag="editable multiples"
+          >
             <ValuationTable d={d} c={c} setScalar={setScalar} />
-
-            <div className="card">
-              <div className="chart-head">
-                <h3>Midpoint P/E price path · {nf(c.peMid, 1)}x</h3>
-              </div>
-              <PathChart d={d} c={c} ticker={active} />
-              <div className="chart-legend">
-                <span>
-                  <i style={{ background: sectorVar(d.sector) }} />
-                  {active} midpoint P/E target
-                </span>
-                <span>
-                  <i className="dash dot" />
-                  EV/EBITDA cross-check
-                </span>
-                <span>
-                  <i className="dash" />
-                  Your cost basis
-                </span>
-              </div>
+            <div className="chart-head">
+              <h3>Midpoint P/E price path · {nf(c.peMid, 1)}x</h3>
             </div>
-          </div>
+            <PathChart d={d} c={c} ticker={active} />
+            <div className="chart-legend">
+              <span>
+                <i style={{ background: sectorVar(d.sector) }} />
+                {active} midpoint P/E target
+              </span>
+              <span>
+                <i className="dash dot" />
+                EV/EBITDA cross-check
+              </span>
+              <span>
+                <i className="dash" />
+                Your cost
+              </span>
+            </div>
+            <p className="note">
+              <strong>How to read it.</strong> Same earnings, two lenses. The EV/EBITDA line values
+              the whole business at {nf(d.evMult, 1)}x EBITDA and adds back {bil(d.netCash)} of net
+              cash, so it should land near the P/E midpoint. A wide gap means one of the multiples
+              is doing the work, not the earnings.
+            </p>
+          </Fold>
 
-          <p className="note">
-            <strong>How to read it.</strong> IRR annualises the midpoint target over the years to
-            that column — CY2026 is one year out, CY2030 five. The EV/EBITDA row values the whole
-            business at {nf(d.evMult, 1)}x EBITDA and adds back {bil(d.netCash)} of net cash before
-            dividing by shares, so it should land near the P/E midpoint. A wide gap between the two
-            means one of the multiples is doing the work, not the earnings.
-          </p>
+          <Fold
+            title="What to check next quarter"
+            hint="Five disclosures that confirm or break the model — tick them off"
+          >
+            <div className="watch">
+              {d.watch.map((item, i) => (
+                <WatchCard
+                  key={item.h}
+                  item={item}
+                  checked={Boolean(store.checks[`${active}:${i}`])}
+                  onToggle={() => toggleCheck(i)}
+                />
+              ))}
+            </div>
+            <p className="note">
+              <strong>Source note.</strong>{' '}
+              {d.sourced
+                ? 'These five benchmarks come from your own reading of the Q2 CY2026 release and management commentary. Re-anchor them each quarter — a benchmark from two quarters ago is no longer a test.'
+                : `The ${d.name} benchmarks are structural — they name the disclosure to read, not a figure management has guided to. Replace each one with the actual guided number when the release lands, then judge the quarter against that.`}
+            </p>
+          </Fold>
         </section>
 
         <section>
-          <SectionHead eyebrow="06 / Verify" title={`What to check next quarter — ${active}`}>
-            The model above is a claim. These are the five disclosures that confirm or break it.
-            Tick them off as the release lands.
-          </SectionHead>
-
-          <div className="watch">
-            {d.watch.map((item, i) => (
-              <WatchCard
-                key={item.h}
-                item={item}
-                checked={Boolean(store.checks[`${active}:${i}`])}
-                onToggle={() => toggleCheck(i)}
-              />
-            ))}
-          </div>
-
-          <p className="note">
-            <strong>Source note.</strong>{' '}
-            {d.sourced
-              ? 'These five benchmarks come from your own reading of the Q2 CY2026 release and management commentary. Re-anchor them each quarter — a benchmark from two quarters ago is no longer a test.'
-              : `The ${d.name} benchmarks are structural — they name the disclosure to read, not a figure management has guided to. Replace each one with the actual guided number when the release lands, then judge the quarter against that.`}
-          </p>
-        </section>
-
-        <section>
-          <SectionHead eyebrow="07 / Rank" title="Where the model says the return is" tag="all companies">
-            The one comparative view on the page. Every company is run through its own scenarios,
-            then sorted by annualised return to CY2030 measured from the market price on{' '}
-            {DATA_AS_OF} — not from your cost, so the order is the same question for everyone.
+          <SectionHead eyebrow="Compare" title="All companies, ranked by the model" tag="all companies">
+            Every company run through its own bear, base and bull cases, sorted by return per year
+            to 2030 from the market price on {DATA_AS_OF} — not from your cost, so the order is
+            the same for everyone.
           </SectionHead>
 
           <Leaderboard data={store.data} active={active} onSelect={selectTicker} />
         </section>
-
       </main>
 
       <footer>
         <span>Ad Stack 2030 · a personal model, not investment advice</span>
-        <span>Reported figures and prices as of {DATA_AS_OF} · inputs save to this browser only</span>
+        <span>Prices and reported figures as of {DATA_AS_OF} · your edits save to this browser only</span>
       </footer>
     </>
   )

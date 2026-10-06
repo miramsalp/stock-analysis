@@ -1085,6 +1085,255 @@ svg.chart {
   cursor: help;
 }
 
+/* ---------- summary card ----------
+   The answer for one company on one screen. Sector colour only marks the
+   identity line; returns keep the semantic pos/neg tones. */
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-top: 3px solid var(--sec);
+}
+
+.sum-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.sum-ticker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--sec);
+}
+
+.sum-head h2 {
+  font-size: clamp(20px, 2.6vw, 26px);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.sum-sector {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.sum-sector i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--sec);
+}
+
+.summary .stats {
+  border-radius: 10px;
+}
+
+.sum-cases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (width <= 760px) {
+  .sum-cases {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sum-case {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  background: var(--sunken);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+}
+
+.sum-case-k {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sum-case-k .sq {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.sum-case.sc-bear .sq {
+  background: var(--chart-bear);
+}
+
+.sum-case.sc-base .sq {
+  background: var(--chart-base);
+}
+
+.sum-case.sc-bull .sq {
+  background: var(--chart-bull);
+}
+
+.sum-case-v {
+  font-family: Archivo, sans-serif;
+  font-size: 21px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.sum-case-r {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sum-case p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.sum-plain {
+  max-width: 78ch;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.sum-pos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+
+.sum-pos .inwrap {
+  width: 130px;
+}
+
+.sum-pos .inwrap input {
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.sum-pos .inwrap .post {
+  padding-left: 5px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.sum-pos-k,
+.sum-pos-at {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.sum-pos-out {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+/* ---------- folds ---------- */
+
+.folds {
+  gap: 10px;
+}
+
+.fold > summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-items: baseline;
+  padding: 15px 18px;
+  list-style: none;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.fold > summary::before {
+  content: '▸';
+  width: 12px;
+  color: var(--accent);
+  transition: transform 0.14s ease;
+}
+
+.fold[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.fold > summary:hover .fold-title {
+  color: var(--accent);
+}
+
+.fold > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.fold-title {
+  display: inline-flex;
+  gap: 10px;
+  align-items: baseline;
+  font-family: Archivo, 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  transition: color 0.14s;
+}
+
+.fold-hint {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.fold-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.fold-body .chart-head {
+  padding: 4px 0 0;
+}
+
+.fold-body .chart-wrap {
+  padding: 0;
+}
+
+.fold-body .chart-legend {
+  padding: 0;
+}
+
+
 /* ---------- notes and footer ---------- */
 
 .note {

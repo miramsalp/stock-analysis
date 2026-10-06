@@ -118,7 +118,7 @@ export default function Leaderboard({ data, active, onSelect }) {
                   <span className="rank-sub">
                     {r.name} · {SECTOR_LABEL[r.sector]}
                     {r.caveat ? (
-                      <abbr className="flag" title="This name carries a caveat — read it in section 01 before trusting the ranking.">
+                      <abbr className="flag" title="This name carries a caveat — read it on that company’s summary before trusting the ranking.">
                         caveat
                       </abbr>
                     ) : null}
@@ -138,7 +138,7 @@ export default function Leaderboard({ data, active, onSelect }) {
 
       <p className="note warn">
         <strong>This ranks your assumptions, not these companies.</strong> Every number above comes
-        out of the scenario cards in section 04, which are editable and mostly modelled judgement.
+        out of each company’s bear / base / bull cases, which are editable and mostly modelled judgement.
         Change one exit multiple and the order changes. Two tests before you believe it: only{' '}
         {survivors} of the top {size} on base case survive into the top {size} on downside, and the
         ranking is measured from the market price on the reference date, so it goes stale the same
