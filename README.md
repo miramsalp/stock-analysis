@@ -3,8 +3,8 @@
 A CY2026–CY2030 equity model for 52 companies across 8 sectors. Every company starts at one
 share bought at its market price on the reference date, so nothing is sized larger than anything
 else by accident. Edit the drivers and every projection, scenario, multiple and IRR on the page
-re-runs — then the Compare section at the foot of the page ranks all 52 against each other on
-the assumptions you just set.
+re-runs — then the Compare view ranks all 52 against each other on the assumptions you just
+set.
 
 | Sector | Tickers |
 | --- | --- |
@@ -40,7 +40,7 @@ other neocloud funded the same way.
 **GRAB** and **BULL** were added on **17 September 2026** — GRAB against UBER as the other
 take-rate mobility and delivery marketplace, and the cheaper, earlier, riskier version of the same
 shape; BULL (Webull) against HOOD and SOFI as a third retail broker at a fraction of the size, and
-the only de-SPAC listing in the book. Since the October 2026 re-pull they carry the same reference
+the only de-SPAC listing in the book. Since the October 2026 re-pulls they carry the same reference
 date as everything else.
 
 React 19 + Vite. No backend — inputs persist to `localStorage` in your own browser.
@@ -57,26 +57,42 @@ npm run lint     # oxlint
 
 ## What the page does
 
-The page reads top to bottom, and only the summary card is open by default. Everything that
-explains or edits it sits in a collapsed fold underneath, so a first visit answers one question
-before it asks you to read a table.
+The page is a three-column research desk: a company rail on the left, the selected company in
+the middle, and its catalysts and news on the right. Every view has its own URL hash
+(`#/APP/valuation`, `#/compare?basis=bear`, `#/news`), so Back works and a link opens the same
+view for someone else — with the shipped numbers, since edits live only in your browser.
 
 | Part | What it holds |
 | --- | --- |
-| Header | The ticker select and the two reset buttons. |
-| Pick a company | All 52 tickers as a grid, grouped by sector. Clicking one loads it into everything below. |
-| Summary card | The selected company in one screen. Its caveat comes first, where it has one, *above* the numbers. Then the price today, the 2030 base-case target, the total gain and the annualised return per year; a bear / base / bull strip with each case's target, per-year return and thesis; one plain-English sentence restating the base and bear cases as assumptions; and the position inputs — shares held and average cost, defaulting to 1 share at the reference-date market price. The returns are measured from that cost, which is why the inputs stay on the card rather than in a fold. |
-| Fold · Bear, base and bull in detail | The three editable scenario cards, each setting its own 2030 revenue, margin and exit multiple, and a band chart of the three 2030 prices against your cost. |
-| Fold · Growth and margin, year by year | The editable driver table — revenue growth, net margin, EBITDA margin and diluted share count per year, plus the CY2025 revenue base — and the projection it produces: revenue, net income, EBITDA, EPS and the implied P/E your entry price represents. |
-| Fold · Valuation cross-check | The P/E low / high / midpoint price ladder with upside and IRR, the EV/EBITDA-plus-net-cash cross-check, and a chart of the midpoint price path. |
-| Fold · What to check next quarter | Five disclosures to check at the next earnings release, with a checkbox that persists. |
-| Compare | All 52 companies sorted by annualised return to 2030, on a basis you choose, with a note that it ranks your assumptions rather than the companies. |
+| Top bar | Search across all 52 (`/` or Ctrl+K opens a command palette with fuzzy match — "crowd" finds CRWD), a data-age chip that turns amber after 14 days and reads "stale" after 30, a System / Light / Dark switch, and a ⋯ menu holding the two resets and the shortcut list. |
+| Company rail | Every company grouped by sector in the palette's order, filterable, and sortable by sector, A–Z, move since the last pull, or base / bear return a year. Each row shows price, the move since the previous pull and the base case a year **from today's price** (not your cost — the same basis Compare uses). Sorting by return puts MSTR and ASTS in a separate "Not ranked" group showing n/m, so the rail never makes the ranking Compare refuses to. Below 900px it becomes a drawer. |
+| Company header | Identity and ‹ › arrows, then the caveat, then the numbers — in that order. The caveat shows as badges and one lead sentence, expandable in place; MSTR and ASTS open with the full note and a stronger frame. Then the price with its move since the previous pull, and the live base 2030 target with its return a year from your cost. |
+| Tabs | Overview, Scenarios, Drivers, Valuation, and Catalysts & news. The tab bar is sticky and carries the live base target, so an edit in Drivers shows its result while you type; on a phone the readout sits on its own line above the tabs. An amber dot marks a tab holding edits. |
+| Overview | One price ladder — today, the previous pull and your cost against the bear, base and bull targets — then the three theses, one plain sentence restating them as assumptions, and the position inputs: shares and cost, defaulting to 1 share at the reference-date price. |
+| Scenarios | The three editable cases, each setting its own 2030 revenue, margin and exit multiple. |
+| Drivers | The editable driver table — growth, net margin, EBITDA margin and diluted shares per year, plus the CY2025 revenue base — and the projection it produces. |
+| Valuation | The P/E low / high / midpoint ladder with upside and IRR, the EV/EBITDA-plus-net-cash cross-check, and a chart of the midpoint price path with the P/E band shaded. |
+| Catalysts & news | The right column at 1280px and wider, a tab below that — never above the caveat or the numbers. The watch checklist (ticks persist), and dated, sourced news items, each with a "why" line naming the driver it touches and a tag that jumps to that input. A next-catalyst line appears only where an entry carries a date. |
+| `#/compare` | All 50 rankable companies sorted by annualised return to 2030, on a basis you choose, filterable by sector. The note saying it ranks your assumptions rather than the companies sits above everything else. MSTR and ASTS are listed underneath with their reasons. |
+| `#/news` | A newswire across the whole book, filterable by kind and sector. Curated at the pull, not a live feed. |
 
-Two reset buttons sit in the header, and they do different things. **Reset \<TICKER\>** restores
-one company's shipped defaults — drivers, scenarios, multiples and position together. **Reset all
+Keys: `j` / `k` next and previous company in the rail's order, `[` / `]` or `1`–`5` for tabs,
+`g c` Compare, `g n` Newswire, `g h` back to the last company, `t` theme, `?` the full list. None
+fire while a field has focus.
+
+Two resets sit in the ⋯ menu, and they do different things. **Reset \<TICKER\>** restores one
+company's shipped defaults — drivers, scenarios, multiples and position together. **Reset all
 positions** rewrites only the two position inputs, across the whole book, to one share at the
-reference-date market price; every driver and scenario you have edited is left alone. Use the
-second one to put the position column back on a like-for-like footing after experimenting.
+reference-date market price; every driver and scenario you have edited is left alone. Both offer
+an Undo for a few seconds afterwards.
+
+### What a saved model does after a re-pull
+
+Only values that differ from the shipped defaults are saved, under `adstack2030.v2`, stamped with
+`DATA_AS_OF`. An untouched company therefore always shows the current pull. Edits saved against an
+earlier pull — including anything in the old `adstack2030.v1` key, which saved every number on the
+first visit — are **not** applied silently: a banner offers to re-apply them or to use the new
+data, because some of those numbers are your edits and most are probably the old data.
 
 ## The model
 
@@ -88,14 +104,18 @@ ni[i]    = rev[i] × niMargin[i]
 eps[i]   = ni[i] / sharesOut[i]
 ebitda[i]= rev[i] × ebMargin[i]
 
-price    = eps × P/E                          IRR = (price / cost)^(1 / yearsOut) − 1
+price    = eps × P/E                          IRR = (price / cost)^(1 / yearsTo) − 1
 evPrice  = (ebitda × evMult + netCash) / sharesOut
 ```
 
 Scenarios do **not** inherit the driver table — each sets its own 2030 revenue, margin and exit
 multiple, so the three cases can disagree about more than one variable at a time.
 
-`yearsOut` counts CY2026 as one year out and CY2030 as five.
+`yearsTo` is the real time from the reference date to the end of each calendar year, not a
+round count: from the 18 October 2026 pull, CY2030 is about 4.2 years away and CY2026 about ten
+weeks, which is why the CY2026 column is not annualised and shows n/m instead. A target at or
+below $0 counts as a total loss (−100%), and a loss-making year shows n/m for IRR, implied P/E and
+upside rather than a confident zero.
 
 ### The ranking
 
@@ -106,7 +126,7 @@ cost-basis return travels alongside in its own column.
 
 ```
 weighted = 0.25 × bear.target + 0.50 × base.target + 0.25 × bull.target
-return   = (target / priceRef)^(1/5) − 1        target ≤ 0 → −1 (total loss)
+return   = (target / priceRef)^(1/yearsTo(2030)) − 1    target ≤ 0 → −1 (total loss)
 ```
 
 Three ranking bases, because one hides the trade-off:
@@ -118,91 +138,108 @@ Three ranking bases, because one hides the trade-off:
 | Downside first | `bear.target` alone | survivability |
 
 The names that top one list are rarely the names that top another — on the shipped defaults at
-the October 2026 pull, the base-case top five and the downside top five share only two names. The chart draws each name
+the 18 October 2026 pull, only five of the base-case top ten survive into the downside top ten. The chart draws each name
 as a **bear-to-bull span** with a marker at the ranking basis, so a wide bar reads as what it is:
 a name the model is not confident about.
 
 A ticker can set `rankable: false` with a `rankReason` to stay out of the ranking entirely. Two
 do. **MSTR** — its scenario targets run through the same P/E ladder as everything else, and that
 ladder is noise for a bitcoin treasury, so ranking on it would place Strategy last for a reason
-that has nothing to do with the asset anyone owns it for. And **ASTS**, which trades at 197x
+that has nothing to do with the asset anyone owns it for. And **ASTS**, which trades at 137x
 trailing *sales* with no trailing P/E at all: there is no 2030 earnings number solid enough to
 sort on, only a view about whether a constellation that does not exist yet gets built. Excluded
 names are named under the table, not silently dropped.
 
 ## Where the numbers come from
 
-All 52 entries were re-pulled on **6 October 2026**, at the **5 October close**, from the
+All 52 entries were re-pulled on **18 October 2026**, at the **16 October close**, from the
 `/statistics/` and `/forecast/` pages on [stockanalysis.com](https://stockanalysis.com) (which
-sources S&P Global consensus). MSTR's bitcoin holdings come from Strategy's 8-K of 5 October, and
-the $85,575 bitcoin price is a CoinGecko quote taken on 6 October — a live quote, not a close, so
-it is the least precise price in the book. `DATA_AS_OF` in `src/data/meta.js` carries the date,
-and the page footer shows it. Every entry now shares that one date; there are no off-date entries
-left. **This is a snapshot, not a feed** — re-pull it when it matters.
+sources S&P Global consensus). MSTR's holdings — 848,250 BTC — come from Strategy's 8-K of 13
+October, and the $80,997 bitcoin price is a CoinGecko snapshot taken on 18 October with no
+timestamp — a live quote, not a close, so it is still the least precise price in the book.
+`DATA_AS_OF` in `src/data/meta.js` carries the date, and the data-age chip and footer show it.
+Every entry shares that one date. **This is a snapshot, not a feed** — re-pull it when it
+matters, and several companies report within days of this one (below).
 
-This replaced the pull dated 10–11 September 2026 (17 September for GRAB and BULL). As in the
-fortnight before it, prices moved far more than reported financials: few companies reported a new
-quarter in between, and most TTM figures are identical. CRWD rose 30.6% on unchanged estimates,
-MSTR 27.9%, SHOP 26.5% and AMD 25.4%; TTD fell 14.2%, AXON 14.0% and NFLX 11.2%. A rising price
-on unchanged estimates makes every multiple on the page more demanding without anything in the
-business having changed, which is worth keeping in mind when a target looks lower than it did.
+Each entry now also carries `pricePrev`, the 5 October close the previous pull used, so the page
+can show how far each price has moved since, and a short `news` list — 235 items across the book,
+roughly from 1 September onward, each dated, sourced and linked, with a "why" line naming the
+driver it touches. News was chosen for whether it moves an input in this model, not for how
+loud it was; it is curated at the pull and goes stale with the prices.
 
-Where a consensus or a reported figure itself moved, the entry comment in the data file says so.
-The ones that change how an entry reads:
+This replaced the pull dated 6 October 2026 (5 October close). Prices again moved far more than
+the reported figures: most names reported nothing in between. The fortnight was a sell-off in
+the AI-infrastructure trade — **IREN fell 33.3%, ASTS and RKLB 30.4%, NBIS 28.9%, ARM 24.8% and
+BE 22.8%**, and MU, MSTR, CRWD, AMD, MRVL, TSM and SPCX all fell 14–17% — while the defensive end
+of the book rose: **LLY +10.0%, CHA +9.9%, LMT +9.0%, V +8.9%, KO +8.5%, COST +7.1% and UNH
++6.0%**. A falling price on unchanged estimates makes the multiples on the page less demanding
+without anything in the business having changed; the reverse is just as true for the names that
+rose.
 
-- **GOOGL** — FY2026 consensus EPS fell from $20.60 to $11.81. That is not a collapse in
-  expectations: the old figure carried a one-off gain and the new one does not. Year one now lands
-  on consensus, so GOOGL has left the below-consensus list further down.
-- **AMZN** — consensus EPS is now $8.31, where the September pull recorded $12.55, and it sits
-  *below* GAAP. See the UBER paragraph below.
-- **MU** — reported FY2026 on 30 September, and its FY2027 estimate is now public. See its own
-  section below.
-- **ORCL** — total debt rose from $155.93B to $169.14B and the share count from 2.88B to 3.03B
-  with no new income statement behind either. That looks like a debt-and-equity raise reaching the
-  balance sheet first, but it has **not been checked against a filing**.
-- **COST** — FY2026 (ended 30 August) has been reported, and year one now lands on the reported
-  figure rather than an estimate.
-- **UNH** — not a market move but a correction: `netCash` had held −$41.86B while the September
-  header already recorded net debt of $44.74B. It now carries −44.74.
+**Four companies reported a quarter between the pulls** — TSM (15 October), ASML (14 October),
+JPM and UNH (both 13 October) — and their trailing figures moved; for everyone else only price,
+consensus and targets did. Where a consensus or reported figure moved, the entry comment in the
+data file says from what to what. The ones that change how an entry reads:
 
-Several FY2027 figures need a follow-up. In September the FY2027 cells on each forecast page's
-table went behind stockanalysis.com's paywall, and **ASML, PLTR, RKLB, ZETA, SPCX, JPM, CEG, VST
-and VRT** each use an FY2027 consensus in `growth[1]` or `niMargin[1]` that was carried forward
-from the 29 August pull. They are still carried forward, unchanged, and both the data file and the
-driver comment say so at each site. But the table cells are not the only place the figure
-appears: the **"Revenue Next Year" and "EPS Next Year" summary boxes** at the top of the same page
-now show FY2027 publicly, and where they were read in this pull they do not always agree with the
-carried values — SPCX's box shows +154.01% revenue growth against the carried +136.32%, RKLB's
-+41.62% against +42.33%, JPM's +2.82% against +2.51%. The carried values were **kept as-is** for
-this pull rather than swapped halfway through. Re-sourcing year two from the summary boxes is the
-open follow-up; until it is done, treat year two on those nine as August's consensus, not today's.
+- **TSM** — Q3 printed a 51.1% net margin, and year one now runs at 51.36% (it was 46.53%). The
+  share count was also corrected: it is now 25.93B ordinary shares at five per ADR, **5.186B**,
+  where it had been 4.70B derived from market cap divided by the ADR price. That route
+  understates the count because the source strikes the cap on the cheaper Taipei line, so the
+  implied market cap on this page now runs about 11% above the source figure — the ADR premium,
+  not an error.
+- **ASML** — the FY2026 guide midpoint of about €44.5B is roughly 37% growth; year one now sits at
+  36.13% and year two at the re-sourced 28.66%.
+- **UNH** — year-one growth turned from −0.20% to +0.16%, so it is no longer one of the entries
+  with revenue falling in the consensus year; `netCash` is now cash less debt, −$45.78B.
+- **JPM** — year two re-sourced (+4.02%), and net cash restated to 555.22. The source's revenue and
+  the bank's reported figure disagree, which the entry comment records.
+- **ARM** — year one is now **FY2027** (April 2026 to March 2027), not FY2026, which was already
+  reported and had put every column a year early. Its base case still lands about 18% below the
+  price.
+- **MU** — the scenarios were rebuilt. See its own section below.
+- **GOOGL** — FY2026 consensus EPS is **$13.14**, up from $11.81 on 6 October and $20.60 in
+  September (the September figure carried a one-off gain). Year one still lands on consensus.
+- **MSTR** — the stock fell 17% while bitcoin fell about 5%, and the premium to net asset value
+  roughly halved. See its own section below.
 
-For the other entries, every year after the first is modelled judgement, with two exceptions
-that come from fiscal years ending away from December. **ARM** ends on 31 March, and its FY2027
-estimate is still public and used for year two. **MU** ends in August: year one is now the
-**reported** FY2026 rather than an estimate, and year two is the now-public FY2027 consensus.
-Offset years also move year one: **SNOW**, ending 31 January, uses the estimate the source labels
-FY2027, not FY2026, and so do the other January-year entries. Each says so in its entry comment
-and caveat.
+The FY2027 follow-up from the last pull is closed. The FY2027 figures that had been carried
+forward from August — **ASML, PLTR, RKLB, ZETA, SPCX, JPM, CEG, VST and VRT** — were re-sourced
+from the forecast pages' "Next Year" summary boxes, which are public again. Where the new
+consensus for year two sits far above a judgement-driven year two (AVGO, AMD, NVDA, BE, NBIS,
+HOOD, COIN, ASTS, UBER and GRAB), the entry comment notes the gap and the drivers were left alone.
+
+For the other entries, every year after the first is modelled judgement, with exceptions that
+come from fiscal years ending away from December. **ARM** ends on 31 March, and year two uses its
+public FY2028 estimate. **MU** ends in August: year one is the **reported** FY2026 and year two the
+FY2027 consensus. Offset years also move year one: **SNOW**, ending 31 January, uses the estimate
+the source labels FY2027, not FY2026, and so do the other January-year entries. Each says so in
+its entry comment and caveat.
 
 `netCash` is defined as total cash less total debt, and for **MU** and **SNOW** the source's own
 net-cash figure is larger than that because it counts long-term investments. Both entries carry
 the source figure instead, because that is the one the market-cap-less-enterprise-value bridge
 agrees with, and `netCash` feeds exactly that bridge. The entry comment records all three numbers.
 **OSCR** carries the source figure too, for the opposite reason: as an insurer, much of its cash
-is regulatory or restricted, so the source figure is *smaller* than cash less debt.
+is regulatory or restricted, so the source figure is *smaller* than cash less debt. **UNH** and
+**RKLB** go the other way and carry cash less debt where the source's line differs.
 
 Three entries need a third page, the `/financials/` annual income statement, because their
 forecast tables are on an adjusted basis far from GAAP: **BULL**, **CHA** and **UBER**. That page
-was not re-fetched for every entry in this pull; where a GAAP figure is carried from September
-(ORCL's FY2026 GAAP EPS of about $5.90, for one), the entry comment says so.
+was not re-fetched for every entry in this pull; where a GAAP figure is carried from an earlier
+pull (ORCL's FY2026 GAAP EPS of about $5.90, for one), the entry comment says so.
 
-Three currencies are converted rather than reported: **TSM** at NT$31.788 (the Taiwan central
-bank's interbank close on 5 October), **ASML** at EUR/USD 1.1204 (the ECB reference rate on 5
-October) and **CHA** at USD/CNY 6.70 (a mid-market rate of 6.7048 on 5 October; quotes found
-for the same days ranged far enough that the third decimal should be treated as soft). Growth
-rates and margins are currency-neutral; every absolute figure for those three moves with the rate,
-and ASML's dollar figures fell about 3.6% on the weaker euro alone.
+Three currencies are converted rather than reported: **TSM** at NT$32.338 (the Taipei forex close
+on 16 October), **ASML** at EUR/USD 1.1253 (the ECB reference rate on 16 October) and **CHA** at
+USD/CNY 6.722 — the **central parity** for 16 October, not a closing rate, because no closing rate
+for that day could be found. Treat CHA's third decimal as soft. Growth rates and margins are
+currency-neutral; every absolute figure for those three moves with the rate. The NT dollar
+weakened 1.7% between the pulls, which by itself took about 1.7% off every converted TSM figure.
+
+Unverified in this pull, and recorded in each entry: MSTR's ~$22B of senior claims (carried since
+August); SNOW's net cash after a 28 September convertible; SPCX's year-one basis, where the $0.01
+EPS and the forecast table's net income imply different margins; whether V's year one should
+land on its non-GAAP consensus at all; and several second-hand figures (COST's debt, ORCL's
+reported debt deal, the BULL F-3/A, MSFT's capex, ASML's equity gain).
 
 Each ticker was built the same way:
 
@@ -210,19 +247,22 @@ Each ticker was built the same way:
 | --- | --- |
 | `prevRev` | Last reported full fiscal year revenue |
 | `growth[0]` | Set so CY2026 lands on the **analyst consensus revenue estimate** — or, for MU and COST, on the reported fiscal year that now covers most of CY2026 |
-| `growth[1..4]` | A deceleration path — judgement, not consensus. The exceptions are the nine names above, where `growth[1]` is a consensus figure carried forward from August, and ARM and MU, where it is a current public FY2027 estimate |
+| `growth[1..4]` | A deceleration path — judgement, not consensus. Where `growth[1]` is a consensus figure (the nine re-sourced names above, ARM and MU), the entry comment says which year it is |
 | `niMargin[0]` | Set so year one lands near the **consensus EPS** — except the nine names below, set deliberately under a non-GAAP consensus, and AMZN, set above one |
 | `sharesOut` | Actual current diluted share count, then a dilution/buyback path |
 | `peLow` / `peHigh` | A band around where the stock actually trades |
 | `netCash` | Total cash less total debt (or market cap less enterprise value) |
-| `cost` | The market price on the reference date — a **placeholder** for your real cost basis |
+| `cost` | The market price on the reference date — a **placeholder** for your real cost basis. APP is the one exception, below |
+| `pricePrev` | The close the previous pull used, for the move-since-pull figures. Shown, never modelled |
+| `news` | `{ d, k, h, s, u, why }` — date, kind, headline, source, link and the driver it touches. Copy, so it is read from the data file and never saved |
 
 Only **APP** is `sourced: true`: its drivers and the five Q2 CY2026 watch items come from the
-owner's own reading of the release, and `cost` is a real entry at $319.46. Its drivers were left
-untouched by both re-pulls, so they land CY2026 on $8.00B against a consensus that now sits at
-$8.10B — a 1.2% gap, kept rather than quietly overwritten. At the 5 October close the stock was
-11.7% below that cost. Everything else has real reported history and real consensus behind year
-one, but the 2027–2030 path and the exit multiples are modelled assumptions.
+owner's own reading of the release, and `cost` is a real entry at $319.46 — the only entry whose
+cost is not its reference price, and so the only one whose returns from cost differ from the
+returns Compare and the rail show. Its drivers were left untouched by every re-pull, so they land
+CY2026 on $8.00B against a consensus that now sits at $8.09B — a gap kept rather than quietly
+overwritten. At the 16 October close the stock was 16.7% below that cost. Everything else has
+real reported history and real consensus behind year one, but the 2027–2030 path and the exit multiples are modelled assumptions.
 
 Nine margins are deliberately set **below** the headline consensus, because consensus EPS for
 those names is non-GAAP while this model runs on GAAP:
@@ -233,14 +273,17 @@ those names is non-GAAP while this model runs on GAAP:
 | CHA | FY2025 consensus basis CNY 10.07 against GAAP EPS of CNY 6.18 for the same year |
 | BE | $2.71 implies a 19.4% margin; GAAP trailing is 7.87% |
 | ARM | $1.77 implies 38%; GAAP trailing is 20.25% |
-| AXON | $7.65 non-GAAP implies about 17%, against a reported 4.5–6% GAAP margin |
-| MRVL | $4.21 non-GAAP against the 16% GAAP margin used here |
+| AXON | $7.65 non-GAAP implies about 17%; year one here is 7.9%, about $3.59 of EPS |
+| MRVL | $4.22 non-GAAP against about $2.20 of GAAP EPS in year one here |
 | ORCL | $8.14 non-GAAP against about $5.90 of GAAP EPS for FY2026 |
 | VRT | $6.74 implies 18.5%; GAAP trailing is 15.09% — year one sits between the two |
 | BULL | $0.24 for FY2026 implies a 16.07% net margin against a 6.34% GAAP trailing one; the forecast page's own FY2025 comparator is $0.28 against GAAP **−$1.23** |
 
-GOOGL sat in this table until the October pull, on a 2026 consensus inflated by a one-off gain.
-That consensus is now normalised at $11.81, and year one lands on it.
+GOOGL sat in this table until the 6 October pull, on a 2026 consensus inflated by a one-off gain.
+That consensus is now $13.14, on what the source shows as a near-GAAP basis, and year one lands on
+it. The 18 October pull suggested several more names whose consensus is adjusted — RKLB, CRWD,
+NOW, RDDT, AMD, TTD, CRM, AVGO, SNOW and possibly V. They are flagged in their entry comments; they
+have not yet been checked one by one, so they are not in this table.
 
 **UBER and AMZN run the gap backwards**, and are the reason to check the direction rather than
 assume it. UBER's consensus EPS of $3.35 sits *below* GAAP — FY2025 reported $4.73 — because GAAP
@@ -262,22 +305,23 @@ anything on this page.
 
 ### Caveats
 
-An optional `caveat` string renders as an amber note on the summary card, above the price and the
-targets, for tickers where the earnings-multiple frame does not cleanly fit. **43 of the 52** carry
-one, and all ten of the names added on 11 September 2026 do. The ones worth knowing about before
-you read anything else (multiples are at the 5 October 2026 close):
+An optional `caveat` string renders as an amber band in the company header, between the name and
+the numbers, for tickers where the earnings-multiple frame does not cleanly fit. **43 of the 52**
+carry one, and all ten of the names added on 11 September 2026 do. The ones worth knowing about
+before you read anything else are below. **The figures in this list were written at the 6 October
+pull** and are kept for the reasoning, not the numbers; each in-app caveat carries the 16 October
+figures, and where they differ, the page is right and this list is not.
 
-- **SPCX** — listed 12 June 2026, so no full year as a public company and under four months of
+- **SPCX** — listed 12 June 2026, so no full year as a public company and about four months of
   trading history to set a multiple against. TTM shows an $8.89B net loss and −$32.52B free cash
   flow; the share count rose 41.79% in a year. Both consensus years assume >135% revenue growth.
   See below.
 - **MSTR** — a bitcoin treasury, so the P/E ladder is noise. See below.
-- **ASTS** — 197x trailing sales, no trailing P/E, −$1.64B free cash flow and a share count up
-  39.67% in a year. Excluded from the ranking for the same reason MSTR is.
-- **MU** — the clearest cyclical here, and one of the entries whose base case sits below the
-  current price. FY2026 is now reported — revenue up 256.33% at a 63.80% net margin — and consensus
-  has FY2027 more than doubling again; the driver table reverts margin toward 35% by 2030 rather
-  than holding it. See below.
+- **ASTS** — 137x trailing sales (197x on 6 October), no trailing P/E, −$1.64B free cash flow
+  and a share count up 39.67% in a year. Excluded from the ranking for the same reason MSTR is.
+- **MU** — the clearest cyclical here. FY2026 is now reported — revenue up 256.33% at a 63.80%
+  net margin — and consensus has FY2027 more than doubling again; the driver table reverts margin
+  toward 35% by 2030 rather than holding it. See below.
 - **SNOW** — $1.20B of free cash flow and a $1.09B GAAP net loss in the same twelve months, almost
   entirely stock compensation. On the adjusted basis the consensus uses, the same revenue path
   produces roughly twice the EPS.
@@ -343,41 +387,44 @@ you read anything else (multiples are at the 5 October 2026 close):
   IREN is one bet rather than two.
 - **ASML** — reports in euros and trades in dollars. Until the September 2026 pull the revenue line
   sat in euros against a dollar share price, which understated the implied P/E by roughly the
-  exchange rate; it is now converted at 1.1204.
-- **TSM** — reports in New Taiwan dollars, and the ADR-equivalent share count is derived from
-  market cap divided by the ADR price rather than from the 5:1 ratio, which do not agree. That
-  count was derived on 10 September 2026 and deliberately not re-derived in October: the same
-  division today gives about 4.32B rather than 4.696B, because the ADR's premium over the Taipei
-  line widened, not because the share count changed.
+  exchange rate; it is now converted at 1.1253.
+- **TSM** — reports in New Taiwan dollars, and since the 18 October pull the ADR-equivalent share
+  count is the 5:1 ratio applied to 25.93B ordinary shares, 5.186B, rather than market cap divided
+  by the ADR price. Implied market cap therefore runs about 11% above the source's — the ADR
+  premium.
 - **KO** — the frame fits, but the model prices no dividend, and a 2.45% yield is close to half
   of the expected total return.
 - **AXON** — ~170x trailing earnings, so the entry multiple decides the outcome, not growth.
 
-### SPCX has under four months of trading history
+### SPCX has barely four months of trading history
+
+*Figures in this section are at the 16 October 2026 close.*
 
 SpaceX came to Nasdaq on **12 June 2026**, which makes it the only entry with no full year as a
 public company and no meaningful trading history to set a multiple band against. It is also, at a
-$2.32T market capitalisation, one of the largest names here — so getting it wrong costs more than
+$1.98T market capitalisation, one of the largest names here — so getting it wrong costs more than
 getting a small one wrong.
 
 What the trailing twelve months actually show: **$23.04B of revenue, an $8.89B net loss, and
 −$32.52B of free cash flow**, funded out of a $100.01B cash pile, with the share count up
-**41.79%** in a year. EV/EBITDA is 383.6x, up from 330.8x in September on a 15.5% higher price and
-the same trailing figures.
+**41.79%** in a year. EV/EBITDA is 325.9x, down from 383.6x on 6 October on a 14.6% lower price
+and the same trailing figures.
 
 Everything that makes the model work happens inside the consensus rather than the history.
-Revenue is forecast to rise **about 139% in 2026 and a further 136% in 2027**, and net margin to go
-from **2.8% to about 21%** across the same step. Nothing else in this book asks you to believe a
-margin step that large in one year. Two of those inputs are softer than they look:
+Revenue is forecast to rise **about 142% in 2026 and a further 157% in 2027**, and net margin to go
+from almost nothing to about **24%** across the same step. Nothing else in this book asks you to
+believe a margin step that large in one year. Two things about those inputs:
 
-- The **2027 figure is August's**, carried forward from before the paywall. The forecast page's
-  "Next Year" summary box now shows a *higher* FY2027 consensus — $113.50B of revenue, +154.01%,
-  and $1.93 of EPS, against the carried +136% and $1.58. It was not adopted in this pull.
-- The **2026 EPS could not be verified.** The page shows **−$0.09** for FY2026, in both the table
-  and the summary box, while the same table shows FY2026 net income of **+$1.90B**; the September
-  pull recorded +$0.09. Whether that is a sign error at the source, an IPO-year effect on earnings
-  attributable to common, or a September misread is not resolvable from the public page.
-  `niMargin[0]` stays at 2.8% until it is.
+- The **2027 figure is now current**: the August figure (+136%) that had been carried forward was
+  replaced with the public "Next Year" consensus, $116.04B of revenue and $1.99 of EPS.
+- The **2026 basis is still unsettled.** The EPS sign has resolved — the page now shows **+$0.01**,
+  where 6 October showed −$0.09 — and `niMargin[0]` is set to the 0.3% that implies. But the same
+  forecast table's FY2026 net income of $2.30B would be about 5.1% of revenue. Which one the source
+  means is not resolvable from the public page.
+
+Two things the drivers do not hold: analysts increasingly price SpaceX as an AI-compute business
+(Q2 capex was $18.4B, $15.8B of it AI), and the pending EchoStar spectrum deal would be paid partly
+in stock. SpaceX reports Q3 on 20 October, two days after this pull.
 
 `growth[2..4]` is a guess at how a curve like that decays, and it is a guess about a business that
 does not exist yet. Treat the position sizing, not the model, as the risk control here.
@@ -389,16 +436,17 @@ The same problem AXON and MRVL have, an order of magnitude larger. The FY2026 co
 revenue. Trailing EBITDA is **$115.94M — 7.4% of revenue** — against the roughly 20% adjusted
 EBITDA margin the company reports. Stock compensation is most of both gaps, so `niMargin` starts
 at 1% and `ebMargin` at 8%, not at anything resembling the headline numbers. None of those
-reported figures, nor the consensus, moved in either re-pull —
-only the price and the price target did.
+reported figures moved in any re-pull, and consensus EPS barely did ($0.96 to $0.95) —
+the price and the price target moved instead.
 
 That makes it a share count problem as much as a margin one. The diluted count rose **13.60% in a
 single year**, to 251.01M. The `sharesOut` path assumes that decelerates to about 4% and then
 below — an assumption, and the one in this entry most likely to be too kind.
 
-Two things frame the result. The stock sits at **$32.88, 3.77% above a $31.64 consensus price
-target**, and at **70.4x EV/EBITDA**, so `evMult` is set to 20 rather than held at today's multiple
-— the base case is earnings catching up to the multiple, not the multiple re-rating. And **free
+Two things frame the result. The stock sits at **$31.81, with a $37.86 consensus price target
+19.0% above it** (on 6 October it sat 3.77% *above* a $31.64 one), and at **68.1x EV/EBITDA**, so
+`evMult` is set to 20 rather than held at today's multiple — the base case is earnings catching up
+to the multiple, not the multiple re-rating. And **free
 cash flow of $224.41M exceeds both trailing EBITDA and reported net income**, because compensation
 paid in stock costs no cash. That single comparison is the bull case and the 2024 short thesis
 restated as one number, which is why the watch items track free cash flow *per share* rather than
@@ -410,25 +458,27 @@ A multiple on software earnings does not value Strategy, and reported net income
 the trailing twelve months show a **$31.4B loss** purely from bitcoin marks running through the
 income statement under fair-value rules. So the P/E ladder for MSTR is noise, and the page says so.
 
-What was done instead: `netCash` is set to the **bitcoin treasury less senior claims** — 848,000
-BTC (about 4% of all bitcoin) at a blended cost of about $75,441, worth roughly **$72.6B** at an
-$85,575 bitcoin price on 6 October 2026, against roughly $22B of debt and preferreds. That last
-figure is still carried forward from the August pull and is the softest number in the entry;
-Strategy has been buying back some of its STRC preferred since, which would nudge it down, and the
-bridge also ignores its separate USD reserve. The result makes the EV/EBITDA **"Implied price per
-share" row read as approximate net asset value per share**: about **$135** against a **$164.43**
-market price, a premium of roughly 22%, up from about 12% in September.
+What was done instead: `netCash` is set to the **bitcoin treasury less senior claims** — 848,250
+BTC (about 4% of all bitcoin) at a blended cost of about $75,444, worth roughly **$68.7B** at an
+$80,997 bitcoin price on 18 October 2026, against roughly $22B of debt and preferreds. That last
+figure is still carried forward from the August pull, could not be re-verified again, and is the
+softest number in the entry; the bridge also ignores Strategy's separate USD reserve, and the
+source's $2.45B of cash disagrees with the company's own reserve figures. The result makes the
+EV/EBITDA **"Implied price per share" row read as approximate net asset value per share**: about
+**$125** against a **$136.83** market price, a premium of roughly 10%, down from about 22% on
+6 October.
 
-The cushion has rebuilt, on the bitcoin price alone. Spot sits about **13% above the treasury's
-own blended cost**, where on 10 September it was about 2%. Nothing in the treasury's behaviour
-changed: the latest tranche — 334 BTC at about $85,839 — was again bought slightly *above* the
-spot price used here, which raises the average and thins the cushion in the same transaction. A
-cushion that rebuilt on an 11% move in bitcoin can thin the same way.
+The premium halved because the stock fell three times as fast as bitcoin — 17% against about 5%
+— around MSCI's approval of index-eligibility screens that could exclude Strategy, with the final
+list due on 11 November. The cushion thinned at the same time: spot sits about **7% above the
+treasury's own blended cost**, down from about 13% on 6 October and up from about 2% on 10
+September. The latest tranche — 250 BTC at about $86,194 — was again bought *above* the spot price
+used here.
 
 The share count row is still the real story. It rises from 384M to 540M, so on a flat bitcoin
-price NAV per share falls to about $98 by 2030 even though the bitcoin pile does not shrink. The
+price NAV per share falls to about $91 by 2030 even though the bitcoin pile does not shrink. The
 five watch items are about bitcoin per share, the NAV premium, blended cost against spot, senior
-claims and the accounting swing — not software revenue.
+claims and the accounting swing — not software revenue. Strategy reports Q3 on 29 October.
 
 ### ORCL is the leveraged version of the AI-capex bet
 
@@ -460,36 +510,29 @@ the ~27% the consensus EPS implies, because neither of those carries the depreci
 being bought now or the interest on $169.14B of debt. That step down is the single most important
 assumption in the entry, and it is judgement rather than consensus.
 
-### MU's base case sits below the current price
+### MU's two cases disagree about how fast the cycle turns
 
-Micron's shipped base case values the equity well *below* what it trades at today, and that is the
-honest output of the model rather than a slip in it. It is not the only entry where that is true —
-after a month in which several prices rose on unchanged estimates, a dozen base cases land below
-the price — but it is the one where the reason is clearest.
+Until the 18 October pull Micron's base case sat well *below* the price — about $673 against
+$1,063.96 — and the bull case's 2030 revenue was below the driver table's own year two. Both
+predated the FY2026 report and the jump in the FY2027 consensus, so the scenarios were rebuilt:
+the **base case now follows the driver table** to CY2030 — $317.8B of revenue at a 35% margin and
+an 11x exit multiple, about **$1,112** against an $878.84 price, roughly +27% in total and +6% a
+year — and the bull case sits above it at $360B and 45%. The bear case is unchanged.
 
 Micron reported FY2026 on 30 September: **$133.19B of revenue, up 256.33%**, at a **63.80%** GAAP
-net margin and **$74.33** of GAAP diluted EPS. Year one now uses those reported figures rather than
-a consensus. Year two uses the FY2027 consensus, which is now public: **$274.73B, up a further
-106.27%**, on **$176.42** of EPS — scaled down slightly to a GAAP basis, a net margin above 70%.
-Both years are a cycle peak. Memory has never held one for five years, so `niMargin` drops to 42%
-in 2028 and reverts toward **35%** by 2030 — a sharp turn, and judgement rather than consensus —
-leaving the driver table at roughly $101 of 2030 EPS, against $75 in year one and $174 in year two.
+net margin. Year one uses those reported figures. Year two uses the FY2027 consensus: **$274.54B,
+up a further 106.13%**, on **$176.55** of EPS. Both years are a cycle peak. Memory has never held
+one for five years, so `niMargin` drops to 42% in 2028 and reverts toward **35%** by 2030 — a sharp
+turn, and judgement rather than consensus.
 
-The base scenario is more cautious still, and it does not inherit the driver table. It assumes
-2030 revenue of $177.21B — barely a third above FY2026 and well below what consensus expects for
-FY2027 alone — at a 38% margin and an 11x exit multiple, a mid-cycle memory multiple rather than a
-growth-stock one. That is roughly **$673 against a $1,063.96 share price**, about −8.7% a year.
-The gap between the driver table and the base scenario is itself the point: the two disagree about
-how fast the cycle turns.
-
-Reverse the single assumption and the answer reverses with it. If high-bandwidth memory has made
-this business structurally less cyclical than it has ever been, the 2030 margin and the exit
-multiple are both too low, and the entry looks entirely different. **That is the argument, and
-the page exists so you can have it with the numbers in front of you** — the ranking says it ranks
+The 11x multiple is the assumption to argue with. It is a mid-cycle memory multiple, not a
+growth-stock one: on a peak-cycle year it is generous, and on a business that high-bandwidth
+memory has made structurally less cyclical it is too low. **That is the argument, and the page
+exists so you can have it with the numbers in front of you.** The ranking says it ranks
 assumptions rather than companies, and this is what that sentence means in practice.
 
 Two mechanical notes. The fiscal year ends in **August** (FY2026 was a 53-week year to 3
-September), so every column sits about a quarter behind the calendar. And the 6.03x forward P/E
+September), so every column sits about a quarter behind the calendar. And the 4.98x forward P/E
 is struck against that FY2027 estimate — the market is paying very little for a year consensus
 already expects to be the largest in the company's history, which is a statement about how much
 the market trusts the estimate, not a bargain the model has found.
@@ -528,35 +571,47 @@ Nothing here is investment advice.
 
 ```
 src/
-  data/meta.js             years, scenario keys, DATA_AS_OF
-  data/sectors.js          the 8 sector groups and their render order
-  data/tracked.js          the 10 names this was built around
-  data/watchlist.js        the 42 coverage names
-  data/tickers.js          merges both, groups by sector
-  lib/model.js             the five-year projection
-  lib/rank.js              cross-company ranking and its three bases
-  lib/format.js            number formatting
-  lib/storage.js           localStorage load/persist (numbers only)
-  hooks/useTip.js          shared chart tooltip plumbing
-  components/              tables, cards, inputs, ticker picker
-  components/Summary.jsx   the summary card: caveat, headline stats, bear/base/bull strip, position
-  components/Fold.jsx      the collapsible <details> wrapper for the four folds
-  components/Leaderboard.jsx  Compare: controls, ranked table, honesty note
-  components/charts/       hand-rolled SVG band, path and rank charts
-  App.jsx                  page shell and state
-  index.css                design tokens and all component styles
+  data/meta.js               years, scenario keys, DATA_AS_OF
+  data/sectors.js            the 8 sector groups and their render order
+  data/tracked.js            the 10 names this was built around
+  data/watchlist.js          the 42 coverage names
+  data/tickers.js            merges both, groups by sector
+  lib/model.js               the five-year projection and the one annualise rule
+  lib/rank.js                cross-company ranking and its three bases
+  lib/book.js                one light row per company for the rail and palette
+  lib/storage.js             localStorage load / persist (overrides only, numbers only)
+  lib/dates.js               DATA_AS_OF parsing, the horizon, data age
+  lib/caveat.js              caveat badges and lead sentence, inferred or declared
+  lib/news.js                news items, driver tags, next catalyst
+  lib/move.js                move since the previous pull
+  lib/format.js              number formatting
+  hooks/                     route (hash), hotkeys, theme, media and width, chart tooltips
+  components/TopBar.jsx      brand, search, data age, theme, resets
+  components/SectorRail.jsx  the company rail
+  components/CompanyHeader.jsx, CaveatBand.jsx, Tabs.jsx, Overview.jsx
+  components/CatalystPanel.jsx, NewsList.jsx, NewsView.jsx
+  components/CompareView.jsx the ranking, its controls and its honesty note
+  components/CommandPalette.jsx, ShortcutSheet.jsx
+  components/charts/         hand-rolled SVG price ladder, path and rank charts
+  App.jsx                    page shell, routing and state
+  index.css                  design tokens and all component styles
 ```
 
 `tracked.js` and `watchlist.js` have identical shape — the split is editorial, not structural.
 
-Only numeric fields are persisted. Copy, scenario theses and watch items always come from
-the data files in `src/data/`, so editing them updates every saved model instead of leaving
-stale wording in someone's browser.
+Only numeric fields are persisted, and only where they differ from the shipped defaults. Copy,
+scenario theses, caveats, news and watch items always come from the data files in `src/data/`,
+so editing them updates every saved model instead of leaving stale wording in someone's browser.
+The saved payload carries two short identifiers besides the numbers — the `DATA_AS_OF` stamp and
+the active ticker — and the theme choice lives in its own key. Watch ticks are keyed by the
+item's heading with its figures dropped, so "What 108x already assumes" and "What 114x already
+assumes" keep the same tick; a heading reworded outright needs an `id` on the watch item.
 
 ## Adding a company
 
 Add an entry to `WATCHLIST` in `src/data/watchlist.js` with the same shape as the others, giving
-it a `sector` key that already exists. The picker, tables, charts and watch grid all read from
+it a `sector` key that already exists, a `pricePrev` (leave it out and the move shows n/m) and a
+`news` array (it can be empty). The rail, palette, tables, charts and watch list all read from
 that object — nothing else needs touching.
 
 Adding a *new sector* means adding it to `SECTORS` in `src/data/sectors.js` and a matching
@@ -581,8 +636,9 @@ labelled with its ticker and every group with its sector name.
 Colour never carries identity alone here — every chip is labelled with its ticker and every group
 with its sector name.
 
-An optional `caveat` string renders as an amber note on the summary card, above the price and
-the targets. Use it whenever the earnings-multiple frame does not cleanly fit: a non-calendar
+An optional `caveat` string renders as an amber band in the company header, above the price and
+the targets. Badges and the lead sentence are inferred from its text; an entry can set
+`caveatKind` and `caveatLead` to override them. Use it whenever the earnings-multiple frame does not cleanly fit: a non-calendar
 fiscal year, a GAAP/non-GAAP gap large enough to mislead, a balance-sheet business, or a multiple
 extreme enough that it — not the growth rate — decides the outcome. 43 of the 52 carry one, and
 the Compare ranking marks every ranked row that has one.

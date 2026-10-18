@@ -1,16 +1,14 @@
 import { sectorVar } from '../../data/tickers.js'
 import useTip from '../../hooks/useTip.js'
-import { money, sgnPct } from '../../lib/format.js'
-import { niceTicks, pctAxisLabel } from './chartUtils.js'
+import useWidth from '../../hooks/useWidth.js'
+import { money, pctAxis, sgnPct } from '../../lib/format.js'
+import { niceTicks, scale, tickCount } from './chartUtils.js'
 import Tip from './Tip.jsx'
 
-const W = 720
-const L = 74
-const R = 92
-const T = 20
+const T = 26
 const B = 30
-const ROW_H = 32
-const BAR_H = 12
+const ROW_H = 26
+const BAR_H = 10
 
 /**
  * The ranked names as annualised-return spans, bear end to bull end, with a solid
@@ -19,15 +17,25 @@ const BAR_H = 12
  * A bar chart of the ranking metric alone would say the top name is the best pick.
  * The span says something truer: two names can share a metric and not share a risk,
  * and the widest bars are the ones the model is least sure about.
+ *
+ * Pointer tooltips only; every value here is also in the sortable table, which is the
+ * keyboard and screen-reader path (`describedBy`).
  */
-export default function RankChart({ rows, basis }) {
+export default function RankChart({ rows, basis, describedBy }) {
   const { ref, tip, track, clear } = useTip()
+  const width = useWidth(ref)
 
-  const H = T + B + rows.length * ROW_H
-  const lo = Math.min(0, ...rows.map((r) => Math.min(r.ret.bear, r.ret[basis])))
-  const hi = Math.max(0, ...rows.map((r) => Math.max(r.ret.bull, r.ret[basis])))
-  const { ticks, min, max } = niceTicks(lo, hi)
-  const x = (v) => L + ((v - min) / (max - min)) * (W - L - R)
+  const W = Math.max(300, width)
+  const narrow = W < 520
+  const L = narrow ? 64 : 92
+  const R = narrow ? 58 : 76
+  const H = T + B + Math.max(1, rows.length) * ROW_H
+
+  const fin = (v) => (Number.isFinite(v) ? v : 0)
+  const lo = Math.min(0, ...rows.map((r) => Math.min(fin(r.ret.bear), fin(r.ret[basis]))))
+  const hi = Math.max(0, ...rows.map((r) => Math.max(fin(r.ret.bull), fin(r.ret[basis]))))
+  const { ticks, min, max } = niceTicks(lo, hi, tickCount(W - L - R, 80))
+  const x = scale(min, max, L, W - R)
 
   return (
     <div className="chart-wrap" ref={ref} onPointerLeave={clear}>
@@ -36,13 +44,14 @@ export default function RankChart({ rows, basis }) {
         className="chart"
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`Annualised return to 2030 for the top ${rows.length} names, bear to bull`}
+        aria-label={`Annualised return to 2030 for ${rows.length} names, bear to bull, ranked on ${basis}. Values are in the table.`}
+        aria-describedby={describedBy}
       >
         {ticks.map((t) => (
           <g key={t}>
             <line className="gridline" x1={x(t)} x2={x(t)} y1={T} y2={H - B} />
-            <text className="axis-t" x={x(t)} y={H - B + 16} textAnchor="middle">
-              {pctAxisLabel(t)}
+            <text className="axis-t" x={x(t)} y={H - B + 18} textAnchor="middle">
+              {pctAxis(t)}
             </text>
           </g>
         ))}
@@ -54,19 +63,22 @@ export default function RankChart({ rows, basis }) {
           y1={T - 8}
           y2={H - B + 2}
           stroke="var(--ink-3)"
-          strokeWidth="2"
+          strokeWidth="1.5"
           strokeDasharray="5 4"
         />
-        <text className="axis-t" x={x(0)} y={T - 13} textAnchor="middle" fill="var(--ink-2)">
+        <text className="axis-t" x={x(0)} y={T - 12} textAnchor="middle" fill="var(--ink-2)">
           today
         </text>
 
         {rows.map((r, i) => {
           const y = T + i * ROW_H
           const mid = y + ROW_H / 2
-          const x1 = x(Math.min(r.ret.bear, r.ret.bull))
-          const x2 = x(Math.max(r.ret.bear, r.ret.bull))
+          const b0 = fin(r.ret.bear)
+          const b1 = fin(r.ret.bull)
+          const x1 = x(Math.min(b0, b1))
+          const x2 = x(Math.max(b0, b1))
           const colour = sectorVar(r.sector)
+          const m = r.ret[basis]
 
           return (
             <g key={r.key}>
@@ -79,13 +91,15 @@ export default function RankChart({ rows, basis }) {
                 fill={colour}
                 opacity="0.28"
               />
-              <rect x={x(r.ret[basis]) - 2} y={mid - 11} width="4" height="22" rx="2" fill={colour} />
+              {Number.isFinite(m) ? (
+                <rect x={x(m) - 2} y={mid - 9} width="4" height="18" rx="2" fill={colour} />
+              ) : null}
 
               <text className="cat-t" x={L - 10} y={mid + 4} textAnchor="end">
-                {i + 1} · {r.key}
+                {narrow ? r.key : `${r.rank} · ${r.key}`}
               </text>
-              <text className="val-t" x={W - R + 10} y={mid + 4}>
-                {sgnPct(r.ret[basis])}
+              <text className="val-t" x={W - R + 8} y={mid + 4}>
+                {sgnPct(m)}
               </text>
 
               <rect
@@ -101,7 +115,7 @@ export default function RankChart({ rows, basis }) {
                       <div className="t">
                         {r.key} · {r.name}
                       </div>
-                      <div className="b">{sgnPct(r.ret[basis])} a year</div>
+                      <div className="b">{sgnPct(m)} a year</div>
                       <div className="s">
                         Bear {money(r.target.bear)} · Base {money(r.target.base)} · Bull{' '}
                         {money(r.target.bull)}

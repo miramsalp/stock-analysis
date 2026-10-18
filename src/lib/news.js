@@ -23,7 +23,7 @@ export const NEWS_KINDS = {
  */
 const DRIVER_RULES = [
   { key: 'growth', label: 'Revenue growth', tab: 'drivers', re: /growth|revenue|top line|demand|bookings|backlog/i },
-  { key: 'niMargin', label: 'Net margin', tab: 'drivers', re: /margin|profitab|cost|opex|earnings power/i },
+  { key: 'niMargin', label: 'Net margin', tab: 'drivers', re: /(?<!same )margin|profitab|opex|earnings power/i },
   { key: 'sharesOut', label: 'Share count', tab: 'drivers', re: /share count|dilut|buyback|repurchase|issuance|convertible|offering/i },
   { key: 'peLow', label: 'Exit multiple', tab: 'valuation', re: /multiple|P\/E|valuation|re-?rat/i },
   { key: 'netCash', label: 'Net cash', tab: 'valuation', re: /net cash|net debt|balance sheet|leverage|debt/i },

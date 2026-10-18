@@ -8,7 +8,7 @@ const DAY = 86400000
 const YEAR = 365.25 * DAY
 
 /**
- * `DATA_AS_OF` is written for people ('6 October 2026'), and `Date.parse` reads that
+ * `DATA_AS_OF` is written for people ('18 October 2026'), and `Date.parse` reads that
  * in local time, which moves the day for anyone east of UTC. Parse it by hand, as UTC.
  */
 export function parseDay(s) {
@@ -25,7 +25,7 @@ export const AS_OF_MS = parseDay(DATA_AS_OF)
 
 /**
  * Years from the reference date to the end of a calendar year. Every return on the
- * page is annualised over this, not over a round five: from a 6 October 2026 price,
+ * page is annualised over this, not over a round five: from an 18 October 2026 pull,
  * CY2030 is about 4.2 years away and CY2026 under three months.
  */
 export function yearsTo(calendarYear) {
@@ -36,6 +36,11 @@ export function yearsTo(calendarYear) {
 /** Whole days since the reference date, against the viewer's clock. */
 export function daysSince(ms = AS_OF_MS, now = Date.now()) {
   return isFinite(ms) ? Math.max(0, Math.floor((now - ms) / DAY)) : NaN
+}
+
+/** Whole days until a future date, or null when it is past or unknown. */
+export function daysUntil(ms, now = Date.now()) {
+  return isFinite(ms) && ms > now ? Math.ceil((ms - now) / DAY) : null
 }
 
 const SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']

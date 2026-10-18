@@ -1,8 +1,9 @@
 # CLAUDE.md
 
 Ad Stack 2030 — a CY2026–CY2030 equity model for 52 companies. React 19 + Vite, no backend,
-no router, no state library, no chart library. `README.md` is the substantive document: how each
-number was derived, what is sourced versus modelled, and why. Read it before changing data.
+no router library (views are hash routes in `hooks/useRoute.js`), no state library, no chart
+library. `README.md` is the substantive document: how each number was derived, what is
+sourced versus modelled, and why. Read it before changing data.
 
 ## Commands
 
@@ -22,14 +23,20 @@ how model changes get checked.
 `sharesOut: [0.252, …]` is 252M shares. Percentages are whole numbers, not fractions:
 `growth: [21, …]` is 21%. Getting a unit wrong produces a plausible-looking page, not an error.
 
-**Only numbers persist.** `src/lib/storage.js` writes scalars and the four five-element series to
-`localStorage` and nothing else. Copy, theses, caveats and watch items always come from
-`src/data/`, so editing prose there updates every saved model instead of leaving stale wording in
-someone's browser. Never persist a string.
+**Only numbers persist, and only edits.** `src/lib/storage.js` writes the scalars, the four
+five-element series and the scenario fields — and only where they differ from `DEFAULTS` — under
+`adstack2030.v2`. Copy, theses, caveats, watch items and news always come from `src/data/`, so
+editing prose there updates every saved model instead of leaving stale wording in someone's
+browser. Never persist prose. The payload carries exactly two strings, both identifiers: the
+`DATA_AS_OF` stamp and the active ticker. The stamp is what keeps a re-pull honest — edits saved
+against another date are held for a banner rather than applied silently — so it must change with
+every pull. The theme lives in its own key outside `storage.js`. Watch ticks are keyed by heading
+with figures stripped, or by an explicit `id` on the watch item when a heading is reworded.
 
 **`DEFAULTS` vs `store.data`.** `store.data` is the user's edited copy; `DEFAULTS` is the shipped
-one. Non-numeric fields — `caveat`, `rankable`, `rankReason`, `sourced` — are read off `DEFAULTS`,
-because a saved payload will not carry them.
+one. Non-numeric fields — `caveat`, `rankable`, `rankReason`, `sourced`, `watch`, `news` — and
+`pricePrev` and `priceRef` are read off `DEFAULTS`, because a saved payload will not carry them
+and the move since the last pull must never be frozen by one.
 
 **Scenarios do not inherit the driver table.** Each of bear/base/bull sets its own 2030 revenue,
 margin and exit multiple, so the three cases can disagree about more than one variable at a time.
@@ -42,9 +49,11 @@ model on a GAAP-unprofitable company, not a bug to clamp away.
 **Consensus EPS is often non-GAAP; this model is not.** Nine entries deliberately sit far below
 the headline consensus for that reason — ZETA, CHA, BE, ARM, AXON, MRVL, ORCL, VRT and BULL. Do
 not "correct" a margin toward a consensus EPS without first checking which basis that consensus is
-on. ZETA is the extreme case: $0.96 adjusted against a GAAP trailing net loss. GOOGL left this list
-in the October 2026 pull: its FY2026 consensus EPS fell from $20.60 to $11.81 once it stopped
-carrying a one-off gain, so year one now lands on consensus rather than below it.
+on. ZETA is the extreme case: $0.95 adjusted against a GAAP trailing net loss. GOOGL left this list
+in the 6 October 2026 pull, once its FY2026 consensus EPS stopped carrying a one-off gain ($20.60
+to $11.81; $13.14 at the 18 October pull), and year one lands on consensus. The 18 October pull
+flagged RKLB, CRWD, NOW, RDDT, AMD, TTD, CRM, AVGO, SNOW and possibly V as adjusted too; they are
+noted in their entry comments but not yet checked one by one, so the list stays at nine.
 
 **The gap can run the other way.** UBER's consensus EPS sits *below* GAAP, because reported
 earnings carry non-recurring tax and equity-investment gains the estimate strips out. Its forward
@@ -53,13 +62,17 @@ October pull — $8.31 consensus against $8.53 of GAAP EPS already reported for 
 driver table stays on the GAAP run-rate rather than dropping to the consensus-implied margin.
 Check the direction, not just the size.
 
-**Three entries are currency conversions.** TSM is converted at NT$31.788, ASML at EUR/USD 1.1204
-and CHA at USD/CNY 6.70 — all recorded in their caveats. Revenue is held in USD so it matches the
+**Three entries are currency conversions.** TSM is converted at NT$32.338, ASML at EUR/USD 1.1253
+and CHA at USD/CNY 6.722 (the 16 October central parity — no closing rate was found) — all
+recorded in their caveats. TSM's share count is ADR-equivalent, 25.93B ordinary shares at five per
+ADR; do not go back to deriving it from market cap over the ADR price. Revenue is held in USD so it matches the
 USD share price; holding it in the reporting currency silently breaks every per-share figure,
 which is exactly the bug the September 2026 pull fixed in ASML.
 
 **Positions all start at 1 share.** Every `shares` field in the data files is `1`, so the position
-column compares like with like. Do not reintroduce per-ticker share counts. `resetTicker(key)`
+column compares like with like. Do not reintroduce per-ticker share counts. `cost` equals
+`priceRef` everywhere except **APP**, which keeps the owner's real $319.46 cost basis on purpose
+(it is `sourced: true`); a re-pull moves APP's `priceRef` and leaves its `cost` alone. `resetTicker(key)`
 restores one company's shipped defaults; `resetPositions(data)` sets every ticker to 1 share at
 `priceRef` and leaves drivers and scenarios untouched — they are different operations and the
 header has a button for each.
@@ -78,8 +91,14 @@ extend, and expect to solve for *position in the list* as much as for hue: Space
 fifth because its olive fails against the red at the end and passes between the purple and the
 pink. The exact commands are in README.md.
 
-Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 6 October 2026,
-for prices at the 5 October close. All 52 entries share that date. Figures come from
+Every figure carries a reference date, `DATA_AS_OF` in `data/meta.js` — 18 October 2026,
+for prices at the 16 October close. All 52 entries share that date. It also sets the data-age
+chip, the annualisation horizon and the storage stamp, so it changes in the same commit as the
+prices — never after. Each entry carries `pricePrev` (the previous pull's close, for the move
+shown on the page) and a `news` array of `{ d, k, h, s, u, why }`, with real URLs, headlines of
+120 characters or fewer, and a "why" line that names the driver it touches; on a re-pull, move
+`priceRef` into `pricePrev` first, and reread any "why" line that compares the news with the
+entry's own numbers, since those numbers may just have changed. Figures come from
 stockanalysis.com; each entry's header comment records
 the exact numbers it was built from, so a re-pull is a diff rather than a re-derivation. **Do not
 model a ticker from memory.** Fetch the quote, financials, statistics and forecast pages first —
@@ -89,9 +108,10 @@ later. If a figure genuinely cannot be verified, say so in the entry's `caveat`.
 ## Tone
 
 The page is written to resist being read as advice. Where the earnings-multiple frame does not
-fit a company, an amber `caveat` string renders on the summary card *above* the price, targets and returns —
-before the numbers, not after. The Compare ranking at the foot of the page carries a note saying
-it ranks assumptions rather than companies.
+fit a company, an amber `caveat` renders in the company header *above* the price, targets and
+returns — before the numbers, not after — and news sits below both, never above. The Compare view
+carries its note saying it ranks assumptions rather than companies above everything else, and no
+other surface (the rail's return sorts included) ranks the `rankable: false` names.
 Keep that posture: when a change makes a number look more authoritative than it is, add the
 qualifier in the same commit.
 

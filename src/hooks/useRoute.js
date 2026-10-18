@@ -16,10 +16,10 @@ import { TICKERS } from '../data/tickers.js'
  */
 export const TABS = [
   { key: 'overview', label: 'Overview' },
-  { key: 'scenarios', label: 'Scenarios', editable: true },
+  { key: 'scenarios', label: 'Scenarios', short: 'Cases', editable: true },
   { key: 'drivers', label: 'Drivers', editable: true },
-  { key: 'valuation', label: 'Valuation', editable: true },
-  { key: 'catalysts', label: 'Catalysts & news' },
+  { key: 'valuation', label: 'Valuation', short: 'Value', editable: true },
+  { key: 'catalysts', label: 'Catalysts & news', short: 'News' },
 ]
 const TAB_KEYS = TABS.map((t) => t.key)
 

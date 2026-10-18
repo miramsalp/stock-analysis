@@ -1,5 +1,3 @@
-import { useRef } from 'react'
-
 import { SCEN_KEYS } from '../../data/tickers.js'
 import useTip from '../../hooks/useTip.js'
 import useWidth from '../../hooks/useWidth.js'
@@ -39,7 +37,6 @@ function spread(items, gap, lo, hi) {
 export default function PriceLadder({ d, c, prev, misfit, compact = false }) {
   const { ref, tip, track, show, clear } = useTip()
   const width = useWidth(ref)
-  const svgRef = useRef(null)
 
   const today = d.priceRef
   const cost = d.cost
@@ -97,18 +94,20 @@ export default function PriceLadder({ d, c, prev, misfit, compact = false }) {
     <div className={`chart-wrap ladder${misfit ? ' misfit' : ''}`} ref={ref} onPointerLeave={clear}>
       <Tip tip={tip} />
       <svg
-        ref={svgRef}
         className="chart"
-        width={W}
-        height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
         aria-label={`Price ladder. ${summary}`}
       >
-        {ticks.map((t) => (
+        {ticks.map((t, i) => (
           <g key={t}>
             <line className="gridline" x1={x(t)} x2={x(t)} y1={AXIS_Y - 30} y2={AXIS_Y + 30} />
-            <text className="axis-t" x={x(t)} y={H - 6} textAnchor="middle">
+            <text
+              className="axis-t"
+              x={x(t)}
+              y={H - 6}
+              textAnchor={i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle'}
+            >
               {axisMoney(t, step)}
             </text>
           </g>
@@ -163,10 +162,10 @@ export default function PriceLadder({ d, c, prev, misfit, compact = false }) {
               stroke="var(--surface)"
               strokeWidth="2"
             />
-            <text className="case-k" x={s.lx} y={AXIS_Y - 50} textAnchor="middle">
+            <text className="lad-k" x={s.lx} y={AXIS_Y - 50} textAnchor="middle">
               {s.label.toUpperCase()}
             </text>
-            <text className="case-v" x={s.lx} y={AXIS_Y - 30} textAnchor="middle">
+            <text className="lad-v" x={s.lx} y={AXIS_Y - 30} textAnchor="middle">
               {price(s.v)}
             </text>
             <rect

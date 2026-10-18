@@ -106,7 +106,7 @@ function diffSaved(savedData) {
   return out
 }
 
-/** A stable key for a watch item: its heading, slugged. Re-ordering items keeps ticks. */
+/** Slug of a heading; re-ordering items keeps ticks. */
 export const slug = (s) =>
   String(s || '')
     .toLowerCase()
@@ -114,7 +114,20 @@ export const slug = (s) =>
     .replace(/^-|-$/g, '')
     .slice(0, 48)
 
-export const watchKey = (ticker, item) => `${ticker}:${slug(item.h)}`
+/*
+ * Headings carry figures that move with every pull — SHOP's 'What 108x already
+ * assumes' became 'What 114x already assumes' — so the key drops every number-led
+ * token before slugging. A heading reworded outright needs an explicit `id` on the
+ * watch item in the data to keep its ticks; the id wins whenever it is present.
+ */
+const figureless = (slugged) =>
+  slugged
+    .split('-')
+    .filter((w) => w && !/^\d/.test(w))
+    .join('-')
+
+export const watchKey = (ticker, item) =>
+  `${ticker}:${typeof item.id === 'string' && item.id ? item.id : figureless(slug(item.h))}`
 
 /** v1 keyed ticks by array position; map each onto the heading now at that position. */
 function migrateChecks(checks) {
@@ -128,7 +141,10 @@ function migrateChecks(checks) {
       const item = DEFAULTS[ticker].watch?.[+rest]
       if (item) out[watchKey(ticker, item)] = true
     } else {
-      out[k] = true
+      // Keys saved before figures were dropped from them still carry the numbers.
+      const items = DEFAULTS[ticker].watch || []
+      const hit = items.find((w) => watchKey(ticker, w) === k || w.id === rest || figureless(rest) === watchKey(ticker, w).slice(ticker.length + 1))
+      out[hit ? watchKey(ticker, hit) : k] = true
     }
   }
   return out
