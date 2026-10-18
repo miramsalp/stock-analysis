@@ -3,6 +3,11 @@
  * watched closely. APP carries the owner's real cost basis and its own sourced watch
  * items; the rest use the market price on the reference date as a placeholder cost.
  *
+ * Figures are from the 2026-10-18 pull, at the 16 October 2026 close. `pricePrev` is
+ * the 5 October close the previous pull used. None of the ten reported a quarter
+ * between the two pulls, so TTM and balance-sheet figures are unchanged; prices,
+ * consensus and price targets moved.
+ *
  * See `./watchlist.js` for the broader coverage set, and README.md for how every
  * field was derived.
  */
@@ -10,16 +15,21 @@ export const TRACKED = {
 
   // FY2025 rev $5.48B · TTM rev $6.83B, NI $4.41B (64.58%) · TTM EBITDA $5.41B
   // (79.29%) · 334.65M shares (-1.81% YoY) · cash $3.05B, debt $3.52B → net debt
-  // $461.77M · price $281.97, down 58.70% over 52 weeks · trailing P/E 21.68,
-  // forward 15.67 · FY2026E rev $8.10B (+47.77%), EPS $16.67 · PT $497.05
+  // $461.77M · price $266.13 (was $281.97, -5.6%) · trailing P/E 20.46 (was 21.68),
+  // forward 14.76 (was 15.67) · FY2026E rev $8.09B (+47.58%; was $8.10B, +47.77%),
+  // EPS $16.59 (was $16.67) · FY2027E rev $10.20B (+26.05%), EPS $20.53 — public
+  // again · PT $480.08 (was $497.05) after a run of sell-side target cuts
   // Drivers left exactly as the owner supplied them. They land CY2026 on $8.00B
-  // against the $8.10B consensus — a 1.2% gap, kept rather than quietly overwritten.
+  // against the $8.09B consensus — a 1.1% gap, kept rather than quietly overwritten.
+  // Year two at +35% (~$10.8B) now sits about 6% above the $10.20B FY2027 consensus;
+  // flagged, not changed. Cost stays at the owner's real $319.46 basis, not the close.
   APP: {
     name: 'AppLovin',
     sector: 'internet',
     shares: 1,
     cost: 319.46,
-    priceRef: 281.97,
+    priceRef: 266.13,
+    pricePrev: 281.97,
     prevRev: 5.4795, // CY2025 base, set so CY2026 lands on $8.00B
     growth: [46, 35, 30, 25, 20],
     niMargin: [62, 63, 64, 65, 65],
@@ -56,7 +66,7 @@ export const TRACKED = {
     watch: [
       {
         h: 'Revenue guidance execution',
-        m: 'Q3 guide $2.055B – $2.085B (+46% to +48% YoY)',
+        m: 'Q3 guide $2.055B – $2.085B (+46% to +48% YoY); reports 4 Nov',
         b: 'Q2 revenue of $1.924B narrowly missed the guidance midpoint on delayed AXON model deployments.',
         c: 'Verify Q3 revenue meets or beats the $2.07B midpoint — that proves the Q2 top-line miss was timing, not structural saturation.',
       },
@@ -85,21 +95,37 @@ export const TRACKED = {
         c: 'Ensure adjusted EBITDA margin holds above 82% despite GPU spend, and that free cash flow normalises toward the ~75%-of-EBITDA full-year target as Q2 tax timing noise clears.',
       },
     ],
+    news: [
+      // newest first, 3–6 items, only things that touch a model driver
+      { d: '2026-10-09', k: 'analyst', h: 'BofA cuts AppLovin target to $325 from $400, Neutral; hard to pay a premium without durable reacceleration', s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/applovin-price-target-lowered-to-325-from-400-at-bofa-thefly-news', why: 'Argues APP should trade near GOOGL/META multiples, which pushes the exit P/E band (peHigh 35, bull 30) down.' },
+      { d: '2026-10-08', k: 'analyst', h: 'Jefferies cuts AppLovin target to $375 from $550; trims 2027 revenue view 5% to $10.1B on Unity Vector strength', s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/applovin-price-target-lowered-to-375-from-550-at-jefferies-thefly-news', why: 'Share loss to Unity lowers revenue growth: $10.1B for 2027 sits under the ~$10.8B year two in this model.' },
+      { d: '2026-10-02', k: 'analyst', h: "Evercore ad-agency checks 'incrementally cautious' on AppLovin and Pinterest, 'most constructive' on Meta and Alphabet", s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/evercore-says-ad-channel-checks-incrementally-cautious-for-applovin-pinterest-thefly-news-2', why: 'Near-term demand signal points to slower revenue growth into Q3/Q4; a growth risk, not a margin one.' },
+      { d: '2026-10-02', k: 'regulatory', h: "Court denies AppLovin restraining order against Unity's Ad Quality SDK over alleged MAX data collection", s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/judge-denies-applovin-restraining-order-against-unity-says-wedbush-thefly-news', why: 'Interim ruling, not merits; Wedbush reads the suit as competitors gaining ground, a risk to growth and the multiple.' },
+      { d: '2026-10-01', k: 'regulatory', h: 'Securities class action alleges AppLovin overstated AI model progress and video creative tool readiness', s: 'Newsfile (Robbins LLP)', u: 'https://www.newsfilecorp.com/release/316996/Robbins-LLP-is-Investigating-Allegations-that-AppLovin-Corporation-Misled-Investors-Regarding-the-Strength-of-its-AI-Models-and-Feasibility-of-its-AI-Video-Creative-Tool', why: 'Allegations only (lead-plaintiff deadline 16 Nov); an overhang on the exit multiple rather than on revenue.' },
+      { d: '2026-09-30', k: 'analyst', h: "Wells Fargo calls AppLovin's Pixel adoption jump a 'false start': 85% of new sites have no traffic", s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/wells-calls-applovin-pixel-adoption-growth-false-start-thefly-news', why: 'Undercuts the e-commerce adoption the $21B CY2030 base case depends on; a risk to later-year revenue growth.' },
+    ],
   },
 
   // FY2025 rev $200.97B, NI $60.46B (30.1%) · TTM rev $228.25B, NI $68.10B (29.84%)
   // · TTM EBITDA $109.66B (48.04%) · 2.55B shares (-1.08% YoY) · cash $90.26B, debt
-  // $112.32B → net debt $22.06B · price $741.90 · trailing P/E 27.96, forward 23.07
-  // · FY2026E rev $254.16B (+26.47%), EPS $30.79 · PT $793.91
+  // $112.32B → net debt $22.06B · price $709.33 (was $741.90, -4.4%) · trailing P/E
+  // 26.73 (was 27.96), forward 22.19 (was 23.07) · FY2026E rev $254.19B (+26.48%;
+  // was $254.16B), EPS $30.37 (was $30.79) · FY2027E rev $306.91B (+20.74%), EPS
+  // $34.63 — public again · PT $814.51 (was $793.91)
+  // Year one trimmed from 30.9% to 30.5% so it follows the EPS cut to $30.37 (GAAP and
+  // adjusted EPS sit close together for Meta outside one-off tax years). Year two at
+  // +18% is 2.7 points under the FY2027 consensus; flagged, left as judgement. Q3 is
+  // reported on 21 October, three days after this pull.
   META: {
     name: 'Meta Platforms',
     sector: 'internet',
     shares: 1,
-    cost: 741.9,
-    priceRef: 741.9,
+    cost: 709.33,
+    priceRef: 709.33,
+    pricePrev: 741.9,
     prevRev: 200.966,
-    growth: [26.47, 18, 15, 13, 11],
-    niMargin: [30.9, 31.5, 32, 32.5, 33],
+    growth: [26.48, 18, 15, 13, 11],
+    niMargin: [30.5, 31.5, 32, 32.5, 33],
     ebMargin: [48, 48.5, 49, 49.5, 50],
     sharesOut: [2.55, 2.51, 2.47, 2.43, 2.39],
     peLow: 18,
@@ -161,6 +187,12 @@ export const TRACKED = {
         b: 'Threads and paid messaging are the credible sources of revenue that is not the core feed.',
         c: 'Watch for the moment management puts an actual revenue figure on these instead of describing them as early. That disclosure is what a bull case needs.',
       },
+    ],
+    news: [
+      // newest first, 3–6 items, only things that touch a model driver
+      { d: '2026-10-16', k: 'analyst', h: 'Deutsche Bank lifts Meta Q3 revenue estimate to $63.7B from $63.1B after channel checks', s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/deutsche-ups-meta-q3-revenue-estimates-after-checks-thefly-news', why: 'Supports year-one revenue growth at or slightly above the 26.48% in the driver table.' },
+      { d: '2026-10-16', k: 'product', h: 'BNP: Muse assistant passes 10.4M downloads since 8 Sep launch, but Meta has yet to show it can monetise it', s: 'TipRanks', u: 'https://www.tipranks.com/news/meta-still-needs-to-show-it-can-monetize-its-muse-agent-says-5-star-bnp-analyst', why: 'Paid Muse tiers are a possible second revenue line for the bull case; the $130B–$145B 2026 capex it restates is the margin risk.' },
+      { d: '2026-10-02', k: 'analyst', h: "Evercore ad-agency checks 'most constructive' on Meta and Alphabet near-term revenue trends", s: 'TheFly via TipRanks', u: 'https://www.tipranks.com/news/the-fly/evercore-says-ad-channel-checks-incrementally-cautious-for-applovin-pinterest-thefly-news-2', why: 'Ad demand supports the revenue growth line into Q3/Q4.' },
     ],
   },
 

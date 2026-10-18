@@ -1,5 +1,7 @@
 import { DEFAULTS, SCEN_KEYS, TICKERS } from '../data/tickers.js'
-import { project } from './model.js'
+import { caveatOf } from './caveat.js'
+import { annualise, project } from './model.js'
+import { moveOf } from './move.js'
 
 /**
  * Cross-company ranking.
@@ -26,10 +28,8 @@ export const RANK_BASES = [
   { key: 'bear', label: 'Downside first', hint: 'the bear scenario alone' },
 ]
 
-export const RANK_SIZES = [3, 5, 10]
-
-/** Annualised return from `from` to `to` over the five years to CY2030. */
-const cagr = (to, from) => (from > 0 ? (to > 0 ? Math.pow(to / from, 1 / 5) - 1 : -1) : 0)
+/** NaN sorts last instead of breaking the comparator. */
+export const sortVal = (v) => (Number.isFinite(v) ? v : -Infinity)
 
 /**
  * One row per ticker, sorted by the chosen basis.
@@ -46,38 +46,54 @@ export function rankTickers(data, basis = 'expected') {
   for (const key of TICKERS) {
     const d = data[key]
     if (!d) continue
+    const caveat = caveatOf(key)
 
     if (DEFAULTS[key].rankable === false) {
-      excluded.push({ key, name: d.name, reason: DEFAULTS[key].rankReason })
+      excluded.push({ key, name: d.name, sector: d.sector, reason: DEFAULTS[key].rankReason, caveat })
       continue
     }
 
     const c = project(d)
     const target = Object.fromEntries(SCEN_KEYS.map((k) => [k, c.scen[k].target]))
-    const weighted = SCEN_KEYS.reduce((sum, k) => sum + target[k] * SCEN_WEIGHTS[k], 0)
-    const price = d.priceRef || d.cost
+    // Limited liability: a below-zero outcome counts as zero in the average, not as a debt.
+    const weighted = SCEN_KEYS.reduce(
+      (sum, k) => sum + Math.max(0, target[k]) * SCEN_WEIGHTS[k],
+      0,
+    )
+    const price = DEFAULTS[key].priceRef || d.cost
 
     const ret = {
-      bear: cagr(target.bear, price),
-      base: cagr(target.base, price),
-      bull: cagr(target.bull, price),
-      expected: cagr(weighted, price),
+      bear: annualise(target.bear, price),
+      base: annualise(target.base, price),
+      bull: annualise(target.bull, price),
+      expected: annualise(weighted, price),
     }
 
     rows.push({
       key,
       name: d.name,
       sector: d.sector,
-      caveat: Boolean(d.caveat),
+      caveat,
+      move: moveOf(key),
       price,
       cost: d.cost,
       target,
       weighted,
       ret,
-      costRet: cagr(target.base, d.cost),
+      costRet: annualise(target.base, d.cost),
     })
   }
 
-  rows.sort((a, b) => b.ret[basis] - a.ret[basis])
+  // Ties (several wiped-out bear cases all at −100%) fall back to the base case and
+  // then the ticker, so the order never depends on which data file a name lives in.
+  rows.sort(
+    (a, b) =>
+      sortVal(b.ret[basis]) - sortVal(a.ret[basis]) ||
+      sortVal(b.ret.base) - sortVal(a.ret.base) ||
+      a.key.localeCompare(b.key),
+  )
+  rows.forEach((r, i) => {
+    r.rank = i + 1
+  })
   return { rows, excluded }
 }
